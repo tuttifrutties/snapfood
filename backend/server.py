@@ -255,6 +255,11 @@ async def get_user_meals(user_id: str, limit: int = 50):
             {"userId": user_id}
         ).sort("timestamp", -1).limit(limit).to_list(limit)
         
+        # Convert ObjectId to string for JSON serialization
+        for meal in meals:
+            if "_id" in meal:
+                meal["_id"] = str(meal["_id"])
+        
         return {"meals": meals}
         
     except Exception as e:
