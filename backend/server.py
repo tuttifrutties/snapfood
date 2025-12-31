@@ -170,9 +170,8 @@ async def analyze_food(request: AnalyzeFoodRequest):
             }
             
             Be realistic and accurate with estimates. If you can't identify the food clearly, say so in the dishName.
-            """,
-            model="gpt-5.2"
-        )
+            """
+        ).with_model("openai", "gpt-4o")
         
         # Create image content
         image_content = ImageContent(image_base64=request.imageBase64)
