@@ -314,6 +314,11 @@ async def get_user(user_id: str):
         user = await db.users.find_one({"id": user_id})
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
+        
+        # Convert ObjectId to string for JSON serialization
+        if "_id" in user:
+            user["_id"] = str(user["_id"])
+        
         return user
         
     except HTTPException:
