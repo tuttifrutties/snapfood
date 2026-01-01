@@ -396,6 +396,145 @@ async def update_premium_status(user_id: str, is_premium: bool):
         logger.error(f"Error updating premium status: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to update premium status: {str(e)}")
 
+@api_router.post("/analyze-ingredients")
+async def analyze_ingredients(request: AnalyzeIngredientsRequest):
+    """Analyze ingredients from photo or manual list"""
+    try:
+        logger.info(f"Analyzing ingredients for user: {request.userId}")
+        
+        api_key = os.environ.get('EMERGENT_LLM_KEY')
+        if not api_key:
+            raise HTTPException(status_code=500, detail="API key not configured")
+        
+        # If image provided, extract ingredients
+        if request.imageBase64:
+            chat = LlmChat(
+                api_key=api_key,
+                session_id=f"ingredient_analysis_{request.userId}",
+                system_message="""You are an AI that identifies ingredients from photos.
+                Look at the image and list all visible ingredients.
+                Return a JSON array of ingredient names.
+                Format: ["ingredient1", "ingredient2", "ingredient3"]
+                Be specific but concise."""
+            ).with_model("openai", "gpt-4o")
+            
+            image_content = ImageContent(image_base64=request.imageBase64)
+            user_message = UserMessage(
+                text="Please identify all ingredients visible in this photo and return them as a JSON array.",
+                file_contents=[image_content]
+            )
+            
+            response = await chat.send_message(user_message)
+            
+            import json
+            try:
+                response_text = response.strip()
+                if "```json" in response_text:
+                    response_text = response_text.split("```json")[1].split("```")[0].strip()
+                elif "```" in response_text:
+                    response_text = response_text.split("```")[1].split("```")[0].strip()
+                
+                ingredients = json.loads(response_text)
+            except Exception as e:
+                logger.error(f"Failed to parse ingredients: {e}")
+                raise HTTPException(status_code=500, detail="Failed to parse ingredients")
+            
+            return {"ingredients": ingredients}
+        
+        elif request.ingredients:
+            return {"ingredients": request.ingredients}
+        
+        else:
+            raise HTTPException(status_code=400, detail="Either imageBase64 or ingredients must be provided")
+            
+    except Exception as e:
+        logger.error(f"Error analyzing ingredients: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to analyze ingredients: {str(e)}")
+
+@api_router.post("/recipe-suggestions")
+async def get_recipe_suggestions(request: AnalyzeIngredientsRequest):
+    """Get recipe suggestions based on available ingredients"""
+    try:
+        logger.info(f"Getting recipe suggestions for user: {request.userId}")
+        
+        if not request.ingredients or len(request.ingredients) == 0:
+            return RecipeSuggestionsResponse(recipes=[])
+        
+        api_key = os.environ.get('EMERGENT_LLM_KEY')
+        if not api_key:
+            raise HTTPException(status_code=500, detail="API key not configured")
+        
+        ingredients_str = ", ".join(request.ingredients)
+        
+        chat = LlmChat(
+            api_key=api_key,
+            session_id=f"recipe_suggestions_{request.userId}",
+            system_message=f"""You are a professional chef AI that creates recipe suggestions.
+            
+            Given a list of available ingredients, suggest 3 delicious recipes.
+            Each recipe must include:
+            - name: Recipe name
+            - description: Brief description
+            - ingredients: List of ingredients with quantities (use the available ingredients)
+            - instructions: Step-by-step cooking instructions (array of strings, each step is clear)
+            - cookingTime: Total time in minutes
+            - servings: Number of servings
+            - calories: Estimated calories per serving
+            - protein: Protein in grams per serving
+            - carbs: Carbohydrates in grams per serving
+            - fats: Fats in grams per serving
+            - healthierOption: Optional suggestion for making it healthier
+            
+            Return as JSON array of recipes.
+            Make recipes beginner-friendly with clear, sequential instructions.
+            Adapt to time of day (lighter meals for evening if possible).
+            """
+        ).with_model("openai", "gpt-4o")
+        
+        user_message = UserMessage(
+            text=f"Create 3 recipe suggestions using these available ingredients: {ingredients_str}. Return as JSON array."
+        )
+        
+        response = await chat.send_message(user_message)
+        
+        import json
+        try:
+            response_text = response.strip()
+            if "```json" in response_text:
+                response_text = response_text.split("```json")[1].split("```")[0].strip()
+            elif "```" in response_text:
+                response_text = response_text.split("```")[1].split("```")[0].strip()
+            
+            recipes_data = json.loads(response_text)
+            
+            # Validate and convert to Recipe objects
+            recipes = []
+            for recipe_dict in recipes_data:
+                recipe = Recipe(
+                    name=recipe_dict.get("name", "Unknown Recipe"),
+                    description=recipe_dict.get("description", ""),
+                    ingredients=recipe_dict.get("ingredients", []),
+                    instructions=recipe_dict.get("instructions", []),
+                    cookingTime=recipe_dict.get("cookingTime", 30),
+                    servings=recipe_dict.get("servings", 2),
+                    calories=recipe_dict.get("calories", 500),
+                    protein=recipe_dict.get("protein", 20.0),
+                    carbs=recipe_dict.get("carbs", 50.0),
+                    fats=recipe_dict.get("fats", 15.0),
+                    healthierOption=recipe_dict.get("healthierOption")
+                )
+                recipes.append(recipe)
+            
+            return RecipeSuggestionsResponse(recipes=recipes)
+            
+        except Exception as e:
+            logger.error(f"Failed to parse recipes: {e}")
+            raise HTTPException(status_code=500, detail="Failed to parse recipe suggestions")
+            
+    except Exception as e:
+        logger.error(f"Error getting recipe suggestions: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to get recipe suggestions: {str(e)}")
+
 # Include the router in the main app
 app.include_router(api_router)
 
