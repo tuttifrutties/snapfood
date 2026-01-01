@@ -98,6 +98,28 @@ class SetUserGoalsRequest(BaseModel):
     activityLevel: str
     goal: str
 
+class AnalyzeIngredientsRequest(BaseModel):
+    userId: str
+    imageBase64: Optional[str] = None
+    ingredients: Optional[List[str]] = None
+
+class Recipe(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    name: str
+    description: str
+    ingredients: List[str]
+    instructions: List[str]
+    cookingTime: int  # in minutes
+    servings: int
+    calories: int
+    protein: float
+    carbs: float
+    fats: float
+    healthierOption: Optional[str] = None
+
+class RecipeSuggestionsResponse(BaseModel):
+    recipes: List[Recipe]
+
 # Helper function to calculate daily calorie needs
 def calculate_daily_needs(age: int, height: float, weight: float, activity_level: str, goal: str):
     # Basal Metabolic Rate (BMR) using Mifflin-St Jeor equation (simplified for average person)
