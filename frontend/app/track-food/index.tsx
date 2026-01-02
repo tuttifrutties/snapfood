@@ -24,6 +24,17 @@ export default function TrackFoodScreen() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<any>(null);
+  const [portions, setPortions] = useState(1);
+
+  const PORTION_OPTIONS = [0.5, 1, 1.5, 2, 2.5, 3];
+
+  const getAdjustedValue = (value: number) => {
+    return Math.round(value * portions);
+  };
+
+  const getAdjustedDecimal = (value: number) => {
+    return (value * portions).toFixed(1);
+  };
 
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
