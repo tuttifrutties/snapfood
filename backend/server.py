@@ -468,7 +468,7 @@ async def analyze_ingredients(request: AnalyzeIngredientsRequest):
 async def get_recipe_suggestions(request: AnalyzeIngredientsRequest):
     """Get recipe suggestions based on available ingredients"""
     try:
-        logger.info(f"Getting recipe suggestions for user: {request.userId}")
+        logger.info(f"Getting recipe suggestions for user: {request.userId} in language: {request.language}")
         
         if not request.ingredients or len(request.ingredients) == 0:
             return RecipeSuggestionsResponse(recipes=[])
@@ -479,10 +479,21 @@ async def get_recipe_suggestions(request: AnalyzeIngredientsRequest):
         
         ingredients_str = ", ".join(request.ingredients)
         
+        # Language-specific system message
+        language_instruction = ""
+        if request.language == "es":
+            language_instruction = "IMPORTANTE: Responde SIEMPRE en ESPAÑOL. Nombres de recetas, descripciones, ingredientes, instrucciones - TODO en español."
+        elif request.language == "en":
+            language_instruction = "IMPORTANT: Respond ALWAYS in ENGLISH. Recipe names, descriptions, ingredients, instructions - EVERYTHING in English."
+        else:
+            language_instruction = f"IMPORTANT: Respond ALWAYS in {request.language.upper()}. All content must be in {request.language}."
+        
         chat = LlmChat(
             api_key=api_key,
             session_id=f"recipe_suggestions_{request.userId}",
-            system_message=f"""You are a professional chef AI that creates recipe suggestions.
+            system_message=f"""{language_instruction}
+            
+            You are a professional chef AI that creates recipe suggestions.
             
             Given a list of available ingredients, suggest 3 delicious recipes.
             Each recipe must include:
