@@ -14,7 +14,7 @@ from PIL import Image
 import io
 
 # Configuration
-BACKEND_URL = "https://foodsnap-6.preview.emergentagent.com/api"
+BACKEND_URL = "https://caloriesnap-41.preview.emergentagent.com/api"
 TEST_USER_ID = None
 
 def create_test_food_image():
