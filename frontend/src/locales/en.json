@@ -138,7 +138,16 @@
     "enablePremiumTitle": "Enable Premium?",
     "enablePremiumMessage": "This will enable all premium features for testing",
     "disablePremiumTitle": "Disable Premium?",
-    "disablePremiumMessage": "This will disable all premium features"
+    "disablePremiumMessage": "This will disable all premium features",
+    "notifications": "Notifications",
+    "mealReminders": "Meal Reminders",
+    "mealRemindersDesc": "Get reminders before lunch and dinner",
+    "lunchReminder": "Lunch Reminder",
+    "lunchReminderDesc": "2 hours before lunch (10:00 AM)",
+    "dinnerReminder": "Dinner Reminder",
+    "dinnerReminderDesc": "2 hours before dinner (6:00 PM)",
+    "notificationsEnabled": "Notifications enabled",
+    "notificationsDisabled": "Notifications disabled"
   },
   "paywall": {
     "title": "Upgrade to Premium",
