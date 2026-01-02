@@ -154,6 +154,41 @@ export default function SettingsScreen() {
           </View>
         </View>
 
+        {/* Notifications Section */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t('settings.notifications')}</Text>
+          
+          <View style={styles.settingRow}>
+            <View style={styles.settingInfo}>
+              <Text style={styles.settingLabel}>{t('settings.lunchReminder')}</Text>
+              <Text style={styles.settingDescription}>
+                {t('settings.lunchReminderDesc')}
+              </Text>
+            </View>
+            <Switch
+              value={lunchReminder}
+              onValueChange={toggleLunchReminder}
+              trackColor={{ false: '#333', true: '#FF6B6B' }}
+              thumbColor="#fff"
+            />
+          </View>
+
+          <View style={styles.settingRow}>
+            <View style={styles.settingInfo}>
+              <Text style={styles.settingLabel}>{t('settings.dinnerReminder')}</Text>
+              <Text style={styles.settingDescription}>
+                {t('settings.dinnerReminderDesc')}
+              </Text>
+            </View>
+            <Switch
+              value={dinnerReminder}
+              onValueChange={toggleDinnerReminder}
+              trackColor={{ false: '#333', true: '#FF6B6B' }}
+              thumbColor="#fff"
+            />
+          </View>
+        </View>
+
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>{t('settings.subscription')}</Text>
           
