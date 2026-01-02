@@ -190,6 +190,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#fff',
   },
+  headerSubtitle: {
+    fontSize: 14,
+    color: '#aaa',
+    marginTop: 4,
+  },
   content: {
     flex: 1,
   },

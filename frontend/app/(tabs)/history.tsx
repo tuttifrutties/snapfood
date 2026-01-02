@@ -167,6 +167,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#fff',
   },
+  headerSubtitle: {
+    fontSize: 14,
+    color: '#aaa',
+    marginTop: 4,
+  },
   lockedContainer: {
     flex: 1,
     alignItems: 'center',
