@@ -58,6 +58,7 @@ export default function HistoryScreen() {
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.headerTitle}>{t('history.title')}</Text>
+          <Text style={styles.headerSubtitle}>{t('history.subtitle')}</Text>
         </View>
         <View style={styles.lockedContainer}>
           <Ionicons name="lock-closed" size={80} color="#555" />
