@@ -597,4 +597,16 @@ if __name__ == "__main__":
         os.system("pip install Pillow")
         from PIL import Image, ImageDraw
     
-    run_full_test_suite()
+    # Check if we should run recipe translation tests specifically
+    import sys
+    if len(sys.argv) > 1 and sys.argv[1] == "recipe-translation":
+        test_recipe_translation_feature()
+    else:
+        # Run full test suite first, then recipe translation tests
+        print("Running full backend test suite first...")
+        run_full_test_suite()
+        
+        print("\n" + "="*60)
+        print("Now running specific recipe translation tests...")
+        print("="*60)
+        test_recipe_translation_feature()
