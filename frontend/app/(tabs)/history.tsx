@@ -174,6 +174,12 @@ export default function HistoryScreen() {
                   <Text style={styles.mealMacroText}>F: {meal.fats}g</Text>
                 </View>
               </View>
+              <TouchableOpacity
+                style={styles.deleteButton}
+                onPress={() => deleteMeal(meal.id)}
+              >
+                <Ionicons name="trash-outline" size={20} color="#FF6B6B" />
+              </TouchableOpacity>
             </View>
           ))
         )}
