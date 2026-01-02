@@ -12,12 +12,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { useUser } from '../../src/contexts/UserContext';
 import { useRouter } from 'expo-router';
 import { format } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 export default function HistoryScreen() {
   const { userId, isPremium } = useUser();
   const router = useRouter();
+  const { t } = useTranslation();
   const [meals, setMeals] = useState<any[]>([]);
   const [dailyTotals, setDailyTotals] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -55,19 +57,17 @@ export default function HistoryScreen() {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>History</Text>
+          <Text style={styles.headerTitle}>{t('history.title')}</Text>
         </View>
         <View style={styles.lockedContainer}>
           <Ionicons name="lock-closed" size={80} color="#555" />
-          <Text style={styles.lockedTitle}>Premium Feature</Text>
-          <Text style={styles.lockedText}>
-            Unlock unlimited meal tracking and detailed history with Premium
-          </Text>
+          <Text style={styles.lockedTitle}>{t('history.premiumFeature')}</Text>
+          <Text style={styles.lockedText}>{t('history.premiumMessage')}</Text>
           <TouchableOpacity
             style={styles.upgradeButton}
             onPress={() => router.push('/paywall')}
           >
-            <Text style={styles.upgradeButtonText}>Upgrade Now</Text>
+            <Text style={styles.upgradeButtonText}>{t('history.upgradeNow')}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -78,7 +78,7 @@ export default function HistoryScreen() {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>History</Text>
+          <Text style={styles.headerTitle}>{t('history.title')}</Text>
         </View>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#FF6B6B" />
@@ -90,28 +90,28 @@ export default function HistoryScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>History</Text>
+        <Text style={styles.headerTitle}>{t('history.title')}</Text>
       </View>
 
       {dailyTotals && dailyTotals.mealCount > 0 && (
         <View style={styles.dailySummary}>
-          <Text style={styles.summaryTitle}>Today's Summary</Text>
+          <Text style={styles.summaryTitle}>{t('history.todaySummary')}</Text>
           <View style={styles.summaryRow}>
             <View style={styles.summaryItem}>
               <Text style={styles.summaryValue}>{dailyTotals.calories}</Text>
-              <Text style={styles.summaryLabel}>Calories</Text>
+              <Text style={styles.summaryLabel}>{t('trackFood.calories')}</Text>
             </View>
             <View style={styles.summaryItem}>
               <Text style={styles.summaryValue}>{dailyTotals.protein.toFixed(1)}g</Text>
-              <Text style={styles.summaryLabel}>Protein</Text>
+              <Text style={styles.summaryLabel}>{t('trackFood.protein')}</Text>
             </View>
             <View style={styles.summaryItem}>
               <Text style={styles.summaryValue}>{dailyTotals.carbs.toFixed(1)}g</Text>
-              <Text style={styles.summaryLabel}>Carbs</Text>
+              <Text style={styles.summaryLabel}>{t('trackFood.carbs')}</Text>
             </View>
             <View style={styles.summaryItem}>
               <Text style={styles.summaryValue}>{dailyTotals.fats.toFixed(1)}g</Text>
-              <Text style={styles.summaryLabel}>Fats</Text>
+              <Text style={styles.summaryLabel}>{t('trackFood.fats')}</Text>
             </View>
           </View>
         </View>
@@ -121,8 +121,8 @@ export default function HistoryScreen() {
         {meals.length === 0 ? (
           <View style={styles.emptyState}>
             <Ionicons name="restaurant" size={60} color="#555" />
-            <Text style={styles.emptyText}>No meals logged yet</Text>
-            <Text style={styles.emptySubtext}>Start tracking your food to see your history</Text>
+            <Text style={styles.emptyText}>{t('history.noMeals')}</Text>
+            <Text style={styles.emptySubtext}>{t('history.noMealsSubtext')}</Text>
           </View>
         ) : (
           meals.map((meal: any) => (
