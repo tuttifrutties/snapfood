@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -10,23 +10,26 @@ import {
 import { useRouter } from 'expo-router';
 import { useUser } from '../src/contexts/UserContext';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 
 export default function PaywallScreen() {
   const router = useRouter();
   const { setPremium } = useUser();
+  const { t } = useTranslation();
+  const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'yearly'>('yearly');
 
   const handlePurchase = () => {
     Alert.alert(
-      'Purchase Premium',
-      'In a real app, this would open the in-app purchase flow. For testing, we\'ll activate Premium now.',
+      t('paywall.purchaseTitle'),
+      t('paywall.purchaseMessage'),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         {
-          text: 'Activate',
+          text: t('common.confirm'),
           onPress: async () => {
             await setPremium(true);
-            Alert.alert('Success!', 'Premium activated!', [
-              { text: 'OK', onPress: () => router.back() },
+            Alert.alert(t('common.success'), t('paywall.activated'), [
+              { text: t('common.done'), onPress: () => router.back() },
             ]);
           },
         },
@@ -43,8 +46,8 @@ export default function PaywallScreen() {
       <ScrollView contentContainerStyle={styles.content}>
         <View style={styles.header}>
           <Ionicons name="star" size={60} color="#FFD700" />
-          <Text style={styles.title}>Upgrade to Premium</Text>
-          <Text style={styles.subtitle}>Unlock the full FoodSnap experience</Text>
+          <Text style={styles.title}>{t('paywall.title')}</Text>
+          <Text style={styles.subtitle}>{t('paywall.subtitle')}</Text>
         </View>
 
         <View style={styles.featuresContainer}>
@@ -53,10 +56,8 @@ export default function PaywallScreen() {
               <Ionicons name="checkmark" size={24} color="#fff" />
             </View>
             <View style={styles.featureText}>
-              <Text style={styles.featureTitle}>Unlimited Photo Tracking</Text>
-              <Text style={styles.featureDescription}>
-                Log as many meals as you want, every day
-              </Text>
+              <Text style={styles.featureTitle}>{t('paywall.feature1Title')}</Text>
+              <Text style={styles.featureDescription}>{t('paywall.feature1Desc')}</Text>
             </View>
           </View>
 
@@ -65,10 +66,8 @@ export default function PaywallScreen() {
               <Ionicons name="checkmark" size={24} color="#fff" />
             </View>
             <View style={styles.featureText}>
-              <Text style={styles.featureTitle}>Full Nutrition History</Text>
-              <Text style={styles.featureDescription}>
-                View detailed meal history and daily summaries
-              </Text>
+              <Text style={styles.featureTitle}>{t('paywall.feature2Title')}</Text>
+              <Text style={styles.featureDescription}>{t('paywall.feature2Desc')}</Text>
             </View>
           </View>
 
@@ -77,10 +76,8 @@ export default function PaywallScreen() {
               <Ionicons name="checkmark" size={24} color="#fff" />
             </View>
             <View style={styles.featureText}>
-              <Text style={styles.featureTitle}>Smart Meal Suggestions</Text>
-              <Text style={styles.featureDescription}>
-                AI-powered meal recommendations based on your goals
-              </Text>
+              <Text style={styles.featureTitle}>{t('paywall.feature3Title')}</Text>
+              <Text style={styles.featureDescription}>{t('paywall.feature3Desc')}</Text>
             </View>
           </View>
 
@@ -89,10 +86,8 @@ export default function PaywallScreen() {
               <Ionicons name="checkmark" size={24} color="#fff" />
             </View>
             <View style={styles.featureText}>
-              <Text style={styles.featureTitle}>Evening Notifications</Text>
-              <Text style={styles.featureDescription}>
-                Get daily nutrition summaries and suggestions
-              </Text>
+              <Text style={styles.featureTitle}>{t('paywall.feature4Title')}</Text>
+              <Text style={styles.featureDescription}>{t('paywall.feature4Desc')}</Text>
             </View>
           </View>
 
@@ -101,10 +96,8 @@ export default function PaywallScreen() {
               <Ionicons name="checkmark" size={24} color="#fff" />
             </View>
             <View style={styles.featureText}>
-              <Text style={styles.featureTitle}>No Ads</Text>
-              <Text style={styles.featureDescription}>
-                Enjoy an ad-free, seamless experience
-              </Text>
+              <Text style={styles.featureTitle}>{t('paywall.feature5Title')}</Text>
+              <Text style={styles.featureDescription}>{t('paywall.feature5Desc')}</Text>
             </View>
           </View>
 
@@ -113,35 +106,59 @@ export default function PaywallScreen() {
               <Ionicons name="checkmark" size={24} color="#fff" />
             </View>
             <View style={styles.featureText}>
-              <Text style={styles.featureTitle}>Ingredient-Based Recipes</Text>
-              <Text style={styles.featureDescription}>
-                Get recipes based on what you have in your fridge
-              </Text>
+              <Text style={styles.featureTitle}>{t('paywall.feature6Title')}</Text>
+              <Text style={styles.featureDescription}>{t('paywall.feature6Desc')}</Text>
             </View>
           </View>
         </View>
 
-        <View style={styles.pricingCard}>
-          <View style={styles.pricingRow}>
-            <View>
-              <Text style={styles.pricingTitle}>Monthly</Text>
-              <Text style={styles.pricingDescription}>Billed monthly</Text>
+        <View style={styles.pricingContainer}>
+          <TouchableOpacity
+            style={[
+              styles.pricingCard,
+              selectedPlan === 'yearly' && styles.pricingCardSelected,
+            ]}
+            onPress={() => setSelectedPlan('yearly')}
+          >
+            {selectedPlan === 'yearly' && (
+              <View style={styles.savingsBadge}>
+                <Text style={styles.savingsText}>{t('paywall.yearlySavings')}</Text>
+              </View>
+            )}
+            <View style={styles.pricingRow}>
+              <View>
+                <Text style={styles.pricingTitle}>{t('paywall.yearly')}</Text>
+                <Text style={styles.pricingDescription}>{t('paywall.yearlyBilled')}</Text>
+              </View>
+              <Text style={styles.price}>{t('paywall.yearlyPrice')}</Text>
             </View>
-            <Text style={styles.price}>$9.99/mo</Text>
-          </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[
+              styles.pricingCard,
+              selectedPlan === 'monthly' && styles.pricingCardSelected,
+            ]}
+            onPress={() => setSelectedPlan('monthly')}
+          >
+            <View style={styles.pricingRow}>
+              <View>
+                <Text style={styles.pricingTitle}>{t('paywall.monthly')}</Text>
+                <Text style={styles.pricingDescription}>{t('paywall.monthlyBilled')}</Text>
+              </View>
+              <Text style={styles.price}>{t('paywall.monthlyPrice')}</Text>
+            </View>
+          </TouchableOpacity>
         </View>
 
         <TouchableOpacity style={styles.purchaseButton} onPress={handlePurchase}>
-          <Text style={styles.purchaseButtonText}>Start Premium</Text>
+          <Text style={styles.purchaseButtonText}>{t('paywall.startPremium')}</Text>
         </TouchableOpacity>
 
-        <Text style={styles.disclaimer}>
-          *This is a demo. In a real app, payment would be processed through App Store / Google
-          Play.
-        </Text>
+        <Text style={styles.disclaimer}>{t('paywall.disclaimer')}</Text>
 
         <TouchableOpacity style={styles.restoreButton}>
-          <Text style={styles.restoreButtonText}>Restore Purchase</Text>
+          <Text style={styles.restoreButtonText}>{t('paywall.restorePurchase')}</Text>
         </TouchableOpacity>
       </ScrollView>
     </View>
@@ -213,13 +230,34 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#aaa',
   },
+  pricingContainer: {
+    marginBottom: 24,
+  },
   pricingCard: {
     backgroundColor: '#1a1a1a',
     borderRadius: 12,
     padding: 20,
-    marginBottom: 24,
+    marginBottom: 12,
     borderWidth: 2,
+    borderColor: '#333',
+    position: 'relative',
+  },
+  pricingCardSelected: {
     borderColor: '#FFD700',
+  },
+  savingsBadge: {
+    position: 'absolute',
+    top: -10,
+    right: 20,
+    backgroundColor: '#4CAF50',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  savingsText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
   },
   pricingRow: {
     flexDirection: 'row',
