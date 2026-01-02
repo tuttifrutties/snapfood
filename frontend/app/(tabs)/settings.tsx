@@ -12,10 +12,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { useUser } from '../../src/contexts/UserContext';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useTranslation } from 'react-i18next';
+import { changeLanguage } from '../../src/i18n';
 
 export default function SettingsScreen() {
   const { isPremium, setPremium } = useUser();
   const router = useRouter();
+  const { t, i18n } = useTranslation();
   const [saveToGallery, setSaveToGallery] = React.useState(true);
 
   React.useEffect(() => {
@@ -34,16 +37,19 @@ export default function SettingsScreen() {
     await AsyncStorage.setItem('saveToGallery', value.toString());
   };
 
+  const toggleLanguage = async () => {
+    const newLang = i18n.language === 'en' ? 'es' : 'en';
+    await changeLanguage(newLang);
+  };
+
   const simulatePremiumToggle = () => {
     Alert.alert(
-      isPremium ? 'Disable Premium?' : 'Enable Premium?',
-      isPremium
-        ? 'This will disable all premium features'
-        : 'This will enable all premium features for testing',
+      isPremium ? t('settings.disablePremiumTitle') : t('settings.enablePremiumTitle'),
+      isPremium ? t('settings.disablePremiumMessage') : t('settings.enablePremiumMessage'),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('common.cancel'), style: 'cancel' },
         {
-          text: 'Confirm',
+          text: t('common.confirm'),
           onPress: () => setPremium(!isPremium),
         },
       ]
@@ -53,25 +59,35 @@ export default function SettingsScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Settings</Text>
+        <Text style={styles.headerTitle}>{t('settings.title')}</Text>
       </View>
 
       <ScrollView style={styles.content}>
         {isPremium && (
           <View style={styles.premiumBadge}>
             <Ionicons name="star" size={24} color="#FFD700" />
-            <Text style={styles.premiumText}>Premium Member</Text>
+            <Text style={styles.premiumText}>{t('settings.premiumMember')}</Text>
           </View>
         )}
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>General</Text>
+          <Text style={styles.sectionTitle}>{t('settings.general')}</Text>
           
+          <TouchableOpacity style={styles.settingRow} onPress={toggleLanguage}>
+            <View style={styles.settingInfo}>
+              <Text style={styles.settingLabel}>{t('settings.language')}</Text>
+              <Text style={styles.settingDescription}>
+                {i18n.language === 'en' ? 'English' : 'Español'}
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={20} color="#aaa" />
+          </TouchableOpacity>
+
           <View style={styles.settingRow}>
             <View style={styles.settingInfo}>
-              <Text style={styles.settingLabel}>Save Photos to Gallery</Text>
+              <Text style={styles.settingLabel}>{t('settings.saveToGallery')}</Text>
               <Text style={styles.settingDescription}>
-                Automatically save food photos to your device
+                {t('settings.saveToGalleryDesc')}
               </Text>
             </View>
             <Switch
@@ -84,7 +100,7 @@ export default function SettingsScreen() {
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Subscription</Text>
+          <Text style={styles.sectionTitle}>{t('settings.subscription')}</Text>
           
           {!isPremium ? (
             <TouchableOpacity
@@ -94,9 +110,9 @@ export default function SettingsScreen() {
               <View style={styles.upgradeContent}>
                 <Ionicons name="star" size={40} color="#FFD700" />
                 <View style={styles.upgradeText}>
-                  <Text style={styles.upgradeTitle}>Upgrade to Premium</Text>
+                  <Text style={styles.upgradeTitle}>{t('settings.upgradePremium')}</Text>
                   <Text style={styles.upgradeDescription}>
-                    Unlimited tracking, smart suggestions, no ads
+                    {t('settings.upgradePremiumDesc')}
                   </Text>
                 </View>
               </View>
@@ -104,48 +120,54 @@ export default function SettingsScreen() {
             </TouchableOpacity>
           ) : (
             <View style={styles.premiumCard}>
-              <Text style={styles.premiumCardText}>You have Premium access</Text>
-              <Text style={styles.premiumCardSubtext}>
-                Enjoying all premium features
-              </Text>
+              <Text style={styles.premiumCardText}>{t('settings.premiumActive')}</Text>
+              <Text style={styles.premiumCardSubtext}>{t('settings.premiumActiveDesc')}</Text>
             </View>
           )}
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>About</Text>
+          <Text style={styles.sectionTitle}>{t('settings.about')}</Text>
           
-          <TouchableOpacity style={styles.menuItem}>
-            <Text style={styles.menuText}>Privacy Policy</Text>
+          <TouchableOpacity 
+            style={styles.menuItem}
+            onPress={() => router.push('/legal/privacy')}
+          >
+            <Text style={styles.menuText}>{t('settings.privacyPolicy')}</Text>
             <Ionicons name="chevron-forward" size={20} color="#aaa" />
           </TouchableOpacity>
           
-          <TouchableOpacity style={styles.menuItem}>
-            <Text style={styles.menuText}>Terms of Service</Text>
+          <TouchableOpacity 
+            style={styles.menuItem}
+            onPress={() => router.push('/legal/terms')}
+          >
+            <Text style={styles.menuText}>{t('settings.termsOfService')}</Text>
             <Ionicons name="chevron-forward" size={20} color="#aaa" />
           </TouchableOpacity>
           
-          <TouchableOpacity style={styles.menuItem}>
-            <Text style={styles.menuText}>Help & Support</Text>
+          <TouchableOpacity 
+            style={styles.menuItem}
+            onPress={() => router.push('/legal/help')}
+          >
+            <Text style={styles.menuText}>{t('settings.helpSupport')}</Text>
             <Ionicons name="chevron-forward" size={20} color="#aaa" />
           </TouchableOpacity>
         </View>
 
-        {/* Test/Debug option */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Developer</Text>
+          <Text style={styles.sectionTitle}>{t('settings.developer')}</Text>
           <TouchableOpacity
             style={styles.testButton}
             onPress={simulatePremiumToggle}
           >
             <Text style={styles.testButtonText}>
-              {isPremium ? 'Test: Disable Premium' : 'Test: Enable Premium'}
+              {isPremium ? t('settings.testDisablePremium') : t('settings.testPremium')}
             </Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.versionContainer}>
-          <Text style={styles.versionText}>FoodSnap v1.0.0</Text>
+          <Text style={styles.versionText}>{t('settings.version')}</Text>
         </View>
       </ScrollView>
     </View>
@@ -202,6 +224,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1a1a1a',
     padding: 16,
     borderRadius: 12,
+    marginBottom: 8,
   },
   settingInfo: {
     flex: 1,
