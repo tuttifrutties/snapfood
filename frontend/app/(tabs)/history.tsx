@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useUser } from '../../src/contexts/UserContext';
@@ -51,6 +52,36 @@ export default function HistoryScreen() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const deleteMeal = async (mealId: string) => {
+    Alert.alert(
+      t('history.deleteTitle'),
+      t('history.deleteMessage'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('history.delete'),
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await fetch(`${API_URL}/api/meals/${mealId}`, {
+                method: 'DELETE',
+              });
+              // Remove from local state
+              setMeals(meals.filter((meal) => meal.id !== mealId));
+              // Reload totals
+              const totalsResponse = await fetch(`${API_URL}/api/meals/${userId}/daily-totals`);
+              const totalsData = await totalsResponse.json();
+              setDailyTotals(totalsData);
+            } catch (error) {
+              console.error('Failed to delete meal:', error);
+              Alert.alert(t('common.error'), t('history.deleteFailed'));
+            }
+          },
+        },
+      ]
+    );
   };
 
   if (!isPremium) {
