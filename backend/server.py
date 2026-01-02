@@ -494,11 +494,24 @@ async def get_recipe_suggestions(request: AnalyzeIngredientsRequest):
         # Language-specific system message
         language_instruction = ""
         if request.language == "es":
-            language_instruction = "IMPORTANTE: Responde SIEMPRE en ESPAÑOL. Nombres de recetas, descripciones, ingredientes, instrucciones - TODO en español."
+            language_instruction = """¡CRÍTICO! RESPONDE EXCLUSIVAMENTE EN ESPAÑOL. 
+            - Nombres de recetas: en español
+            - Descripciones: en español
+            - Ingredientes: en español (ejemplo: "pollo", "arroz", NO "chicken", "rice")
+            - Instrucciones: en español paso a paso
+            - Opciones saludables: en español
+            NO uses inglés bajo ninguna circunstancia. Este es un requisito absoluto."""
         elif request.language == "en":
-            language_instruction = "IMPORTANT: Respond ALWAYS in ENGLISH. Recipe names, descriptions, ingredients, instructions - EVERYTHING in English."
+            language_instruction = """CRITICAL! RESPOND EXCLUSIVELY IN ENGLISH.
+            - Recipe names: in English
+            - Descriptions: in English
+            - Ingredients: in English (example: "chicken", "rice")
+            - Instructions: in English step by step
+            - Healthier options: in English
+            Do NOT use any other language. This is an absolute requirement."""
         else:
-            language_instruction = f"IMPORTANT: Respond ALWAYS in {request.language.upper()}. All content must be in {request.language}."
+            language_instruction = f"""CRITICAL! RESPOND EXCLUSIVELY IN {request.language.upper()}.
+            All content must be in {request.language}. This is an absolute requirement."""
         
         chat = LlmChat(
             api_key=api_key,
