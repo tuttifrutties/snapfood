@@ -67,6 +67,7 @@ class Meal(BaseModel):
 class AnalyzeFoodRequest(BaseModel):
     userId: str
     imageBase64: str
+    language: Optional[str] = "en"  # Language code: en, es, etc.
 
 class AnalyzeFoodResponse(BaseModel):
     dishName: str
