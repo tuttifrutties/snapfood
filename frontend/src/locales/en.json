@@ -100,6 +100,7 @@
   },
   "history": {
     "title": "History",
+    "subtitle": "Check what you've been eating",
     "todaySummary": "Today's Summary",
     "noMeals": "No meals logged yet",
     "noMealsSubtext": "Start tracking your food to see your history",
@@ -109,6 +110,7 @@
   },
   "settings": {
     "title": "Settings",
+    "subtitle": "Customize your app",
     "general": "General",
     "language": "Language",
     "saveToGallery": "Save Photos to Gallery",
