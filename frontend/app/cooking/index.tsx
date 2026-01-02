@@ -137,6 +137,7 @@ export default function CookingScreen() {
         body: JSON.stringify({
           userId,
           ingredients: selectedIngredients,
+          language: i18n.language,
         }),
       });
 
