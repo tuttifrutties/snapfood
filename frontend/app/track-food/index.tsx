@@ -20,7 +20,7 @@ const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 export default function TrackFoodScreen() {
   const { userId } = useUser();
   const router = useRouter();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<any>(null);
