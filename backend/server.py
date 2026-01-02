@@ -480,6 +480,7 @@ async def get_recipe_suggestions(request: AnalyzeIngredientsRequest):
     """Get recipe suggestions based on available ingredients"""
     try:
         logger.info(f"Getting recipe suggestions for user: {request.userId} in language: {request.language}")
+        logger.info(f"Request data - Language received: '{request.language}', Ingredients: {request.ingredients}")
         
         if not request.ingredients or len(request.ingredients) == 0:
             return RecipeSuggestionsResponse(recipes=[])
