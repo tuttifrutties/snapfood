@@ -57,7 +57,6 @@ export default function HistoryScreen() {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>{t('history.title')}</Text>
           <Text style={styles.headerSubtitle}>{t('history.subtitle')}</Text>
         </View>
         <View style={styles.lockedContainer}>
