@@ -296,6 +296,42 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
   },
+  portionContainer: {
+    marginBottom: 20,
+    backgroundColor: '#1a1a1a',
+    padding: 16,
+    borderRadius: 12,
+  },
+  portionLabel: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  portionButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    gap: 8,
+  },
+  portionButton: {
+    flex: 1,
+    backgroundColor: '#333',
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  portionButtonActive: {
+    backgroundColor: '#FF6B6B',
+  },
+  portionButtonText: {
+    color: '#aaa',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  portionButtonTextActive: {
+    color: '#fff',
+  },
   instructionText: {
     color: '#aaa',
     fontSize: 16,
