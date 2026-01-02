@@ -17,7 +17,7 @@ export default function Index() {
       if (!hasCompletedOnboarding) {
         router.replace('/onboarding');
       } else {
-        router.replace('/(tabs)/camera');
+        router.replace('/(tabs)/home');
       }
     }
   }, [isLoading, userId, hasCompletedOnboarding]);
