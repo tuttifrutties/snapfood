@@ -159,21 +159,47 @@ export default function TrackFoodScreen() {
           <View style={styles.resultContainer}>
             <Text style={styles.dishName}>{analysisResult.dishName}</Text>
 
+            {/* Portion Selector */}
+            <View style={styles.portionContainer}>
+              <Text style={styles.portionLabel}>{t('trackFood.portionSize')}</Text>
+              <View style={styles.portionButtons}>
+                {PORTION_OPTIONS.map((option) => (
+                  <TouchableOpacity
+                    key={option}
+                    style={[
+                      styles.portionButton,
+                      portions === option && styles.portionButtonActive,
+                    ]}
+                    onPress={() => setPortions(option)}
+                  >
+                    <Text
+                      style={[
+                        styles.portionButtonText,
+                        portions === option && styles.portionButtonTextActive,
+                      ]}
+                    >
+                      {option}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+
             <View style={styles.macrosContainer}>
               <View style={styles.macroBox}>
-                <Text style={styles.macroValue}>{analysisResult.calories}</Text>
+                <Text style={styles.macroValue}>{getAdjustedValue(analysisResult.calories)}</Text>
                 <Text style={styles.macroLabel}>{t('trackFood.calories')}</Text>
               </View>
               <View style={styles.macroBox}>
-                <Text style={styles.macroValue}>{analysisResult.protein}g</Text>
+                <Text style={styles.macroValue}>{getAdjustedDecimal(analysisResult.protein)}g</Text>
                 <Text style={styles.macroLabel}>{t('trackFood.protein')}</Text>
               </View>
               <View style={styles.macroBox}>
-                <Text style={styles.macroValue}>{analysisResult.carbs}g</Text>
+                <Text style={styles.macroValue}>{getAdjustedDecimal(analysisResult.carbs)}g</Text>
                 <Text style={styles.macroLabel}>{t('trackFood.carbs')}</Text>
               </View>
               <View style={styles.macroBox}>
-                <Text style={styles.macroValue}>{analysisResult.fats}g</Text>
+                <Text style={styles.macroValue}>{getAdjustedDecimal(analysisResult.fats)}g</Text>
                 <Text style={styles.macroLabel}>{t('trackFood.fats')}</Text>
               </View>
             </View>
