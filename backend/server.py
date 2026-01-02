@@ -177,18 +177,24 @@ async def translate_recipes(recipes_data: list, target_language: str, api_key: s
             Translate ALL recipe content to {target_lang_name}. This includes:
             - Recipe names
             - Descriptions  
-            - Ingredients (both the ingredient names AND quantities)
+            - Ingredients (translate the text but keep as simple strings, NOT objects)
             - Step-by-step instructions
             - Healthier options
             
-            CRITICAL: Return the EXACT same JSON structure, only translate the text values.
-            Preserve all numbers, measurements, and JSON structure.
+            CRITICAL RULES:
+            1. Return the EXACT same JSON structure - do not change data types or structure
+            2. Ingredients must remain as an array of strings, NOT objects
+            3. Only translate the text content, preserve all numbers and measurements
+            4. Do not restructure or reorganize the data
             
-            Example translations to {target_lang_name}:
+            Example ingredient translations to {target_lang_name}:
             - "2 cups of milk" → {'"2 tazas de leche"' if target_language == "es" else '"2 cups of milk"'}
-            - "Preheat oven to 350°F" → {'"Precalentar el horno a 175°C"' if target_language == "es" else '"Preheat oven to 350°F"'}
+            - "1 chicken breast" → {'"1 pechuga de pollo"' if target_language == "es" else '"1 chicken breast"'}
             
-            Return only the translated JSON, no explanations."""
+            WRONG: {{"item": "pollo", "quantity": "1", "unit": "pechuga"}}
+            CORRECT: "1 pechuga de pollo"
+            
+            Return only the translated JSON with the exact same structure, no explanations."""
         ).with_model("openai", "gpt-4o")
         
         # Convert recipes to JSON string for translation
