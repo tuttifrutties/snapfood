@@ -99,6 +99,7 @@ export default function CookingScreen() {
         body: JSON.stringify({
           userId,
           imageBase64: base64Image,
+          language: i18n.language,
         }),
       });
 
