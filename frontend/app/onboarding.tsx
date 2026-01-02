@@ -13,15 +13,16 @@ import {
 import { useRouter } from 'expo-router';
 import { useUser } from '../src/contexts/UserContext';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 export default function OnboardingScreen() {
   const router = useRouter();
   const { userId, completeOnboarding } = useUser();
+  const { t } = useTranslation();
   const [step, setStep] = useState(1);
 
-  // User data
   const [goal, setGoal] = useState<'lose' | 'maintain' | 'gain'>('maintain');
   const [age, setAge] = useState('');
   const [height, setHeight] = useState('');
@@ -30,7 +31,7 @@ export default function OnboardingScreen() {
 
   const handleFinish = async () => {
     if (!age || !height || !weight) {
-      Alert.alert('Missing Information', 'Please fill in all fields');
+      Alert.alert(t('onboarding.missingInfo'), t('onboarding.fillAllFields'));
       return;
     }
 
@@ -49,10 +50,10 @@ export default function OnboardingScreen() {
       });
 
       await completeOnboarding();
-      router.replace('/(tabs)/camera');
+      router.replace('/(tabs)/home');
     } catch (error) {
       console.error('Failed to save goals:', error);
-      Alert.alert('Error', 'Failed to save your information. Please try again.');
+      Alert.alert(t('common.error'), 'Failed to save your information. Please try again.');
     }
   };
 
@@ -61,28 +62,26 @@ export default function OnboardingScreen() {
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.content}>
           <Ionicons name="restaurant" size={80} color="#FF6B6B" />
-          <Text style={styles.title}>Welcome to FoodSnap!</Text>
-          <Text style={styles.subtitle}>
-            Track your meals with AI-powered nutrition analysis
-          </Text>
+          <Text style={styles.title}>{t('onboarding.welcome')}</Text>
+          <Text style={styles.subtitle}>{t('onboarding.subtitle')}</Text>
 
           <View style={styles.featuresList}>
             <View style={styles.featureItem}>
               <Ionicons name="camera" size={24} color="#FF6B6B" />
-              <Text style={styles.featureText}>Snap photos of your meals</Text>
+              <Text style={styles.featureText}>{t('onboarding.feature1')}</Text>
             </View>
             <View style={styles.featureItem}>
               <Ionicons name="analytics" size={24} color="#FF6B6B" />
-              <Text style={styles.featureText}>Get instant nutrition data</Text>
+              <Text style={styles.featureText}>{t('onboarding.feature2')}</Text>
             </View>
             <View style={styles.featureItem}>
               <Ionicons name="trending-up" size={24} color="#FF6B6B" />
-              <Text style={styles.featureText}>Track your progress</Text>
+              <Text style={styles.featureText}>{t('onboarding.feature3')}</Text>
             </View>
           </View>
 
           <TouchableOpacity style={styles.button} onPress={() => setStep(2)}>
-            <Text style={styles.buttonText}>Get Started</Text>
+            <Text style={styles.buttonText}>{t('onboarding.getStarted')}</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>
@@ -93,8 +92,8 @@ export default function OnboardingScreen() {
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.content}>
-          <Text style={styles.title}>What's Your Goal?</Text>
-          <Text style={styles.subtitle}>This helps us personalize your experience</Text>
+          <Text style={styles.title}>{t('onboarding.goal')}</Text>
+          <Text style={styles.subtitle}>{t('onboarding.goalSubtitle')}</Text>
 
           <TouchableOpacity
             style={[styles.goalCard, goal === 'lose' && styles.goalCardSelected]}
@@ -106,9 +105,9 @@ export default function OnboardingScreen() {
               color={goal === 'lose' ? '#FF6B6B' : '#aaa'}
             />
             <Text style={[styles.goalTitle, goal === 'lose' && styles.goalTitleSelected]}>
-              Lose Weight
+              {t('onboarding.loseWeight')}
             </Text>
-            <Text style={styles.goalDescription}>Create a calorie deficit</Text>
+            <Text style={styles.goalDescription}>{t('onboarding.loseWeightDesc')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -120,12 +119,10 @@ export default function OnboardingScreen() {
               size={32}
               color={goal === 'maintain' ? '#FF6B6B' : '#aaa'}
             />
-            <Text
-              style={[styles.goalTitle, goal === 'maintain' && styles.goalTitleSelected]}
-            >
-              Maintain Weight
+            <Text style={[styles.goalTitle, goal === 'maintain' && styles.goalTitleSelected]}>
+              {t('onboarding.maintainWeight')}
             </Text>
-            <Text style={styles.goalDescription}>Balance your calories</Text>
+            <Text style={styles.goalDescription}>{t('onboarding.maintainWeightDesc')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -138,13 +135,13 @@ export default function OnboardingScreen() {
               color={goal === 'gain' ? '#FF6B6B' : '#aaa'}
             />
             <Text style={[styles.goalTitle, goal === 'gain' && styles.goalTitleSelected]}>
-              Gain Muscle
+              {t('onboarding.gainMuscle')}
             </Text>
-            <Text style={styles.goalDescription}>Create a calorie surplus</Text>
+            <Text style={styles.goalDescription}>{t('onboarding.gainMuscleDesc')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.button} onPress={() => setStep(3)}>
-            <Text style={styles.buttonText}>Continue</Text>
+            <Text style={styles.buttonText}>{t('common.continue')}</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>
@@ -157,11 +154,11 @@ export default function OnboardingScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>About You</Text>
-        <Text style={styles.subtitle}>Help us calculate your daily targets</Text>
+        <Text style={styles.title}>{t('onboarding.aboutYou')}</Text>
+        <Text style={styles.subtitle}>{t('onboarding.aboutYouSubtitle')}</Text>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>Age</Text>
+          <Text style={styles.inputLabel}>{t('onboarding.age')}</Text>
           <TextInput
             style={styles.input}
             placeholder="25"
@@ -173,7 +170,7 @@ export default function OnboardingScreen() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>Height (cm)</Text>
+          <Text style={styles.inputLabel}>{t('onboarding.height')}</Text>
           <TextInput
             style={styles.input}
             placeholder="170"
@@ -185,7 +182,7 @@ export default function OnboardingScreen() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>Weight (kg)</Text>
+          <Text style={styles.inputLabel}>{t('onboarding.weight')}</Text>
           <TextInput
             style={styles.input}
             placeholder="70"
@@ -197,14 +194,14 @@ export default function OnboardingScreen() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>Activity Level</Text>
+          <Text style={styles.inputLabel}>{t('onboarding.activityLevel')}</Text>
           <View style={styles.activityButtons}>
             {[
-              { key: 'sedentary', label: 'Sedentary' },
-              { key: 'light', label: 'Light' },
-              { key: 'moderate', label: 'Moderate' },
-              { key: 'active', label: 'Active' },
-              { key: 'very_active', label: 'Very Active' },
+              { key: 'sedentary', label: t('onboarding.sedentary') },
+              { key: 'light', label: t('onboarding.light') },
+              { key: 'moderate', label: t('onboarding.moderate') },
+              { key: 'active', label: t('onboarding.active') },
+              { key: 'very_active', label: t('onboarding.veryActive') },
             ].map((item) => (
               <TouchableOpacity
                 key={item.key}
@@ -228,7 +225,7 @@ export default function OnboardingScreen() {
         </View>
 
         <TouchableOpacity style={styles.button} onPress={handleFinish}>
-          <Text style={styles.buttonText}>Finish Setup</Text>
+          <Text style={styles.buttonText}>{t('onboarding.finishSetup')}</Text>
         </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>
