@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
-import { useUser } from '../src/contexts/UserContext';
+import { useUser } from '@/src/contexts/UserContext';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
