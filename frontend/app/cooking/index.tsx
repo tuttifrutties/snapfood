@@ -16,6 +16,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useUser } from '@/src/contexts/UserContext';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
