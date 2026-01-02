@@ -157,12 +157,34 @@ export default function CookingScreen() {
   };
 
   const getRecipeSuggestions = async () => {
+    if (!canUseCooking()) {
+      Alert.alert(
+        t('cooking.premiumFeature'),
+        'Free users can use this feature once per day. Upgrade to Premium for unlimited access!',
+        [
+          { text: t('common.cancel'), style: 'cancel' },
+          { text: t('history.upgradeNow'), onPress: () => router.push('/paywall') },
+        ]
+      );
+      return;
+    }
+
     if (selectedIngredients.length === 0) {
       Alert.alert(t('common.error'), 'Please select at least one ingredient.');
       return;
     }
 
-    const currentLanguage = i18n.language;
+    // Get language from AsyncStorage to ensure we have the correct one
+    let currentLanguage = i18n.language || 'en';
+    try {
+      const savedLanguage = await AsyncStorage.getItem('app_language');
+      if (savedLanguage) {
+        currentLanguage = savedLanguage;
+      }
+    } catch (error) {
+      console.error('Failed to get language:', error);
+    }
+    
     console.log('Getting recipes in language:', currentLanguage); // Debug log
 
     setIsLoadingRecipes(true);
@@ -180,6 +202,11 @@ export default function CookingScreen() {
       const data = await response.json();
       setRecipes(data.recipes || []);
       setMode('results');
+      
+      // Increment cooking count for free users
+      if (!isPremium) {
+        await incrementCookingCount();
+      }
     } catch (error) {
       console.error('Failed to get recipes:', error);
       Alert.alert(t('common.error'), 'Failed to get recipe suggestions. Please try again.');
