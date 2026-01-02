@@ -326,4 +326,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#FF6B6B',
   },
+  deleteButton: {
+    padding: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
 });
