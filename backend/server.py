@@ -401,6 +401,21 @@ async def get_daily_totals(user_id: str):
         logger.error(f"Error getting daily totals: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to get daily totals: {str(e)}")
 
+@api_router.delete("/meals/{meal_id}")
+async def delete_meal(meal_id: str):
+    """Delete a specific meal"""
+    try:
+        result = await db.meals.delete_one({"id": meal_id})
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Meal not found")
+        return {"success": True, "message": "Meal deleted successfully"}
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error deleting meal: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to delete meal: {str(e)}")
+
 @api_router.post("/users")
 async def create_user():
     """Create a new user"""
