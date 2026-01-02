@@ -68,6 +68,8 @@
     "protein": "Proteína",
     "carbs": "Carbohidratos",
     "fats": "Grasas",
+    "portions": "Porciones",
+    "portionSize": "¿Cuánto comiste?",
     "mealSaved": "¡Comida guardada exitosamente!",
     "analysisFailed": "Análisis Fallido",
     "analysisFailedMessage": "No se pudo analizar la comida. Por favor, intenta de nuevo.",
