@@ -413,7 +413,7 @@ async def update_premium_status(user_id: str, is_premium: bool):
 async def analyze_ingredients(request: AnalyzeIngredientsRequest):
     """Analyze ingredients from photo or manual list"""
     try:
-        logger.info(f"Analyzing ingredients for user: {request.userId}")
+        logger.info(f"Analyzing ingredients for user: {request.userId} in language: {request.language}")
         
         api_key = os.environ.get('EMERGENT_LLM_KEY')
         if not api_key:
@@ -421,10 +421,21 @@ async def analyze_ingredients(request: AnalyzeIngredientsRequest):
         
         # If image provided, extract ingredients
         if request.imageBase64:
+            # Language-specific system message
+            language_instruction = ""
+            if request.language == "es":
+                language_instruction = "IMPORTANTE: Responde SIEMPRE en ESPAÑOL. Nombres de ingredientes - TODO en español."
+            elif request.language == "en":
+                language_instruction = "IMPORTANT: Respond ALWAYS in ENGLISH. Ingredient names - EVERYTHING in English."
+            else:
+                language_instruction = f"IMPORTANT: Respond ALWAYS in {request.language.upper()}. All content must be in {request.language}."
+            
             chat = LlmChat(
                 api_key=api_key,
                 session_id=f"ingredient_analysis_{request.userId}",
-                system_message="""You are an AI that identifies ingredients from photos.
+                system_message=f"""{language_instruction}
+                
+                You are an AI that identifies ingredients from photos.
                 Look at the image and list all visible ingredients.
                 Return a JSON array of ingredient names.
                 Format: ["ingredient1", "ingredient2", "ingredient3"]
