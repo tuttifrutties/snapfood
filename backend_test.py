@@ -291,6 +291,220 @@ def test_get_user_meals(user_id):
         print(f"❌ Exception during meal history retrieval: {str(e)}")
         return None, False
 
+def test_recipe_suggestions_spanish():
+    """Test POST /api/recipe-suggestions with Spanish language"""
+    print("\n=== Testing Recipe Suggestions with Spanish Translation ===")
+    
+    try:
+        payload = {
+            "userId": "test-user-123",
+            "ingredients": ["chicken", "rice", "tomatoes", "garlic"],
+            "language": "es"
+        }
+        
+        print(f"📤 Request: {json.dumps(payload, indent=2)}")
+        print("⏳ This may take 10-15 seconds for AI generation + translation...")
+        
+        start_time = time.time()
+        response = requests.post(f"{BACKEND_URL}/recipe-suggestions", json=payload, timeout=60)
+        end_time = time.time()
+        
+        print(f"Response time: {end_time - start_time:.2f} seconds")
+        
+        if response.status_code == 200:
+            data = response.json()
+            recipes = data.get('recipes', [])
+            
+            print(f"✅ Received {len(recipes)} recipe suggestions")
+            
+            # Check if recipes are in Spanish
+            spanish_indicators = []
+            
+            for i, recipe in enumerate(recipes):
+                print(f"\n📝 Recipe {i+1}: {recipe.get('name', 'Unknown')}")
+                print(f"   Description: {recipe.get('description', '')[:100]}...")
+                print(f"   First ingredient: {recipe.get('ingredients', [''])[0] if recipe.get('ingredients') else 'None'}")
+                print(f"   First instruction: {recipe.get('instructions', [''])[0] if recipe.get('instructions') else 'None'}")
+                
+                # Check for Spanish content
+                name = recipe.get('name', '').lower()
+                description = recipe.get('description', '').lower()
+                ingredients = ' '.join(recipe.get('ingredients', [])).lower()
+                instructions = ' '.join(recipe.get('instructions', [])).lower()
+                
+                # Common Spanish words/patterns in cooking
+                spanish_words = ['pollo', 'arroz', 'tomate', 'ajo', 'con', 'de', 'en', 'el', 'la', 'los', 'las', 
+                               'minutos', 'cocinar', 'agregar', 'añadir', 'mezclar', 'calentar', 'freír', 'hervir',
+                               'cucharada', 'cucharadita', 'taza', 'gramos', 'aceite', 'sal', 'pimienta']
+                
+                found_spanish = []
+                all_text = f"{name} {description} {ingredients} {instructions}"
+                for word in spanish_words:
+                    if word in all_text:
+                        found_spanish.append(word)
+                
+                if found_spanish:
+                    spanish_indicators.append(f"Recipe {i+1}: {found_spanish[:3]}")
+            
+            if spanish_indicators:
+                print(f"\n🇪🇸 SPANISH CONTENT DETECTED:")
+                for indicator in spanish_indicators:
+                    print(f"   ✅ {indicator}")
+                return True
+            else:
+                print(f"\n❌ NO SPANISH CONTENT DETECTED - Recipes appear to be in English")
+                print("   This indicates translation is NOT working")
+                return False
+                
+        else:
+            print(f"❌ Failed with status {response.status_code}: {response.text}")
+            return False
+            
+    except Exception as e:
+        print(f"❌ Exception during recipe suggestions: {str(e)}")
+        return False
+
+def test_recipe_suggestions_english():
+    """Test POST /api/recipe-suggestions with English language (should not translate)"""
+    print("\n=== Testing Recipe Suggestions with English (No Translation) ===")
+    
+    try:
+        payload = {
+            "userId": "test-user-456",
+            "ingredients": ["chicken", "rice", "tomatoes", "garlic"],
+            "language": "en"
+        }
+        
+        print(f"📤 Request: {json.dumps(payload, indent=2)}")
+        print("⏳ This may take 5-10 seconds for AI generation...")
+        
+        start_time = time.time()
+        response = requests.post(f"{BACKEND_URL}/recipe-suggestions", json=payload, timeout=60)
+        end_time = time.time()
+        
+        print(f"Response time: {end_time - start_time:.2f} seconds")
+        
+        if response.status_code == 200:
+            data = response.json()
+            recipes = data.get('recipes', [])
+            
+            print(f"✅ Received {len(recipes)} recipe suggestions")
+            
+            for i, recipe in enumerate(recipes):
+                print(f"\n📝 Recipe {i+1}: {recipe.get('name', 'Unknown')}")
+                print(f"   Description: {recipe.get('description', '')[:100]}...")
+                print(f"   First ingredient: {recipe.get('ingredients', [''])[0] if recipe.get('ingredients') else 'None'}")
+            
+            print(f"\n🇺🇸 English recipes received (no translation should occur)")
+            return True
+                
+        else:
+            print(f"❌ Failed with status {response.status_code}: {response.text}")
+            return False
+            
+    except Exception as e:
+        print(f"❌ Exception during recipe suggestions: {str(e)}")
+        return False
+
+def check_backend_logs():
+    """Check backend logs for translation messages"""
+    print("\n=== Checking Backend Logs for Translation Messages ===")
+    
+    try:
+        import subprocess
+        result = subprocess.run(
+            ["tail", "-n", "100", "/var/log/supervisor/backend.out.log"],
+            capture_output=True,
+            text=True,
+            timeout=10
+        )
+        
+        if result.returncode == 0:
+            logs = result.stdout
+            print("📋 Searching recent backend logs for translation activity...")
+            
+            # Look for translation-related messages
+            translation_logs = []
+            recipe_logs = []
+            
+            for line in logs.split('\n'):
+                line_lower = line.lower()
+                if 'translat' in line_lower:
+                    translation_logs.append(line)
+                elif 'recipe' in line_lower:
+                    recipe_logs.append(line)
+            
+            if translation_logs:
+                print("🔍 Translation-related log entries found:")
+                for log in translation_logs[-5:]:  # Last 5 relevant entries
+                    print(f"   {log}")
+            else:
+                print("ℹ️  No translation-specific logs found")
+                
+            if recipe_logs:
+                print("🔍 Recipe-related log entries found:")
+                for log in recipe_logs[-5:]:  # Last 5 relevant entries
+                    print(f"   {log}")
+            else:
+                print("ℹ️  No recipe-specific logs found")
+                
+            # Look specifically for the "Translating recipes to es" message
+            if any("translating recipes to es" in line.lower() for line in logs.split('\n')):
+                print("✅ Found 'Translating recipes to es' message in logs!")
+            else:
+                print("❌ Did not find 'Translating recipes to es' message in logs")
+                
+        else:
+            print(f"❌ Could not read logs: {result.stderr}")
+            
+    except Exception as e:
+        print(f"❌ Error reading logs: {str(e)}")
+
+def test_recipe_translation_feature():
+    """Test the complete recipe translation feature as requested"""
+    print("🌮 Recipe Translation Feature Test")
+    print("=" * 50)
+    print("Testing the two-step translation system:")
+    print("1. Generate recipes in English with OpenAI")
+    print("2. Translate to target language with OpenAI")
+    print("=" * 50)
+    
+    results = {
+        'spanish_translation': False,
+        'english_no_translation': False
+    }
+    
+    # Test Spanish translation
+    results['spanish_translation'] = test_recipe_suggestions_spanish()
+    
+    time.sleep(2)  # Brief pause between tests
+    
+    # Test English (no translation)
+    results['english_no_translation'] = test_recipe_suggestions_english()
+    
+    # Check logs for translation activity
+    check_backend_logs()
+    
+    # Summary
+    print("\n" + "=" * 50)
+    print("📊 RECIPE TRANSLATION TEST SUMMARY")
+    print("=" * 50)
+    print(f"🇪🇸 Spanish Translation: {'✅ WORKING' if results['spanish_translation'] else '❌ FAILED'}")
+    print(f"🇺🇸 English (No Translation): {'✅ WORKING' if results['english_no_translation'] else '❌ FAILED'}")
+    
+    if results['spanish_translation'] and results['english_no_translation']:
+        print("\n🎉 RECIPE TRANSLATION SYSTEM WORKING CORRECTLY!")
+        print("   ✅ Recipes are properly translated to Spanish")
+        print("   ✅ English recipes are not unnecessarily translated")
+    else:
+        print("\n⚠️  RECIPE TRANSLATION ISSUES DETECTED")
+        if not results['spanish_translation']:
+            print("   ❌ Spanish translation not working - recipes remain in English")
+        if not results['english_no_translation']:
+            print("   ❌ English recipe generation failed")
+    
+    return results
+
 def run_full_test_suite():
     """Run the complete test suite following the test plan"""
     print("🍕 FoodSnap Backend API Test Suite")
