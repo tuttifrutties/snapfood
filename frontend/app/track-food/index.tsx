@@ -110,13 +110,21 @@ export default function TrackFoodScreen() {
         const base64 = reader.result as string;
         const base64Data = base64.split(',')[1];
 
+        // Save with adjusted values based on portions
         await fetch(`${API_URL}/api/meals`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             userId,
             photoBase64: base64Data,
-            ...analysisResult,
+            dishName: analysisResult.dishName,
+            calories: getAdjustedValue(analysisResult.calories),
+            protein: parseFloat(getAdjustedDecimal(analysisResult.protein)),
+            carbs: parseFloat(getAdjustedDecimal(analysisResult.carbs)),
+            fats: parseFloat(getAdjustedDecimal(analysisResult.fats)),
+            ingredients: analysisResult.ingredients,
+            warnings: analysisResult.warnings,
+            portions: portions,
           }),
         });
 
