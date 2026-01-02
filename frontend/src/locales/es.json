@@ -52,7 +52,7 @@
     "trackFoodDesc": "Toma una foto y obtén información nutricional instantánea",
     "whatToCook": "¿Qué Debo Cocinar?",
     "whatToCookDesc": "Obtén sugerencias de recetas basadas en tus ingredientes",
-    "dailyLimit": "{{count}}/1 fotos hoy",
+    "dailyLimit": "{{count}}/2 fotos hoy",
     "dailyLimitReached": "¡Límite diario alcanzado!",
     "upgradeForUnlimited": "Actualiza a Premium para rastreo ilimitado"
   },

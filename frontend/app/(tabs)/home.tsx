@@ -36,7 +36,7 @@ export default function HomeScreen() {
   };
 
   const handleTrackFood = () => {
-    if (!isPremium && todayCount >= 1) {
+    if (!isPremium && todayCount >= 2) {
       Alert.alert(
         t('home.dailyLimitReached'),
         t('home.upgradeForUnlimited'),
@@ -105,7 +105,7 @@ export default function HomeScreen() {
           <Ionicons name="chevron-forward" size={24} color="#aaa" />
         </TouchableOpacity>
 
-        {!isPremium && todayCount >= 1 && (
+        {!isPremium && todayCount >= 2 && (
           <View style={styles.upgradePrompt}>
             <Text style={styles.upgradeText}>{t('home.dailyLimitReached')}</Text>
             <TouchableOpacity
