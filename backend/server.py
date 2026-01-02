@@ -160,17 +160,28 @@ async def root():
 async def analyze_food(request: AnalyzeFoodRequest):
     """Analyze food image using OpenAI GPT-4 Vision"""
     try:
-        logger.info(f"Analyzing food for user: {request.userId}")
+        logger.info(f"Analyzing food for user: {request.userId} in language: {request.language}")
         
         # Initialize LLM chat with OpenAI GPT-4 Vision
         api_key = os.environ.get('EMERGENT_LLM_KEY')
         if not api_key:
             raise HTTPException(status_code=500, detail="API key not configured")
         
+        # Language-specific system message
+        language_instruction = ""
+        if request.language == "es":
+            language_instruction = "IMPORTANTE: Responde SIEMPRE en ESPAÑOL. Nombres de platos, ingredientes, advertencias - TODO en español."
+        elif request.language == "en":
+            language_instruction = "IMPORTANT: Respond ALWAYS in ENGLISH. Dish names, ingredients, warnings - EVERYTHING in English."
+        else:
+            language_instruction = f"IMPORTANT: Respond ALWAYS in {request.language.upper()}. All content must be in {request.language}."
+        
         chat = LlmChat(
             api_key=api_key,
             session_id=f"food_analysis_{request.userId}",
-            system_message="""You are a professional nutritionist AI that analyzes food photos. 
+            system_message=f"""{language_instruction}
+            
+            You are a professional nutritionist AI that analyzes food photos. 
             Provide accurate estimates of:
             - Dish name
             - Main ingredients (list of 3-5 items)
@@ -182,7 +193,7 @@ async def analyze_food(request: AnalyzeFoodRequest):
             - Health warnings if any (high calories, high fat, low protein, etc.)
             
             Return your response in this EXACT JSON format:
-            {
+            {{
               "dishName": "Name of the dish",
               "ingredients": ["ingredient1", "ingredient2", "ingredient3"],
               "calories": 500,
@@ -191,7 +202,7 @@ async def analyze_food(request: AnalyzeFoodRequest):
               "fats": 15.0,
               "portionSize": "medium",
               "warnings": ["High in sodium", "Low protein"]
-            }
+            }}
             
             Be realistic and accurate with estimates. If you can't identify the food clearly, say so in the dishName.
             """
