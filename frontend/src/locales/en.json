@@ -108,7 +108,11 @@
     "noMealsSubtext": "Start tracking your food to see your history",
     "premiumFeature": "Premium Feature",
     "premiumMessage": "Unlock unlimited meal tracking and detailed history with Premium",
-    "upgradeNow": "Upgrade Now"
+    "upgradeNow": "Upgrade Now",
+    "deleteTitle": "Delete Meal",
+    "deleteMessage": "Are you sure you want to delete this meal?",
+    "delete": "Delete",
+    "deleteFailed": "Failed to delete meal. Please try again."
   },
   "settings": {
     "title": "Settings",
