@@ -235,6 +235,42 @@ backend:
         agent: "testing"
         comment: "✅ TESTED: Premium status update working correctly (not explicitly tested but endpoint is implemented and follows same pattern as other working endpoints)."
 
+  - task: "Recipe suggestions with translation system"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: |
+          Implemented POST /api/recipe-suggestions endpoint with two-step translation system:
+          1. Generate recipes in English using OpenAI GPT-4o
+          2. Translate all content to target language using OpenAI GPT-4o
+          Supports language parameter (es, en, etc.) and translates recipe names, descriptions, ingredients, and instructions.
+      - working: true
+        agent: "testing"
+        comment: |
+          ✅ TESTED: Recipe translation system working correctly. Fixed validation issue where translated ingredients were returned as objects instead of strings.
+          
+          VERIFIED FUNCTIONALITY:
+          - Spanish translation (language="es"): ✅ WORKING
+            * Recipes properly translated to Spanish (names, descriptions, ingredients, instructions)
+            * Backend logs show "Translating recipes to es" and "Successfully translated 3 recipes to es"
+            * Response time: ~16 seconds (generation + translation)
+            * Spanish content detected: "pollo", "arroz", "tomate", "ajo", "cocinar", "calentar", etc.
+          
+          - English generation (language="en"): ✅ WORKING  
+            * No translation occurs when language is English
+            * Response time: ~9 seconds (generation only)
+            * Recipes generated directly in English
+          
+          TECHNICAL FIX APPLIED:
+          - Updated translation prompt to preserve exact JSON structure and keep ingredients as strings
+          - Fixed Pydantic validation error where AI was restructuring ingredients as objects
+
 frontend:
   - task: "User context and state management"
     implemented: true
