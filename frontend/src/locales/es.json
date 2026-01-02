@@ -108,7 +108,11 @@
     "noMealsSubtext": "Comienza a rastrear tu comida para ver tu historial",
     "premiumFeature": "Función Premium",
     "premiumMessage": "Desbloquea rastreo ilimitado e historial detallado con Premium",
-    "upgradeNow": "Actualizar Ahora"
+    "upgradeNow": "Actualizar Ahora",
+    "deleteTitle": "Eliminar Comida",
+    "deleteMessage": "¿Estás seguro de que quieres eliminar esta comida?",
+    "delete": "Eliminar",
+    "deleteFailed": "No se pudo eliminar la comida. Por favor, intenta de nuevo."
   },
   "settings": {
     "title": "Ajustes",
