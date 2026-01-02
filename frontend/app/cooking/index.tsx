@@ -129,6 +129,9 @@ export default function CookingScreen() {
       return;
     }
 
+    const currentLanguage = i18n.language;
+    console.log('Getting recipes in language:', currentLanguage); // Debug log
+
     setIsLoadingRecipes(true);
     try {
       const response = await fetch(`${API_URL}/api/recipe-suggestions`, {
@@ -137,7 +140,7 @@ export default function CookingScreen() {
         body: JSON.stringify({
           userId,
           ingredients: selectedIngredients,
-          language: i18n.language,
+          language: currentLanguage,
         }),
       });
 
