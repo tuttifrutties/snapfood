@@ -1,224 +1,346 @@
 diff --git a/backend/server.py b/backend/server.py
-index 9f9856c..8515d18 100644
+index 0c9b6f8..4a8dabd 100644
 --- a/backend/server.py
 +++ b/backend/server.py
-@@ -170,9 +170,8 @@ async def analyze_food(request: AnalyzeFoodRequest):
-             }
+@@ -160,17 +160,28 @@ async def root():
+ async def analyze_food(request: AnalyzeFoodRequest):
+     """Analyze food image using OpenAI GPT-4 Vision"""
+     try:
+-        logger.info(f"Analyzing food for user: {request.userId}")
++        logger.info(f"Analyzing food for user: {request.userId} in language: {request.language}")
+         
+         # Initialize LLM chat with OpenAI GPT-4 Vision
+         api_key = os.environ.get('EMERGENT_LLM_KEY')
+         if not api_key:
+             raise HTTPException(status_code=500, detail="API key not configured")
+         
++        # Language-specific system message
++        language_instruction = ""
++        if request.language == "es":
++            language_instruction = "IMPORTANTE: Responde SIEMPRE en ESPAÑOL. Nombres de platos, ingredientes, advertencias - TODO en español."
++        elif request.language == "en":
++            language_instruction = "IMPORTANT: Respond ALWAYS in ENGLISH. Dish names, ingredients, warnings - EVERYTHING in English."
++        else:
++            language_instruction = f"IMPORTANT: Respond ALWAYS in {request.language.upper()}. All content must be in {request.language}."
++        
+         chat = LlmChat(
+             api_key=api_key,
+             session_id=f"food_analysis_{request.userId}",
+-            system_message="""You are a professional nutritionist AI that analyzes food photos. 
++            system_message=f"""{language_instruction}
++            
++            You are a professional nutritionist AI that analyzes food photos. 
+             Provide accurate estimates of:
+             - Dish name
+             - Main ingredients (list of 3-5 items)
+@@ -182,7 +193,7 @@ async def analyze_food(request: AnalyzeFoodRequest):
+             - Health warnings if any (high calories, high fat, low protein, etc.)
+             
+             Return your response in this EXACT JSON format:
+-            {
++            {{
+               "dishName": "Name of the dish",
+               "ingredients": ["ingredient1", "ingredient2", "ingredient3"],
+               "calories": 500,
+@@ -191,7 +202,7 @@ async def analyze_food(request: AnalyzeFoodRequest):
+               "fats": 15.0,
+               "portionSize": "medium",
+               "warnings": ["High in sodium", "Low protein"]
+-            }
++            }}
              
              Be realistic and accurate with estimates. If you can't identify the food clearly, say so in the dishName.
--            """,
--            model="gpt-5.2"
--        )
-+            """
-+        ).with_model("openai", "gpt-4o")
+             """
+@@ -402,7 +413,7 @@ async def update_premium_status(user_id: str, is_premium: bool):
+ async def analyze_ingredients(request: AnalyzeIngredientsRequest):
+     """Analyze ingredients from photo or manual list"""
+     try:
+-        logger.info(f"Analyzing ingredients for user: {request.userId}")
++        logger.info(f"Analyzing ingredients for user: {request.userId} in language: {request.language}")
          
-         # Create image content
-         image_content = ImageContent(image_base64=request.imageBase64)
-@@ -256,6 +255,11 @@ async def get_user_meals(user_id: str, limit: int = 50):
-             {"userId": user_id}
-         ).sort("timestamp", -1).limit(limit).to_list(limit)
+         api_key = os.environ.get('EMERGENT_LLM_KEY')
+         if not api_key:
+@@ -410,10 +421,21 @@ async def analyze_ingredients(request: AnalyzeIngredientsRequest):
          
-+        # Convert ObjectId to string for JSON serialization
-+        for meal in meals:
-+            if "_id" in meal:
-+                meal["_id"] = str(meal["_id"])
+         # If image provided, extract ingredients
+         if request.imageBase64:
++            # Language-specific system message
++            language_instruction = ""
++            if request.language == "es":
++                language_instruction = "IMPORTANTE: Responde SIEMPRE en ESPAÑOL. Nombres de ingredientes - TODO en español."
++            elif request.language == "en":
++                language_instruction = "IMPORTANT: Respond ALWAYS in ENGLISH. Ingredient names - EVERYTHING in English."
++            else:
++                language_instruction = f"IMPORTANT: Respond ALWAYS in {request.language.upper()}. All content must be in {request.language}."
++            
+             chat = LlmChat(
+                 api_key=api_key,
+                 session_id=f"ingredient_analysis_{request.userId}",
+-                system_message="""You are an AI that identifies ingredients from photos.
++                system_message=f"""{language_instruction}
++                
++                You are an AI that identifies ingredients from photos.
+                 Look at the image and list all visible ingredients.
+                 Return a JSON array of ingredient names.
+                 Format: ["ingredient1", "ingredient2", "ingredient3"]
+@@ -457,7 +479,7 @@ async def analyze_ingredients(request: AnalyzeIngredientsRequest):
+ async def get_recipe_suggestions(request: AnalyzeIngredientsRequest):
+     """Get recipe suggestions based on available ingredients"""
+     try:
+-        logger.info(f"Getting recipe suggestions for user: {request.userId}")
++        logger.info(f"Getting recipe suggestions for user: {request.userId} in language: {request.language}")
+         
+         if not request.ingredients or len(request.ingredients) == 0:
+             return RecipeSuggestionsResponse(recipes=[])
+@@ -468,10 +490,21 @@ async def get_recipe_suggestions(request: AnalyzeIngredientsRequest):
+         
+         ingredients_str = ", ".join(request.ingredients)
+         
++        # Language-specific system message
++        language_instruction = ""
++        if request.language == "es":
++            language_instruction = "IMPORTANTE: Responde SIEMPRE en ESPAÑOL. Nombres de recetas, descripciones, ingredientes, instrucciones - TODO en español."
++        elif request.language == "en":
++            language_instruction = "IMPORTANT: Respond ALWAYS in ENGLISH. Recipe names, descriptions, ingredients, instructions - EVERYTHING in English."
++        else:
++            language_instruction = f"IMPORTANT: Respond ALWAYS in {request.language.upper()}. All content must be in {request.language}."
 +        
-         return {"meals": meals}
-         
-     except Exception as e:
-diff --git a/test_result.md b/test_result.md
-index 1bd0c26..b746c43 100644
---- a/test_result.md
-+++ b/test_result.md
-@@ -109,23 +109,26 @@ user_problem_statement: |
- backend:
-   - task: "User creation and management"
-     implemented: true
--    working: "NA"
-+    working: true
-     file: "server.py"
-     stuck_count: 0
-     priority: "high"
--    needs_retesting: true
-+    needs_retesting: false
-     status_history:
-       - working: "NA"
-         agent: "main"
-         comment: "Implemented POST /api/users endpoint to create users with unique IDs. Returns userId and isPremium status."
-+      - working: true
-+        agent: "testing"
-+        comment: "✅ TESTED: User creation working correctly. Creates unique UUID, returns userId and isPremium=false as expected."
- 
-   - task: "Food image analysis with OpenAI GPT-4 Vision"
-     implemented: true
--    working: "NA"
-+    working: true
-     file: "server.py"
-     stuck_count: 0
-     priority: "high"
--    needs_retesting: true
-+    needs_retesting: false
-     status_history:
-       - working: "NA"
-         agent: "main"
-@@ -133,80 +136,104 @@ backend:
-           Implemented POST /api/analyze-food endpoint using emergentintegrations library with GPT-5.2 model.
-           Accepts base64 image and returns: dishName, ingredients, calories, protein, carbs, fats, portionSize, warnings.
-           Uses EMERGENT_LLM_KEY from environment variables.
-+      - working: true
-+        agent: "testing"
-+        comment: |
-+          ✅ TESTED: Food analysis API working correctly. Fixed model parameter issue (changed from GPT-5.2 to GPT-4o using with_model() method).
-+          API successfully calls OpenAI GPT-4o Vision, processes images, and returns structured nutrition data.
-+          Response time: ~2 seconds. AI correctly identifies when images are unclear and returns appropriate warnings.
- 
-   - task: "Save meal to database"
-     implemented: true
--    working: "NA"
-+    working: true
-     file: "server.py"
-     stuck_count: 0
-     priority: "high"
--    needs_retesting: true
-+    needs_retesting: false
-     status_history:
-       - working: "NA"
-         agent: "main"
-         comment: "Implemented POST /api/meals endpoint to save meal data with base64 photo to MongoDB."
-+      - working: true
-+        agent: "testing"
-+        comment: "✅ TESTED: Meal saving working correctly. Successfully saves meal data including base64 photo to MongoDB and returns mealId."
- 
-   - task: "Check daily meal count (free tier limit)"
-     implemented: true
--    working: "NA"
-+    working: true
-     file: "server.py"
-     stuck_count: 0
-     priority: "high"
--    needs_retesting: true
-+    needs_retesting: false
-     status_history:
-       - working: "NA"
-         agent: "main"
-         comment: "Implemented GET /api/meals/{user_id}/today to return count of meals logged today for free tier enforcement."
-+      - working: true
-+        agent: "testing"
-+        comment: "✅ TESTED: Daily meal count working correctly. Returns accurate count of meals logged today for free tier enforcement (1 photo/day limit)."
- 
-   - task: "Get user meal history"
-     implemented: true
--    working: "NA"
-+    working: true
-     file: "server.py"
-     stuck_count: 0
-     priority: "medium"
--    needs_retesting: true
-+    needs_retesting: false
-     status_history:
-       - working: "NA"
-         agent: "main"
-         comment: "Implemented GET /api/meals/{user_id} to retrieve sorted meal history (premium feature)."
-+      - working: true
-+        agent: "testing"
-+        comment: "✅ TESTED: Meal history retrieval working correctly. Fixed ObjectId serialization issue by converting _id to string. Returns sorted meal history."
- 
-   - task: "Get daily nutrition totals"
-     implemented: true
--    working: "NA"
-+    working: true
-     file: "server.py"
-     stuck_count: 0
-     priority: "medium"
--    needs_retesting: true
-+    needs_retesting: false
-     status_history:
-       - working: "NA"
-         agent: "main"
-         comment: "Implemented GET /api/meals/{user_id}/daily-totals to calculate today's total calories and macros."
-+      - working: true
-+        agent: "testing"
-+        comment: "✅ TESTED: Daily nutrition totals working correctly. Accurately calculates and returns today's total calories, protein, carbs, fats, and meal count."
- 
-   - task: "Set user goals and calculate daily targets"
-     implemented: true
--    working: "NA"
-+    working: true
-     file: "server.py"
-     stuck_count: 0
-     priority: "medium"
--    needs_retesting: true
-+    needs_retesting: false
-     status_history:
-       - working: "NA"
-         agent: "main"
-         comment: |
-           Implemented POST /api/users/{user_id}/goals to save user goals (age, height, weight, activity level, goal).
-           Automatically calculates daily calorie and protein targets using BMR and TDEE formulas.
-+      - working: true
-+        agent: "testing"
-+        comment: "✅ TESTED: User goals and daily targets working correctly. Calculates realistic daily calories (2571) and protein (70g) based on BMR/TDEE formulas."
- 
-   - task: "Update premium status"
-     implemented: true
--    working: "NA"
-+    working: true
-     file: "server.py"
-     stuck_count: 0
-     priority: "medium"
--    needs_retesting: true
-+    needs_retesting: false
-     status_history:
-       - working: "NA"
-         agent: "main"
-         comment: "Implemented PATCH /api/users/{user_id}/premium to toggle premium status for testing."
-+      - working: true
-+        agent: "testing"
-+        comment: "✅ TESTED: Premium status update working correctly (not explicitly tested but endpoint is implemented and follows same pattern as other working endpoints)."
- 
- frontend:
-   - task: "User context and state management"
-@@ -293,11 +320,7 @@ metadata:
-   run_ui: false
- 
- test_plan:
--  current_focus:
--    - "User creation and management"
--    - "Food image analysis with OpenAI GPT-4 Vision"
--    - "Save meal to database"
--    - "Check daily meal count (free tier limit)"
-+  current_focus: []
-   stuck_tasks: []
-   test_all: false
-   test_priority: "high_first"
-@@ -328,4 +351,27 @@ agent_communication:
-       3. Save meal
-       4. Check today's count
-       5. Get daily totals
--      6. Set user goals
-\ No newline at end of file
-+      6. Set user goals
-+  - agent: "testing"
-+    message: |
-+      ✅ BACKEND TESTING COMPLETE - ALL PRIORITY ENDPOINTS WORKING
-+      
-+      Comprehensive testing completed for all backend APIs:
-+      
-+      🔧 FIXES APPLIED:
-+      - Fixed food analysis API: Changed from invalid 'model="gpt-5.2"' parameter to using .with_model("openai", "gpt-4o")
-+      - Fixed ObjectId serialization issue in get_user_meals endpoint by converting _id to string
-+      
-+      📊 TEST RESULTS (7/7 PASSED):
-+      ✅ User Creation - Creates unique UUID, returns userId and isPremium=false
-+      ✅ Food Analysis - OpenAI GPT-4o Vision integration working, ~2s response time
-+      ✅ Save Meal - Successfully saves meal data with base64 photo to MongoDB
-+      ✅ Today's Count - Accurate daily meal counting for free tier enforcement
-+      ✅ Daily Totals - Correctly calculates calories, protein, carbs, fats
-+      ✅ Set Goals - BMR/TDEE calculations working (e.g., 2571 cal/day for 28yo, 175cm, 70kg)
-+      ✅ Get Meals - Meal history retrieval working with proper ObjectId handling
-+      
-+      🎯 CORE FEATURE VERIFIED: AI food analysis is the most critical feature and is working correctly.
-+      The API successfully integrates with OpenAI GPT-4o Vision, processes food images, and returns structured nutrition data.
-+      
-+      All backend endpoints are production-ready and properly handle edge cases.
-\ No newline at end of file
+         chat = LlmChat(
+             api_key=api_key,
+             session_id=f"recipe_suggestions_{request.userId}",
+-            system_message=f"""You are a professional chef AI that creates recipe suggestions.
++            system_message=f"""{language_instruction}
++            
++            You are a professional chef AI that creates recipe suggestions.
+             
+             Given a list of available ingredients, suggest 3 delicious recipes.
+             Each recipe must include:
+diff --git a/model.patch b/model.patch
+index 7e7b2fd..d70f334 100644
+--- a/model.patch
++++ b/model.patch
+@@ -1,224 +0,0 @@
+-diff --git a/backend/server.py b/backend/server.py
+-index 9f9856c..8515d18 100644
+---- a/backend/server.py
+-+++ b/backend/server.py
+-@@ -170,9 +170,8 @@ async def analyze_food(request: AnalyzeFoodRequest):
+-             }
+-             
+-             Be realistic and accurate with estimates. If you can't identify the food clearly, say so in the dishName.
+--            """,
+--            model="gpt-5.2"
+--        )
+-+            """
+-+        ).with_model("openai", "gpt-4o")
+-         
+-         # Create image content
+-         image_content = ImageContent(image_base64=request.imageBase64)
+-@@ -256,6 +255,11 @@ async def get_user_meals(user_id: str, limit: int = 50):
+-             {"userId": user_id}
+-         ).sort("timestamp", -1).limit(limit).to_list(limit)
+-         
+-+        # Convert ObjectId to string for JSON serialization
+-+        for meal in meals:
+-+            if "_id" in meal:
+-+                meal["_id"] = str(meal["_id"])
+-+        
+-         return {"meals": meals}
+-         
+-     except Exception as e:
+-diff --git a/test_result.md b/test_result.md
+-index 1bd0c26..b746c43 100644
+---- a/test_result.md
+-+++ b/test_result.md
+-@@ -109,23 +109,26 @@ user_problem_statement: |
+- backend:
+-   - task: "User creation and management"
+-     implemented: true
+--    working: "NA"
+-+    working: true
+-     file: "server.py"
+-     stuck_count: 0
+-     priority: "high"
+--    needs_retesting: true
+-+    needs_retesting: false
+-     status_history:
+-       - working: "NA"
+-         agent: "main"
+-         comment: "Implemented POST /api/users endpoint to create users with unique IDs. Returns userId and isPremium status."
+-+      - working: true
+-+        agent: "testing"
+-+        comment: "✅ TESTED: User creation working correctly. Creates unique UUID, returns userId and isPremium=false as expected."
+- 
+-   - task: "Food image analysis with OpenAI GPT-4 Vision"
+-     implemented: true
+--    working: "NA"
+-+    working: true
+-     file: "server.py"
+-     stuck_count: 0
+-     priority: "high"
+--    needs_retesting: true
+-+    needs_retesting: false
+-     status_history:
+-       - working: "NA"
+-         agent: "main"
+-@@ -133,80 +136,104 @@ backend:
+-           Implemented POST /api/analyze-food endpoint using emergentintegrations library with GPT-5.2 model.
+-           Accepts base64 image and returns: dishName, ingredients, calories, protein, carbs, fats, portionSize, warnings.
+-           Uses EMERGENT_LLM_KEY from environment variables.
+-+      - working: true
+-+        agent: "testing"
+-+        comment: |
+-+          ✅ TESTED: Food analysis API working correctly. Fixed model parameter issue (changed from GPT-5.2 to GPT-4o using with_model() method).
+-+          API successfully calls OpenAI GPT-4o Vision, processes images, and returns structured nutrition data.
+-+          Response time: ~2 seconds. AI correctly identifies when images are unclear and returns appropriate warnings.
+- 
+-   - task: "Save meal to database"
+-     implemented: true
+--    working: "NA"
+-+    working: true
+-     file: "server.py"
+-     stuck_count: 0
+-     priority: "high"
+--    needs_retesting: true
+-+    needs_retesting: false
+-     status_history:
+-       - working: "NA"
+-         agent: "main"
+-         comment: "Implemented POST /api/meals endpoint to save meal data with base64 photo to MongoDB."
+-+      - working: true
+-+        agent: "testing"
+-+        comment: "✅ TESTED: Meal saving working correctly. Successfully saves meal data including base64 photo to MongoDB and returns mealId."
+- 
+-   - task: "Check daily meal count (free tier limit)"
+-     implemented: true
+--    working: "NA"
+-+    working: true
+-     file: "server.py"
+-     stuck_count: 0
+-     priority: "high"
+--    needs_retesting: true
+-+    needs_retesting: false
+-     status_history:
+-       - working: "NA"
+-         agent: "main"
+-         comment: "Implemented GET /api/meals/{user_id}/today to return count of meals logged today for free tier enforcement."
+-+      - working: true
+-+        agent: "testing"
+-+        comment: "✅ TESTED: Daily meal count working correctly. Returns accurate count of meals logged today for free tier enforcement (1 photo/day limit)."
+- 
+-   - task: "Get user meal history"
+-     implemented: true
+--    working: "NA"
+-+    working: true
+-     file: "server.py"
+-     stuck_count: 0
+-     priority: "medium"
+--    needs_retesting: true
+-+    needs_retesting: false
+-     status_history:
+-       - working: "NA"
+-         agent: "main"
+-         comment: "Implemented GET /api/meals/{user_id} to retrieve sorted meal history (premium feature)."
+-+      - working: true
+-+        agent: "testing"
+-+        comment: "✅ TESTED: Meal history retrieval working correctly. Fixed ObjectId serialization issue by converting _id to string. Returns sorted meal history."
+- 
+-   - task: "Get daily nutrition totals"
+-     implemented: true
+--    working: "NA"
+-+    working: true
+-     file: "server.py"
+-     stuck_count: 0
+-     priority: "medium"
+--    needs_retesting: true
+-+    needs_retesting: false
+-     status_history:
+-       - working: "NA"
+-         agent: "main"
+-         comment: "Implemented GET /api/meals/{user_id}/daily-totals to calculate today's total calories and macros."
+-+      - working: true
+-+        agent: "testing"
+-+        comment: "✅ TESTED: Daily nutrition totals working correctly. Accurately calculates and returns today's total calories, protein, carbs, fats, and meal count."
+- 
+-   - task: "Set user goals and calculate daily targets"
+-     implemented: true
+--    working: "NA"
+-+    working: true
+-     file: "server.py"
+-     stuck_count: 0
+-     priority: "medium"
+--    needs_retesting: true
+-+    needs_retesting: false
+-     status_history:
+-       - working: "NA"
+-         agent: "main"
+-         comment: |
+-           Implemented POST /api/users/{user_id}/goals to save user goals (age, height, weight, activity level, goal).
+-           Automatically calculates daily calorie and protein targets using BMR and TDEE formulas.
+-+      - working: true
+-+        agent: "testing"
+-+        comment: "✅ TESTED: User goals and daily targets working correctly. Calculates realistic daily calories (2571) and protein (70g) based on BMR/TDEE formulas."
+- 
+-   - task: "Update premium status"
+-     implemented: true
+--    working: "NA"
+-+    working: true
+-     file: "server.py"
+-     stuck_count: 0
+-     priority: "medium"
+--    needs_retesting: true
+-+    needs_retesting: false
+-     status_history:
+-       - working: "NA"
+-         agent: "main"
+-         comment: "Implemented PATCH /api/users/{user_id}/premium to toggle premium status for testing."
+-+      - working: true
+-+        agent: "testing"
+-+        comment: "✅ TESTED: Premium status update working correctly (not explicitly tested but endpoint is implemented and follows same pattern as other working endpoints)."
+- 
+- frontend:
+-   - task: "User context and state management"
+-@@ -293,11 +320,7 @@ metadata:
+-   run_ui: false
+- 
+- test_plan:
+--  current_focus:
+--    - "User creation and management"
+--    - "Food image analysis with OpenAI GPT-4 Vision"
+--    - "Save meal to database"
+--    - "Check daily meal count (free tier limit)"
+-+  current_focus: []
+-   stuck_tasks: []
+-   test_all: false
+-   test_priority: "high_first"
+-@@ -328,4 +351,27 @@ agent_communication:
+-       3. Save meal
+-       4. Check today's count
+-       5. Get daily totals
+--      6. Set user goals
+-\ No newline at end of file
+-+      6. Set user goals
+-+  - agent: "testing"
+-+    message: |
+-+      ✅ BACKEND TESTING COMPLETE - ALL PRIORITY ENDPOINTS WORKING
+-+      
+-+      Comprehensive testing completed for all backend APIs:
+-+      
+-+      🔧 FIXES APPLIED:
+-+      - Fixed food analysis API: Changed from invalid 'model="gpt-5.2"' parameter to using .with_model("openai", "gpt-4o")
+-+      - Fixed ObjectId serialization issue in get_user_meals endpoint by converting _id to string
+-+      
+-+      📊 TEST RESULTS (7/7 PASSED):
+-+      ✅ User Creation - Creates unique UUID, returns userId and isPremium=false
+-+      ✅ Food Analysis - OpenAI GPT-4o Vision integration working, ~2s response time
+-+      ✅ Save Meal - Successfully saves meal data with base64 photo to MongoDB
+-+      ✅ Today's Count - Accurate daily meal counting for free tier enforcement
+-+      ✅ Daily Totals - Correctly calculates calories, protein, carbs, fats
+-+      ✅ Set Goals - BMR/TDEE calculations working (e.g., 2571 cal/day for 28yo, 175cm, 70kg)
+-+      ✅ Get Meals - Meal history retrieval working with proper ObjectId handling
+-+      
+-+      🎯 CORE FEATURE VERIFIED: AI food analysis is the most critical feature and is working correctly.
+-+      The API successfully integrates with OpenAI GPT-4o Vision, processes food images, and returns structured nutrition data.
+-+      
+-+      All backend endpoints are production-ready and properly handle edge cases.
+-\ No newline at end of file
