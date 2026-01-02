@@ -138,7 +138,16 @@
     "enablePremiumTitle": "¿Activar Premium?",
     "enablePremiumMessage": "Esto activará todas las funciones premium para pruebas",
     "disablePremiumTitle": "¿Desactivar Premium?",
-    "disablePremiumMessage": "Esto desactivará todas las funciones premium"
+    "disablePremiumMessage": "Esto desactivará todas las funciones premium",
+    "notifications": "Notificaciones",
+    "mealReminders": "Recordatorios de Comidas",
+    "mealRemindersDesc": "Recibe recordatorios antes del almuerzo y la cena",
+    "lunchReminder": "Recordatorio de Almuerzo",
+    "lunchReminderDesc": "2 horas antes del almuerzo (10:00 AM)",
+    "dinnerReminder": "Recordatorio de Cena",
+    "dinnerReminderDesc": "2 horas antes de la cena (6:00 PM)",
+    "notificationsEnabled": "Notificaciones activadas",
+    "notificationsDisabled": "Notificaciones desactivadas"
   },
   "paywall": {
     "title": "Actualizar a Premium",
