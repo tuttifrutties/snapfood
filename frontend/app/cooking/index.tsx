@@ -35,18 +35,51 @@ const COMMON_INGREDIENTS_ES = [
 ];
 
 export default function CookingScreen() {
-  const { userId } = useUser();
+  const { userId, isPremium } = useUser();
   const router = useRouter();
   const { t, i18n } = useTranslation();
   const [mode, setMode] = useState<'select' | 'photo' | 'manual' | 'results'>('select');
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState('')
   const [recipes, setRecipes] = useState<any[]>([]);
   const [isLoadingRecipes, setIsLoadingRecipes] = useState(false);
+  const [todayCookingCount, setTodayCookingCount] = useState(0);
 
   const ingredientList = i18n.language === 'es' ? COMMON_INGREDIENTS_ES : COMMON_INGREDIENTS;
+
+  useEffect(() => {
+    checkTodayCookingCount();
+  }, [userId]);
+
+  const checkTodayCookingCount = async () => {
+    if (!userId) return;
+    try {
+      const key = `cooking_count_${userId}_${new Date().toDateString()}`;
+      const count = await AsyncStorage.getItem(key);
+      setTodayCookingCount(count ? parseInt(count) : 0);
+    } catch (error) {
+      console.error('Failed to check cooking count:', error);
+    }
+  };
+
+  const incrementCookingCount = async () => {
+    if (!userId) return;
+    try {
+      const key = `cooking_count_${userId}_${new Date().toDateString()}`;
+      const newCount = todayCookingCount + 1;
+      await AsyncStorage.setItem(key, newCount.toString());
+      setTodayCookingCount(newCount);
+    } catch (error) {
+      console.error('Failed to increment cooking count:', error);
+    }
+  };
+
+  const canUseCooking = () => {
+    if (isPremium) return true;
+    return todayCookingCount < 1;
+  };
 
   const filteredIngredients = ingredientList.filter(ing =>
     ing.toLowerCase().includes(searchQuery.toLowerCase())
