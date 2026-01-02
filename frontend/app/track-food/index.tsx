@@ -72,6 +72,7 @@ export default function TrackFoodScreen() {
         body: JSON.stringify({
           userId,
           imageBase64: base64Image,
+          language: i18n.language, // Send current language
         }),
       });
 
