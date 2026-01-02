@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Switch,
   Alert,
+  Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useUser } from '../../src/contexts/UserContext';
@@ -14,14 +15,24 @@ import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from 'react-i18next';
 import { changeLanguage } from '../../src/i18n';
+import {
+  registerForPushNotificationsAsync,
+  scheduleLunchReminder,
+  scheduleDinnerReminder,
+  getLunchReminderStatus,
+  getDinnerReminderStatus,
+  sendTestNotification,
+} from '../../src/services/notifications';
 
 export default function SettingsScreen() {
   const { isPremium, setPremium } = useUser();
   const router = useRouter();
   const { t, i18n } = useTranslation();
-  const [saveToGallery, setSaveToGallery] = React.useState(true);
+  const [saveToGallery, setSaveToGallery] = useState(true);
+  const [lunchReminder, setLunchReminder] = useState(false);
+  const [dinnerReminder, setDinnerReminder] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     loadSettings();
   }, []);
 
@@ -30,6 +41,12 @@ export default function SettingsScreen() {
     if (savedPref !== null) {
       setSaveToGallery(savedPref === 'true');
     }
+    
+    // Load notification settings
+    const lunchStatus = await getLunchReminderStatus();
+    const dinnerStatus = await getDinnerReminderStatus();
+    setLunchReminder(lunchStatus);
+    setDinnerReminder(dinnerStatus);
   };
 
   const toggleSaveToGallery = async (value: boolean) => {
@@ -37,9 +54,47 @@ export default function SettingsScreen() {
     await AsyncStorage.setItem('saveToGallery', value.toString());
   };
 
+  const toggleLunchReminder = async (value: boolean) => {
+    if (value) {
+      await registerForPushNotificationsAsync();
+    }
+    await scheduleLunchReminder(value, i18n.language);
+    setLunchReminder(value);
+    
+    if (value) {
+      Alert.alert(
+        t('settings.notificationsEnabled'),
+        t('settings.lunchReminderDesc')
+      );
+    }
+  };
+
+  const toggleDinnerReminder = async (value: boolean) => {
+    if (value) {
+      await registerForPushNotificationsAsync();
+    }
+    await scheduleDinnerReminder(value, i18n.language);
+    setDinnerReminder(value);
+    
+    if (value) {
+      Alert.alert(
+        t('settings.notificationsEnabled'),
+        t('settings.dinnerReminderDesc')
+      );
+    }
+  };
+
   const toggleLanguage = async () => {
     const newLang = i18n.language === 'en' ? 'es' : 'en';
     await changeLanguage(newLang);
+    
+    // Update notifications with new language
+    if (lunchReminder) {
+      await scheduleLunchReminder(true, newLang);
+    }
+    if (dinnerReminder) {
+      await scheduleDinnerReminder(true, newLang);
+    }
   };
 
   const simulatePremiumToggle = () => {
