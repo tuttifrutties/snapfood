@@ -54,7 +54,7 @@ export default function HomeScreen() {
     if (!isPremium) {
       Alert.alert(
         t('cooking.premiumFeature'),
-        t('cooking.premiumFeatureMessage'),
+        'Recipe suggestions are only available for Premium users. Upgrade now to unlock unlimited cooking ideas!',
         [
           { text: t('common.cancel'), style: 'cancel' },
           { text: t('history.upgradeNow'), onPress: () => router.push('/paywall') },
