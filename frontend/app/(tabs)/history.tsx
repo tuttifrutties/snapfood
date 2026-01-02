@@ -78,7 +78,7 @@ export default function HistoryScreen() {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.headerTitle}>{t('history.title')}</Text>
+          <Text style={styles.headerSubtitle}>{t('history.subtitle')}</Text>
         </View>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color="#FF6B6B" />
@@ -90,7 +90,7 @@ export default function HistoryScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>{t('history.title')}</Text>
+        <Text style={styles.headerSubtitle}>{t('history.subtitle')}</Text>
       </View>
 
       {dailyTotals && dailyTotals.mealCount > 0 && (
