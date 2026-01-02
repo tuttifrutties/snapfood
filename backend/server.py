@@ -151,6 +151,71 @@ def calculate_daily_needs(age: int, height: float, weight: float, activity_level
     
     return daily_calories, daily_protein
 
+# Helper function to translate recipes to target language
+async def translate_recipes(recipes_data: list, target_language: str, api_key: str):
+    """Translate all recipe content to target language using OpenAI"""
+    try:
+        import json
+        
+        language_names = {
+            "es": "Spanish",
+            "en": "English",
+            "fr": "French",
+            "de": "German",
+            "it": "Italian",
+            "pt": "Portuguese"
+        }
+        
+        target_lang_name = language_names.get(target_language, target_language)
+        
+        # Create translation prompt
+        chat = LlmChat(
+            api_key=api_key,
+            session_id=f"translation_{target_language}",
+            system_message=f"""You are a professional translator specializing in culinary content.
+            
+            Translate ALL recipe content to {target_lang_name}. This includes:
+            - Recipe names
+            - Descriptions  
+            - Ingredients (both the ingredient names AND quantities)
+            - Step-by-step instructions
+            - Healthier options
+            
+            CRITICAL: Return the EXACT same JSON structure, only translate the text values.
+            Preserve all numbers, measurements, and JSON structure.
+            
+            Example translations to {target_lang_name}:
+            - "2 cups of milk" → {'"2 tazas de leche"' if target_language == "es" else '"2 cups of milk"'}
+            - "Preheat oven to 350°F" → {'"Precalentar el horno a 175°C"' if target_language == "es" else '"Preheat oven to 350°F"'}
+            
+            Return only the translated JSON, no explanations."""
+        ).with_model("openai", "gpt-4o")
+        
+        # Convert recipes to JSON string for translation
+        recipes_json = json.dumps(recipes_data, ensure_ascii=False, indent=2)
+        
+        user_message = UserMessage(
+            text=f"Translate this recipe JSON to {target_lang_name}. Return only the translated JSON:\n\n{recipes_json}"
+        )
+        
+        response = await chat.send_message(user_message)
+        
+        # Parse translated response
+        response_text = response.strip()
+        if "```json" in response_text:
+            response_text = response_text.split("```json")[1].split("```")[0].strip()
+        elif "```" in response_text:
+            response_text = response_text.split("```")[1].split("```")[0].strip()
+        
+        translated_recipes = json.loads(response_text)
+        logger.info(f"Successfully translated {len(translated_recipes)} recipes to {target_language}")
+        
+        return translated_recipes
+        
+    except Exception as e:
+        logger.error(f"Translation failed: {e}. Returning original recipes.")
+        return recipes_data  # Return original if translation fails
+
 # Routes
 @api_router.get("/")
 async def root():
