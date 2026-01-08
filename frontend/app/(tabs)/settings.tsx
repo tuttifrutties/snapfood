@@ -97,20 +97,6 @@ export default function SettingsScreen() {
     }
   };
 
-  const simulatePremiumToggle = () => {
-    Alert.alert(
-      isPremium ? t('settings.disablePremiumTitle') : t('settings.enablePremiumTitle'),
-      isPremium ? t('settings.disablePremiumMessage') : t('settings.enablePremiumMessage'),
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: t('common.confirm'),
-          onPress: () => setPremium(!isPremium),
-        },
-      ]
-    );
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
