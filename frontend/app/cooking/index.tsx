@@ -10,30 +10,17 @@ import {
   Alert,
   TextInput,
   FlatList,
+  SectionList,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
-import { useUser } from '@/src/contexts/UserContext';
+import { useUser } from '@/contexts/UserContext';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getIngredientsByCategory, searchIngredients, getTotalIngredientsCount } from '@/data/ingredients';
 
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
-
-// Common ingredient list
-const COMMON_INGREDIENTS = [
-  'Chicken', 'Beef', 'Pork', 'Fish', 'Eggs', 'Milk', 'Cheese', 'Butter',
-  'Rice', 'Pasta', 'Bread', 'Flour', 'Potatoes', 'Tomatoes', 'Onions',
-  'Garlic', 'Carrots', 'Broccoli', 'Lettuce', 'Spinach', 'Bell Peppers',
-  'Mushrooms', 'Beans', 'Lentils', 'Olive Oil', 'Salt', 'Pepper',
-];
-
-const COMMON_INGREDIENTS_ES = [
-  'Pollo', 'Carne', 'Cerdo', 'Pescado', 'Huevos', 'Leche', 'Queso', 'Mantequilla',
-  'Arroz', 'Pasta', 'Pan', 'Harina', 'Papas', 'Tomates', 'Cebollas',
-  'Ajo', 'Zanahorias', 'Brócoli', 'Lechuga', 'Espinaca', 'Pimientos',
-  'Champiñones', 'Frijoles', 'Lentejas', 'Aceite de Oliva', 'Sal', 'Pimienta',
-];
 
 export default function CookingScreen() {
   const { userId, isPremium } = useUser();
