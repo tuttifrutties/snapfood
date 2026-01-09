@@ -87,20 +87,22 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   };
 
   const setPremium = async (premium: boolean) => {
-    if (!userId) return;
-    
     try {
       // Update locally first for immediate UI feedback
+      console.log('Setting premium to:', premium);
       setIsPremium(premium);
       await AsyncStorage.setItem('isPremium', premium.toString());
+      console.log('Premium state updated successfully');
       
-      // Then update on server
-      const response = await fetch(`${API_URL}/api/users/${userId}/premium?is_premium=${premium}`, {
-        method: 'PATCH',
-      });
-      
-      if (!response.ok) {
-        console.error('Server error updating premium');
+      // Then update on server if userId exists
+      if (userId) {
+        const response = await fetch(`${API_URL}/api/users/${userId}/premium?is_premium=${premium}`, {
+          method: 'PATCH',
+        });
+        
+        if (!response.ok) {
+          console.error('Server error updating premium');
+        }
       }
     } catch (error) {
       console.error('Failed to update premium status:', error);
