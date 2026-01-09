@@ -77,9 +77,13 @@ export default function CookingScreen() {
     return todayCookingCount < 1;
   };
 
-  const filteredIngredients = ingredientList.filter(ing =>
-    ing.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const toggleCategory = (categoryId: string) => {
+    if (expandedCategories.includes(categoryId)) {
+      setExpandedCategories(expandedCategories.filter(id => id !== categoryId));
+    } else {
+      setExpandedCategories([...expandedCategories, categoryId]);
+    }
+  };
 
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
