@@ -9,7 +9,8 @@
     "close": "Cerrar",
     "confirm": "Confirmar",
     "error": "Error",
-    "success": "Éxito"
+    "success": "Éxito",
+    "clear": "Limpiar"
   },
   "navigation": {
     "home": "Inicio",
