@@ -189,8 +189,8 @@
     "noSubscriptionMessage": "We couldn't find any previous purchases to restore.",
     "restoreFailed": "Restore Failed",
     "alreadyPremium": "You're Already Premium!",
-    "enjoyFeatures": "You have access to all premium features."
-  },
+    "enjoyFeatures": "You have access to all premium features.",
+    "goBack": "Go Back"
   },
   "legal": {
     "privacyTitle": "Privacy Policy",
