@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.maiostudio.foodsnap",
+      "bundleIdentifier": "com.snapfood.app",
       "infoPlist": {
         "NSCameraUsageDescription": "FoodSnap needs camera access to take photos of your food for nutrition analysis.",
         "NSPhotoLibraryUsageDescription": "FoodSnap needs photo library access to select food photos for analysis."
@@ -22,13 +22,14 @@
         "backgroundColor": "#FF6B6B"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.maiostudio.foodsnap",
+      "package": "com.snapfood.app",
       "permissions": [
         "CAMERA",
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE",
         "RECEIVE_BOOT_COMPLETED",
-        "SCHEDULE_EXACT_ALARM"
+        "SCHEDULE_EXACT_ALARM",
+        "com.android.vending.BILLING"
       ]
     },
     "web": {
