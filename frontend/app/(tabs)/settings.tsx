@@ -10,7 +10,7 @@ import {
   Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useUser } from '../../src/contexts/UserContext';
+import { usePremium } from '../../src/contexts/PremiumContext';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from 'react-i18next';
@@ -21,11 +21,10 @@ import {
   scheduleDinnerReminder,
   getLunchReminderStatus,
   getDinnerReminderStatus,
-  sendTestNotification,
 } from '../../src/services/notifications';
 
 export default function SettingsScreen() {
-  const { isPremium, setPremium } = useUser();
+  const { isPremium } = usePremium();
   const router = useRouter();
   const { t, i18n } = useTranslation();
   const [saveToGallery, setSaveToGallery] = useState(true);
@@ -94,17 +93,6 @@ export default function SettingsScreen() {
     }
     if (dinnerReminder) {
       await scheduleDinnerReminder(true, newLang);
-    }
-  };
-
-  const toggleDeveloperPremium = async () => {
-    // Toggle premium directly without confirmation for easier testing
-    console.log('Toggle premium clicked, current state:', isPremium);
-    try {
-      await setPremium(!isPremium);
-      console.log('Premium toggled to:', !isPremium);
-    } catch (error) {
-      console.error('Error toggling premium:', error);
     }
   };
 
@@ -238,24 +226,6 @@ export default function SettingsScreen() {
           >
             <Text style={styles.menuText}>{t('settings.helpSupport')}</Text>
             <Ionicons name="chevron-forward" size={20} color="#aaa" />
-          </TouchableOpacity>
-        </View>
-
-        {/* Developer Section - Remove before production */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{t('settings.developer')}</Text>
-          <TouchableOpacity
-            style={[styles.testButton, isPremium && styles.testButtonActive]}
-            onPress={toggleDeveloperPremium}
-          >
-            <Ionicons 
-              name={isPremium ? "star" : "star-outline"} 
-              size={20} 
-              color={isPremium ? "#FFD700" : "#FF6B6B"} 
-            />
-            <Text style={styles.testButtonText}>
-              {isPremium ? t('settings.testDisablePremium') : t('settings.testPremium')}
-            </Text>
           </TouchableOpacity>
         </View>
 
@@ -394,26 +364,6 @@ const styles = StyleSheet.create({
   },
   menuText: {
     fontSize: 16,
-    color: '#fff',
-  },
-  testButton: {
-    flexDirection: 'row',
-    backgroundColor: '#1a1a1a',
-    padding: 16,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-    borderWidth: 2,
-    borderColor: '#FF6B6B',
-  },
-  testButtonActive: {
-    borderColor: '#FFD700',
-    backgroundColor: '#FFD70010',
-  },
-  testButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
     color: '#fff',
   },
   versionContainer: {
