@@ -118,6 +118,8 @@ class Recipe(BaseModel):
     carbs: float
     fats: float
     healthierOption: Optional[str] = None
+    countryOfOrigin: Optional[str] = None  # Country or region where this dish originates
+    cuisine: Optional[str] = None  # Type of cuisine (Italian, Mexican, Chinese, etc.)
 
 class RecipeSuggestionsResponse(BaseModel):
     recipes: List[Recipe]
