@@ -583,13 +583,15 @@ async def get_recipe_suggestions(request: AnalyzeIngredientsRequest):
         chat = LlmChat(
             api_key=api_key,
             session_id=f"recipe_suggestions_{request.userId}",
-            system_message="""You are a professional chef AI that creates recipe suggestions.
+            system_message="""You are a professional chef AI that creates diverse, international recipe suggestions.
             
-            Given a list of available ingredients, suggest 3 delicious recipes.
+            Given a list of available ingredients, suggest 8 different recipes from around the world.
+            IMPORTANT: Include recipes from DIFFERENT cuisines and countries. Mix it up!
+            
             Each recipe must include:
             - name: Recipe name
-            - description: Brief description
-            - ingredients: List of ingredients with quantities (use the available ingredients)
+            - description: Brief description of the dish
+            - ingredients: List of ingredients with quantities. ALWAYS include "Salt and pepper to taste" as a standard ingredient
             - instructions: Step-by-step cooking instructions (array of strings, each step is clear)
             - cookingTime: Total time in minutes
             - servings: Number of servings
@@ -598,15 +600,17 @@ async def get_recipe_suggestions(request: AnalyzeIngredientsRequest):
             - carbs: Carbohydrates in grams per serving
             - fats: Fats in grams per serving
             - healthierOption: Optional suggestion for making it healthier
+            - countryOfOrigin: Country where this dish originates (e.g., "Italy", "Mexico", "China", "India", "Japan", "Thailand", "France", "Peru", "Morocco", "Korea", etc.)
+            - cuisine: Type of cuisine (e.g., "Italian", "Mexican", "Chinese", "Indian", "Japanese", "Thai", "French", "Peruvian", "Moroccan", "Korean", "American", "Mediterranean", etc.)
             
-            Return as JSON array of recipes.
+            Return as JSON array of 8 recipes.
             Make recipes beginner-friendly with clear, sequential instructions.
-            Adapt to time of day (lighter meals for evening if possible).
+            Include recipes from at least 5 different countries/cuisines.
             """
         ).with_model("openai", "gpt-4o")
         
         user_message = UserMessage(
-            text=f"Create 3 recipe suggestions using these available ingredients: {ingredients_str}. Return as JSON array."
+            text=f"Create 8 diverse recipe suggestions from different world cuisines using these available ingredients: {ingredients_str}. Include at least 5 different countries of origin. Return as JSON array."
         )
         
         response = await chat.send_message(user_message)
