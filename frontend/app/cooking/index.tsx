@@ -30,12 +30,20 @@ export default function CookingScreen() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchQuery, setSearchQuery] = useState('');
   const [recipes, setRecipes] = useState<any[]>([]);
   const [isLoadingRecipes, setIsLoadingRecipes] = useState(false);
   const [todayCookingCount, setTodayCookingCount] = useState(0);
+  const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
 
-  const ingredientList = i18n.language === 'es' ? COMMON_INGREDIENTS_ES : COMMON_INGREDIENTS;
+  // Get ingredients by category based on current language
+  const ingredientCategories = getIngredientsByCategory(i18n.language as 'en' | 'es');
+  const totalIngredients = getTotalIngredientsCount();
+
+  // Search results
+  const searchResults = searchQuery.trim() 
+    ? searchIngredients(searchQuery, i18n.language as 'en' | 'es')
+    : [];
 
   useEffect(() => {
     checkTodayCookingCount();
