@@ -1,138 +1,109 @@
 <analysis>
 <original_problem_statement>
-The user wants to build a full-featured, freemium mobile app for iOS and Android called FoodSnap.
+The user wants to build a full-featured, freemium mobile app for iOS and Android called FoodSnap. The app is largely functional, and the user's latest requests focus on making it production-ready and enhancing core features.
 
-**PRODUCT REQUIREMENTS:**
+**LATEST PRODUCT REQUIREMENTS (In addition to the original concept):**
 
-**Core Concept:**
-- An app that uses food photos to estimate calories and macronutrients, track nutrition, and suggest meals.
+**1. Production-Ready Monetization (RevenueCat):**
+- Integrate RevenueCat for real in-app subscriptions.
+- Android package name: .
+- Use entitlement  and offering .
+- Remove all developer/test toggles for enabling premium.
+- Implement a paywall showing monthly (.99/mo) and annual (9.99/yr) options with dynamic pricing from RevenueCat.
+- Include a Restore Purchases button.
+- Gate all premium features using the RevenueCat entitlement status.
 
-**Freemium Model:**
-- **Free Version:**
-  - **(Updated)** 2 food photo analyses per day (originally 1).
-  - Shows calories and macros for each meal.
-  - Displays ads (to be implemented, suggested before taking a photo).
-  - **(Updated)** NO cooking suggestions feature. This is now exclusive to premium.
-  - No advanced history or smart notifications.
-- **Paid Version (Premium):**
-  - Price: .99/month, 9.99/year.
-  - Unlimited food photos.
-  - Full nutrition history.
-  - What should I cook? feature with full recipes.
-  - Smart evening notifications.
-  - No ads.
+**2. Global What to Cook? Feature:**
+- The ingredient list must be massive, containing hundreds of globally sourced ingredients (fruits, vegetables, proteins from all continents).
+- Implement an ingredient search bar.
+- Remove Salt and Pepper as selectable ingredients. The AI should assume they are available and mention to taste in recipes.
+- The AI should return many more recipe suggestions (e.g., 8 instead of 3).
+- Each recipe must include its **country of origin**.
 
-**Key Features:**
-- **Food Photo Logging:** Take a photo, get AI analysis (dish name, ingredients, portion, calories, macros), and save to history.
-- **What should I cook? (Premium):** Take a photo of ingredients or use a checklist to get recipe suggestions with full instructions, cooking time, and variations.
-- **Multilingual Support:** The app must automatically detect device language (English/Spanish) and translate all content, including AI-generated recipes and analysis.
-- **Functional Screens:** Implement Home (with two main actions), Cooking Flow, History, Settings (with language switcher), and fully functional legal pages (Privacy, Terms, Help).
-- **Recipes:** All recipes must be beginner-friendly with step-by-step instructions.
+**3. Feature Enhancements:**
+- **Portion Selector:** When tracking a meal, allow the user to select the portion size (from 0.5 to 3 plates), which adjusts the nutritional info accordingly.
+- **Delete History:** Allow users to delete a previously logged meal from their history.
+- **Push Notifications:** Implement push notifications to remind users about lunch and dinner.
+
+**4. UI/UX Polish:**
+- Fix UI layout issues, such as the tab bar overlapping with Android system navigation buttons (SafeArea).
+- Remove repetitive titles on screens (e.g., History in the header and again in the content).
+- Remove the developer-only Test Premium button before final production.
 </original_problem_statement>
 
 **User's preferred language**: The user communicates in Spanish. The next agent MUST respond in Spanish.
 
 **what currently exists?**
-A full-stack Expo (React Native) and FastAPI application has been built.
-- **Frontend:** A multi-screen application using Expo Router. It includes screens for onboarding, home, food tracking, cooking suggestions, settings, paywall, and legal info. Internationalization (i18n) is set up for English and Spanish, translating UI elements.
-- **Backend:** A FastAPI server with endpoints for user management, AI-powered food analysis (), ingredient analysis (), and recipe suggestions (). It integrates with OpenAI GPT-4o.
-- **AI-Content Translation:** A new backend mechanism has been implemented. It first gets recipe/analysis data from OpenAI in English and then uses a separate call to OpenAI to translate that content into the user's selected language (, , etc.). This was a workaround for the primary issue of AI not respecting the language prompt.
+The project is a full-stack Expo (React Native) and FastAPI application.
+- **Frontend:** Most features are implemented, including a massively expanded What to Cook? feature with a searchable, categorized database of over 500 global ingredients. Portion selection for meal tracking and the ability to delete meals from history are also complete. Basic push notifications are configured. The app has been configured for release with a name (FoodSnap), version, icons, and a bundle ID (). A developer toggle for premium access was re-added for testing purposes and is currently functional.
+- **Backend:** The FastAPI server has been updated to support the new frontend features. It can generate up to 8 recipes, includes the country of origin, and handles meal deletion via a new  endpoint.
+- **Monetization:** The agent has just begun integrating the RevenueCat SDK ().
 
 **Last working item**:
-- Last item agent was working on: Implementing an internal, backend-side translation system for all AI-generated content as a workaround for OpenAI not respecting the language parameter in prompts. The agent also updated the backend logic to enforce the new freemium rules (2 photos/day, no cooking for free users). The agent was about to update the frontend to reflect these changes.
+- Last item agent was working on: Integrating RevenueCat for production-ready in-app purchases. The agent had installed the SDK, updated  with the correct Android package name (), added RevenueCat keys to , created a new , wrapped the root layout with its provider, and was in the process of overwriting  with a new implementation using RevenueCat's UI and adding the necessary translations.
 - Status: IN PROGRESS
 - Agent Testing Done: N
-- Which testing method agent to use? Both. First, use  to test the backend  endpoint to verify that the translation layer works. Then, manually test the frontend flow after the UI changes are made to confirm the new freemium limits are correctly applied and displayed.
+- Which testing method agent to use? Frontend testing agent. After the implementation is complete, the agent must use the screenshot tool to verify that the new paywall UI loads correctly, fetches offerings from RevenueCat (mocked if necessary), and displays dynamic prices. The agent must also verify that the Restore Purchases button is present. Since real purchases cannot be made, the purchase flow itself cannot be fully tested.
 - User Testing Done: N
 
 **All Pending/In progress Issue list**:
--   Issue 1: AI-generated content (recipes, ingredients) appears in English despite the user selecting Spanish. (P0)
--   Issue 2: The What should I cook? feature is still accessible to free users, which contradicts the new user requirement. (P1)
--   Issue 3: The daily photo limit for free users is still 1 instead of the newly requested 2. (P1)
+-   Issue 1: The Expo Go mobile app frequently fails to connect or load the update (). This is a recurring environmental issue. (P2)
 
 **Issues Detail**:
-- **Issue 1: AI-generated content is in English**
-    - **Attempted fixes:**
-        1.  Passing a  parameter to the backend and including it in the OpenAI prompt. This failed; the model continued to respond in English.
-        2.  Forcing a read from  on the frontend to get the language. This also failed; the backend logs showed the language was still being received as 'en'.
-        3.  **Current approach:** An internal translation layer was added to the backend. The backend now requests content from OpenAI in English, and then makes a second OpenAI call to translate the response into the user's specified language.
-    - **Next debug checklist:**
-        1.  The user needs to test the recipe generation feature again to verify if the new backend translation system works.
-        2.  If it still fails, check the backend logs (==> Press Ctrl-C to exit <==
-fc19d7-ba72-4fe5-a2e5-ac687d2dda00/today HTTP/1.1" 200 OK
-INFO:     10.64.128.205:36316 - "GET /api/meals/5cfc19d7-ba72-4fe5-a2e5-ac687d2dda00/today HTTP/1.1" 200 OK
-INFO:     10.64.128.53:55490 - "GET /api/users/6455186f-8078-490a-96f2-3f50ffc42a31 HTTP/1.1" 200 OK
-INFO:     10.64.130.160:58864 - "GET /api/meals/6455186f-8078-490a-96f2-3f50ffc42a31/today HTTP/1.1" 200 OK
-INFO:     10.64.130.160:32876 - "GET /api/meals/6455186f-8078-490a-96f2-3f50ffc42a31/today HTTP/1.1" 200 OK
-INFO:     10.64.128.53:38300 - "PATCH /api/users/6455186f-8078-490a-96f2-3f50ffc42a31/premium?is_premium=false HTTP/1.1" 200 OK
-INFO:     10.64.128.6:48742 - "PATCH /api/users/6455186f-8078-490a-96f2-3f50ffc42a31/premium?is_premium=true HTTP/1.1" 200 OK
-INFO:     10.64.128.6:45444 - "POST /api/recipe-suggestions HTTP/1.1" 200 OK
-INFO:     10.64.130.165:52182 - "GET /api/users/5cfc19d7-ba72-4fe5-a2e5-ac687d2dda00 HTTP/1.1" 200 OK
-INFO:     10.64.130.165:52182 - "GET /api/meals/5cfc19d7-ba72-4fe5-a2e5-ac687d2dda00/today HTTP/1.1" 200 OK) to see the flow: the initial recipe generation call, and the subsequent translation call. Verify the correct language code is used in the translation prompt.
-        3.  Check the frontend  file to ensure the  parameter is correctly passed during the API call to .
-    - **Why fix this issue and what will be achieved with the fix?** The app's core value proposition for non-English speakers depends on providing content in their native language. Fixing this is critical for user experience and retention.
-    - **Status:** IN PROGRESS
+- **Issue 1: Expo Go Connection Failure**
+    - **Attempted fixes:** Restarting services, clearing the Expo cache ([03:53:02] Starting project at /app/frontend). These have not been reliable. The  previously identified a misconfiguration in  as a potential cause, but this is a protected variable.
+    - **Next debug checklist:** The most reliable workaround is to **use the web preview URL in the mobile browser**. The next agent should recommend this to the user instead of spending time debugging Expo Go.
+    - **Why fix this issue and what will be achieved with the fix?** Fixing this would allow the user to test on their device using the preferred Expo Go app, which provides a more native testing experience. However, given it's an environmental issue, focusing on the workaround is more efficient.
+    - **Status:** NOT STARTED
     - **Is recurring issue?** Y
-    - **Should Test frontend/backend/both after fix?** Both.
-    - **Blocked on other issue:** None.
-
-- **Issue 2: What should I cook? accessible to free users**
-    - **Attempted fixes:** The backend logic in  was updated to check for premium status, but the frontend UI hasn't been changed yet.
-    - **Next debug checklist:**
-        1.  Modify  (the Home screen).
-        2.  Wrap the What Should I Cook? button/logic in a conditional that checks .
-        3.  If the user is not premium, the button should either be disabled or navigate to the paywall screen.
-    - **Why fix this issue and what will be achieved with the fix?** To align the app with the user's specified business model and properly monetize the premium feature.
-    - **Status:** NOT STARTED (on the frontend)
-    - **Is recurring issue?** N
-    - **Should Test frontend/backend/both after fix?** Frontend.
-    - **Blocked on other issue:** None.
-
-- **Issue 3: Incorrect photo limit for free users**
-    - **Attempted fixes:** The backend logic in  within the  endpoint was updated to allow 2 daily logs for free users. The frontend has not been updated.
-    - **Next debug checklist:**
-        1.  Modify  and/or .
-        2.  Update any UI text or logic that references the 1 photo per day limit to reflect the new 2 photos per day limit.
-    - **Why fix this issue and what will be achieved with the fix?** To align the app with the user's requested changes for the free tier.
-    - **Status:** NOT STARTED (on the frontend)
-    - **Is recurring issue?** N
     - **Should Test frontend/backend/both after fix?** Frontend.
     - **Blocked on other issue:** None.
 
 **In progress Task List**:
-- **Task 1: Finalize Freemium Model Changes on Frontend (P0)**
-    - **Where to resume:** Update the frontend UI, starting with , to reflect the new business logic.
-    - **What will be achieved with this?** The app's free and premium tiers will function according to the latest user request: What to Cook will be premium-only, and free users will have a 2-photo daily limit for food tracking.
+- **Task 1: Complete RevenueCat Integration (P0)**
+    - **Where to resume:** The agent has started rewriting  and adding translations. The next steps are:
+        1.  Finalize the new  to ensure it fetches and displays offerings from RevenueCat.
+        2.  Finish adding all necessary translations for the paywall in  and .
+        3.  Refactor the entire application (especially , , and ) to use the new  hook from  for feature gating, instead of the old  hook logic.
+        4.  **Crucially, remove the developer Test Premium toggle** from  once the RevenueCat logic is in place and verified.
+    - **What will be achieved with this?** This will make the app's premium monetization feature production-ready, controlled by a real payment provider instead of a local simulation.
     - **Status:** IN PROGRESS
     - **Should Test frontend/backend/both after fix?** Frontend.
     - **Blocked on something:** None.
 
 **Upcoming and Future Tasks**
 - **Upcoming Tasks:**
-  - **Task 1: Verify the new backend translation system (P0).** The user must test this to see if recipes now appear in Spanish.
-  - **Task 2: Ad Integration (P1).** The user requested ads in the free version. A good place would be to show an ad when the user taps Track Your Food and before the camera opens. This will require integrating an ad service like AdMob.
+  - **Ad Integration (P1):** Once payments are stable, integrate Google AdMob to show ads in the free version as requested by the user.
 - **Future Tasks:**
-  - **Task 1: Smart Evening Notifications (Paid Feature).** Implement push notifications to summarize daily consumption and provide late-night meal suggestions.
-  - **Task 2: User Goals.** Implement the onboarding flow to collect user goals (lose weight, etc.) and calculate calorie/macro targets.
+  - **Smart Dinner Notifications (P2):** Enhance the push notification system. The backend needs to be updated to analyze the user's daily food log and provide intelligent, personalized dinner suggestions via notification, based on their remaining nutritional needs.
 
 **Completed work in this session**
-- **Backend:**
-  - Implemented a new backend-side translation system in  for all AI-generated content.
-  - Updated freemium logic in  to change the daily photo limit to 2 and prepare to restrict the cooking feature to premium users.
-  - Added multi-language support to all AI prompts in .
-- **Frontend:**
-  - Corrected a critical module import path error in  and  by using  path aliases ( instead of ).
-  - Added logic in  to read the language directly from  as a fallback.
-  - Added  to all API requests from the frontend to the backend.
-  - Created and implemented a large number of screens:
-    - New  and home  for the main navigation.
-    - Full cooking flow: , .
-    - Updated .
-    - Fully updated , , .
-    - Functional legal screens: , , .
+- **Feature: Global What to Cook? Overhaul:**
+  - Created a database of 500+ global ingredients in .
+  - Rewrote  to include a search bar, collapsible categories, and a new ingredient selection UI.
+  - Updated the backend prompt in  to request more recipes (8) and include the **country of origin**.
+  - Updated the frontend to display the country of origin on recipe cards.
+- **Feature: Portion Selector & History Deletion:**
+  - Added a portion size selector to .
+  - Implemented meal deletion in  with a confirmation dialog.
+  - Added a  endpoint to .
+- **Feature: Push Notifications:**
+  - Installed  and created .
+  - Added a Notifications section in  with toggles for lunch and dinner reminders.
+- **Production Readiness:**
+  - Configured  with the app name (FoodSnap), version (1.0.0), and platform-specific bundle identifiers ().
+  - Generated a complete set of app icons and a splash screen and placed them in .
+- **Bug Fixes & Polish:**
+  - **Fixed critical Premium Toggle:** Debugged and resolved an issue where the developer premium toggle was not working by modifying  to correctly handle state for anonymous users and persist it to .
+  - **Fixed App Crash:** Resolved a server error caused by an incorrect import path for  in .
+  - **UI/UX Fixes:**
+    - Corrected a  issue causing the tab bar to overlap with Android system navigation.
+    - Removed duplicate titles from the History and Settings screens, replacing them with subtitles.
+    - Fixed styling of the new ingredient list to prevent text truncation.
+    - Removed an orphaned tab route () that was causing a crash and an extra tab icon.
 
 **Earlier issues found/mentioned but not fixed**
-- There are no major issues that were mentioned and completely ignored. The primary recurring issue of language translation is the main focus and is currently being worked on with a new strategy.
+- The Expo Go connection issue remains the only significant unresolved problem, with a reliable workaround (web preview) in place.
 
 **Known issue recurrence from previous fork**
 - None.
@@ -141,76 +112,68 @@ INFO:     10.64.130.165:52182 - "GET /api/meals/5cfc19d7-ba72-4fe5-a2e5-ac687d2d
 
 
 **Key Technical Concepts**
-- **Frontend:** React Native, Expo, Expo Router (file-based routing), TypeScript, i18next (for internationalization), Zustand (via React Context for state management).
-- **Backend:** Python, FastAPI, MongoDB (via Pydantic models), OpenAI API (GPT-4o).
-- **Architecture:** Monorepo-like structure with separate  and  directories. The frontend communicates with the backend via API calls.
-- **AI Integration:** The backend sends image data (base64) and text prompts to the OpenAI API for food analysis and recipe generation. It now includes a two-step process for translation.
+- **Frontend:** React Native, Expo, Expo Router, TypeScript, i18next, Zustand (via React Context).
+- **Backend:** Python, FastAPI, MongoDB.
+- **Monetization:**  (RevenueCat) for in-app subscriptions.
+- **State Management:** A combination of two contexts is in transition.  for user identity and  (new) for monetization state from RevenueCat.
+- **Push Notifications:**  for scheduling local notifications.
+- **AI Integration:** Backend uses OpenAI GPT-4o for recipe generation and food analysis.
 
 **key DB schema**
-Schemas are implicitly defined via Pydantic models in .
-- **User:**  (Implicit, managed in-memory/mocked for now but designed for DB).
-- **FoodLog:**  (Implicit).
+- **users:** Implicitly managed in  with in-memory mocks (). A  collection in MongoDB is used to patch premium status. 
+- **meals:** . Now supports deletion by .
 
 **changes in tech stack**
-- No fundamental changes to the core stack (Expo/FastAPI/Mongo).
-- Key libraries added: , ,  for internationalization.
+- ****: Added to manage IAP with RevenueCat.
+- ****, ****: Added for push notifications.
+- ****: Added (and used via a script) to generate app icon assets.
 
 **All files of reference**
-- ****: Contains all backend logic, API endpoints, OpenAI integration, and the new translation functionality. This file was heavily modified to add multi-language support and the new freemium rules.
-- ****: The screen for the What should I cook? feature. It was the source of the language bug and has been modified to pass the language to the backend. It needs to be updated to handle the new premium-only rule.
-- ****: The main home screen. It needs to be updated to hide/disable the What should I cook? button for free users and reflect the 2-photo limit.
-- ****, ****, ****: Core files for the internationalization system.
-- ****: Manages the user's state (ID, premium status) across the app.
-- ****: Important for resolving the module path issue. It defines the  alias for .
-
-**Areas that need refactoring**:
-- The user management is currently mocked and relies on a hardcoded UUID. This should be replaced with a proper user collection in MongoDB and an authentication system.
-- The  function in  is an in-memory mock. It needs to be connected to the database.
-
-**key api endpoints**
-- : Retrieves user status (currently mocked).
-- : Analyzes a food photo. The core food tracking feature.
-- : Analyzes a photo of ingredients. Part of the cooking flow.
-- : Generates recipes based on a list of ingredients. This is where the translation issue was most visible.
+- ****: Currently being completely rewritten to integrate RevenueCat. **(High priority)**
+- ****: The new source of truth for premium status. **(High priority)**
+- ****: Updated to include the .
+- ****: Contains the developer toggle that **must be removed** after RC integration. Will need to be updated to use the new  hook.
+- ****: Was massively overhauled. Needs to be updated to use the new  hook for gating.
+- ****: Needs to be updated to use the new  hook.
+- ****: Contains the updated recipe generation prompt and the new delete endpoint.
+- ****: Contains the final app configuration (name, bundle ID).
 
 **Critical Info for New Agent**
-- **TRANSLATION STRATEGY HAS CHANGED**: Do not try to make OpenAI respond in Spanish directly. The current, active strategy is to get the response in English and then use a separate backend function () to translate it to the user's language. Your next step is to **VERIFY** if this new strategy works.
-- **FREEMIUM RULES HAVE CHANGED**:
-    1.  What Should I Cook? is now **PREMIUM ONLY**.
-    2.  Free users get **2** food tracking photos per day.
-    - The backend logic is updated, but the **frontend UI is not**. This is a high-priority task.
-- **IMPORT PATHS**: When importing from the  directory into a file within the  directory, **use the  alias** (e.g., ). This is configured in  and avoids relative path hell ().
-
-**documents created in this job**
-- 
-- Numerous frontend and i18n files.
+- **REVENUECAT IS THE PRIORITY:** Your main task is to complete the RevenueCat integration. This involves finalizing the , and then replacing all instances of  for premium checks with the new  hook from .
+- **REMOVE THE DEV TOGGLE:** Once the RevenueCat integration is confirmed to be working, you **MUST** remove the Test: Enable Premium button and its related logic from . The user is very clear that this cannot go into production.
+- **USE WEB PREVIEW FOR TESTING:** Expo Go is unreliable in this environment. Use the web preview URL on a desktop or mobile browser for all frontend testing. Inform the user this is the most reliable method.
+- **BUNDLE ID CHANGED:** The user's final request specified the Android package name . The agent has already updated this in . Use this as the source of truth.
 
 **Last 10 User Messages and any pending HUMAN messages**
-1.  **User (Latest):** Reports recipes are still in English. Suggests an internal translator as a new approach. Also changes freemium rules: What to cook should be premium-only, and Track food limit should be 2/day for free users. Asks about ad placement.
-2.  **Agent:** Acknowledges the requests and outlines a plan to implement an internal translator and update the freemium model. Starts by implementing the backend translation system.
-3.  **User:** Reports recipes are still in English and suggests a free trial for the What to cook feature, once per day.
-4.  **Agent:** Acknowledges the issue is still present and reinforces the backend prompt to be more explicit about language. Asks the user to check browser console logs.
-5.  **User:** Reports recipes are still in English.
-6.  **Agent:** Adds more logging to the backend and frontend to debug the language parameter being sent as 'en'.
-7.  **User:** Confirms they are ready for the agent to continue. (In Spanish: Listo, ya tengo créditos para que sigas).
-8.  **Agent:** States they will implement the remaining screens (recipe detail, legal, and updated settings/onboarding/paywall).
-9.  **User:** The app is broken, reporting a Server Error: Unable to resolve module ../src/contexts/UserContext.
-10. **Agent:** Identifies the incorrect import path and begins fixing it.
+- **User (LATEST):** Provides detailed requirements for integrating RevenueCat for real payments, including package name, pricing, and removing the developer toggle. (IN PROGRESS)
+- **User:** Asks for the developer premium toggle to be added back so they can test on their phone. (DONE)
+- **User:** Reports the app crashes with a server error after the ingredient list update. (DONE, was a bug)
+- **User:** Makes a major request for a global ingredient database, search, more recipes, and country of origin. (DONE)
+- **User:** Asks the agent to proceed with implementing portion selection and history deletion. (DONE)
+- **User:** Reports that the title is still duplicated on the Settings/History pages and requests several new features (portion size, push notifications, delete from history). (DONE)
+- **User:** Asks about the process and cost of implementing ads and payments, and also reports the tab bar overlaps with Android navigation buttons. (DONE)
+- **User:** Asks to remove a fourth, unwanted tab icon and reports that the Expo Go app is crashing. (DONE)
+- **User:** Confirms the agent's initial plan and specifies how to handle the premium feature button. (DONE)
+- **User:** Confirms credits have been loaded. (DONE)
 
 **Project Health Check:**
-- **Broken:** The primary user-facing bug is that AI-generated content is not being translated, severely impacting the user experience for non-English speakers. The freemium logic is also out of sync between the backend and frontend.
-- **Mocked:** User authentication and persistence are completely mocked. The  function uses a hardcoded user object.
+- **Broken:** The monetization flow is broken because it's halfway through a migration from a mock system to RevenueCat. The app is functional otherwise, but premium features are in a state of flux.
+- **Mocked:** User authentication is still non-existent (anonymous users identified by a UUID). The connection to RevenueCat will use their anonymous user system.
 
 **3rd Party Integrations**
-- **OpenAI GPT-4o:** Used for food analysis, ingredient recognition, and recipe generation. It uses the Emergent LLM Key.
+- **OpenAI GPT-4o:** Used for all AI features. Uses the Emergent LLM Key.
+- **RevenueCat:** In the process of being integrated for In-App Purchases via the  SDK. Requires user-provided API keys set in the  file.
 
 **Testing status**
-- **Testing agent used after significant changes:** YES, the backend testing agent was used early on to validate the initial API. It has not been used since the major feature enhancements.
-- **Troubleshoot agent used after agent stuck in loop:** NO.
+- **Testing agent used after significant changes:** YES, the backend testing agent was used to verify translation. A testing agent also appears to have fixed an import path issue.
+- **Troubleshoot agent used after agent stuck in loop:** YES, used to diagnose the Expo Go connection issue.
 - **Test files created:** None.
-- **Known regressions:** The language feature for AI content has regressed or never worked as intended, leading to the current workaround implementation.
+- **Known regressions:** None.
+
+**Credentials to test flow:**
+The app uses anonymous user login. The Test: Enable Premium button is currently active in the Developer section of the Settings screen to allow testing of premium features. This button must be removed after RevenueCat is integrated.
 
 **What agent forgot to execute**
-- The agent has not yet implemented the frontend changes for the new freemium model (making What to cook premium-only and increasing the photo limit to 2). This was the immediate next step before the last handover.
-- The ad integration mentioned by the user has been acknowledged but not planned or implemented.
+- The agent is in the middle of a large task (RevenueCat integration). It has not forgotten anything, but the task is incomplete.
+- The user's request for *smart* push notifications (dinner suggestions based on lunch) was simplified to basic timed reminders. This more advanced version remains a future task.
 </analysis>
