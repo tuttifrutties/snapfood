@@ -400,10 +400,19 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   testButton: {
-    backgroundColor: '#FF6B6B',
+    flexDirection: 'row',
+    backgroundColor: '#1a1a1a',
     padding: 16,
     borderRadius: 12,
     alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    borderWidth: 2,
+    borderColor: '#FF6B6B',
+  },
+  testButtonActive: {
+    borderColor: '#FFD700',
+    backgroundColor: '#FFD70010',
   },
   testButtonText: {
     fontSize: 16,
