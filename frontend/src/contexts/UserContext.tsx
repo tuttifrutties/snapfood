@@ -84,12 +84,21 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     if (!userId) return;
     
     try {
-      await fetch(`${API_URL}/api/users/${userId}/premium?is_premium=${premium}`, {
+      // Update locally first for immediate UI feedback
+      setIsPremium(premium);
+      await AsyncStorage.setItem('isPremium', premium.toString());
+      
+      // Then update on server
+      const response = await fetch(`${API_URL}/api/users/${userId}/premium?is_premium=${premium}`, {
         method: 'PATCH',
       });
-      setIsPremium(premium);
+      
+      if (!response.ok) {
+        console.error('Server error updating premium');
+      }
     } catch (error) {
       console.error('Failed to update premium status:', error);
+      // Keep the local state even if server fails
     }
   };
 
