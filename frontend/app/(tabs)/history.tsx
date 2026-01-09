@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useUser } from '../../src/contexts/UserContext';
+import { usePremium } from '../../src/contexts/PremiumContext';
 import { useRouter } from 'expo-router';
 import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
@@ -18,7 +19,8 @@ import { useTranslation } from 'react-i18next';
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 export default function HistoryScreen() {
-  const { userId, isPremium } = useUser();
+  const { userId } = useUser();
+  const { isPremium } = usePremium();
   const router = useRouter();
   const { t } = useTranslation();
   const [meals, setMeals] = useState<any[]>([]);
