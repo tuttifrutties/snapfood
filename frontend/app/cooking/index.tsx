@@ -687,12 +687,14 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   selectedBadge: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     backgroundColor: '#FF6B6B20',
     paddingHorizontal: 16,
     paddingVertical: 8,
     marginHorizontal: 16,
     borderRadius: 8,
-    alignSelf: 'flex-start',
   },
   selectedText: {
     color: '#FF6B6B',
