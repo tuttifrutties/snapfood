@@ -644,7 +644,9 @@ async def get_recipe_suggestions(request: AnalyzeIngredientsRequest):
                     protein=recipe_dict.get("protein", 20.0),
                     carbs=recipe_dict.get("carbs", 50.0),
                     fats=recipe_dict.get("fats", 15.0),
-                    healthierOption=recipe_dict.get("healthierOption")
+                    healthierOption=recipe_dict.get("healthierOption"),
+                    countryOfOrigin=recipe_dict.get("countryOfOrigin"),
+                    cuisine=recipe_dict.get("cuisine")
                 )
                 recipes.append(recipe)
             
