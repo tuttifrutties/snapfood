@@ -31,6 +31,12 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     try {
       const storedUserId = await AsyncStorage.getItem('userId');
       const onboardingComplete = await AsyncStorage.getItem('onboardingComplete');
+      const storedPremium = await AsyncStorage.getItem('isPremium');
+      
+      // Set premium from local storage first
+      if (storedPremium === 'true') {
+        setIsPremium(true);
+      }
       
       if (storedUserId) {
         setUserId(storedUserId);
