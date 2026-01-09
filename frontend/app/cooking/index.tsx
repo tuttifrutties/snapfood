@@ -867,6 +867,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     padding: 8,
+    justifyContent: 'flex-start',
   },
   clearText: {
     color: '#FF6B6B',
