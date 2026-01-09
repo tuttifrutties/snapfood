@@ -99,7 +99,13 @@ export default function SettingsScreen() {
 
   const toggleDeveloperPremium = async () => {
     // Toggle premium directly without confirmation for easier testing
-    await setPremium(!isPremium);
+    console.log('Toggle premium clicked, current state:', isPremium);
+    try {
+      await setPremium(!isPremium);
+      console.log('Premium toggled to:', !isPremium);
+    } catch (error) {
+      console.error('Error toggling premium:', error);
+    }
   };
 
   return (
