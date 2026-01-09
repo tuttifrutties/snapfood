@@ -97,18 +97,9 @@ export default function SettingsScreen() {
     }
   };
 
-  const toggleDeveloperPremium = () => {
-    Alert.alert(
-      isPremium ? t('settings.disablePremiumTitle') : t('settings.enablePremiumTitle'),
-      isPremium ? t('settings.disablePremiumMessage') : t('settings.enablePremiumMessage'),
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: t('common.confirm'),
-          onPress: () => setPremium(!isPremium),
-        },
-      ]
-    );
+  const toggleDeveloperPremium = async () => {
+    // Toggle premium directly without confirmation for easier testing
+    await setPremium(!isPremium);
   };
 
   return (
