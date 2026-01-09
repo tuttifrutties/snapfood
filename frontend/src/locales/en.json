@@ -10,7 +10,8 @@
     "confirm": "Confirm",
     "error": "Error",
     "success": "Success",
-    "clear": "Clear"
+    "clear": "Clear",
+    "goBack": "Go Back"
   },
   "navigation": {
     "home": "Home",

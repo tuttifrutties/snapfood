@@ -10,7 +10,8 @@
     "confirm": "Confirmar",
     "error": "Error",
     "success": "Éxito",
-    "clear": "Limpiar"
+    "clear": "Limpiar",
+    "goBack": "Volver"
   },
   "navigation": {
     "home": "Inicio",
