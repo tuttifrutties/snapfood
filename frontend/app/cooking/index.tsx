@@ -527,6 +527,18 @@ export default function CookingScreen() {
                     </Text>
                   </View>
                 </View>
+                
+                {/* Country/Cuisine badge */}
+                {(recipe.countryOfOrigin || recipe.cuisine) && (
+                  <View style={styles.cuisineBadge}>
+                    <Ionicons name="globe-outline" size={14} color="#FF6B6B" />
+                    <Text style={styles.cuisineText}>
+                      {recipe.cuisine || recipe.countryOfOrigin}
+                      {recipe.countryOfOrigin && recipe.cuisine ? ` • ${recipe.countryOfOrigin}` : ''}
+                    </Text>
+                  </View>
+                )}
+                
                 <Text style={styles.recipeDescription}>{recipe.description}</Text>
                 <View style={styles.recipeMacros}>
                   <Text style={styles.recipeMacroText}>{recipe.calories} cal</Text>
