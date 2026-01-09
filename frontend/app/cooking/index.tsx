@@ -818,4 +818,111 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
+  // New styles for categories and search
+  ingredientListContainer: {
+    flex: 1,
+  },
+  categoryContainer: {
+    marginBottom: 8,
+    backgroundColor: '#1a1a1a',
+    marginHorizontal: 16,
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  categoryHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+    backgroundColor: '#222',
+  },
+  categoryTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  categoryTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#fff',
+  },
+  categoryBadge: {
+    backgroundColor: '#FF6B6B',
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 10,
+  },
+  categoryBadgeText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  ingredientGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    padding: 8,
+  },
+  clearText: {
+    color: '#FF6B6B',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  selectedPreview: {
+    maxHeight: 50,
+    paddingHorizontal: 16,
+    marginBottom: 8,
+  },
+  selectedTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FF6B6B',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    marginRight: 8,
+    gap: 6,
+  },
+  selectedTagText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  searchResultsContainer: {
+    marginHorizontal: 16,
+    marginBottom: 16,
+  },
+  searchResultsTitle: {
+    color: '#aaa',
+    fontSize: 14,
+    marginBottom: 12,
+  },
+  noResults: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 40,
+  },
+  noResultsText: {
+    color: '#555',
+    fontSize: 16,
+    marginTop: 12,
+  },
+  getSuggestionsButtonDisabled: {
+    backgroundColor: '#333',
+  },
+  cuisineBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FF6B6B20',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    alignSelf: 'flex-start',
+    marginBottom: 8,
+    gap: 4,
+  },
+  cuisineText: {
+    color: '#FF6B6B',
+    fontSize: 12,
+    fontWeight: '500',
+  },
 });
