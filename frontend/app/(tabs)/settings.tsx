@@ -244,6 +244,24 @@ export default function SettingsScreen() {
           </TouchableOpacity>
         </View>
 
+        {/* Developer Section - Remove before production */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>{t('settings.developer')}</Text>
+          <TouchableOpacity
+            style={[styles.testButton, isPremium && styles.testButtonActive]}
+            onPress={toggleDeveloperPremium}
+          >
+            <Ionicons 
+              name={isPremium ? "star" : "star-outline"} 
+              size={20} 
+              color={isPremium ? "#FFD700" : "#FF6B6B"} 
+            />
+            <Text style={styles.testButtonText}>
+              {isPremium ? t('settings.testDisablePremium') : t('settings.testPremium')}
+            </Text>
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.versionContainer}>
           <Text style={styles.versionText}>{t('settings.version')}</Text>
         </View>
