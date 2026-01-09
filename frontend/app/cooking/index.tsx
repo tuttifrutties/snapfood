@@ -14,11 +14,11 @@ import {
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
-import { useUser } from '@/contexts/UserContext';
+import { useUser } from '../../src/contexts/UserContext';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getIngredientsByCategory, searchIngredients, getTotalIngredientsCount } from '@/data/ingredients';
+import { getIngredientsByCategory, searchIngredients, getTotalIngredientsCount } from '../../src/data/ingredients';
 
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
