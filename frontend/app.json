@@ -66,8 +66,7 @@
         {
           "photosPermission": "FoodSnap needs access to your photos to analyze food images."
         }
-      ],
-      "react-native-purchases"
+      ]
     ],
     "experiments": {
       "typedRoutes": true
