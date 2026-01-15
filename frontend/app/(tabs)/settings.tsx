@@ -8,13 +8,14 @@ import {
   Switch,
   Alert,
   Platform,
+  Modal,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { usePremium } from '../../src/contexts/PremiumContext';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from 'react-i18next';
-import { changeLanguage } from '../../src/i18n';
+import { changeLanguage, getSupportedLanguages } from '../../src/i18n';
 import {
   registerForPushNotificationsAsync,
   scheduleLunchReminder,
