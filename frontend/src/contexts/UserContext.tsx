@@ -50,6 +50,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   const initializeUser = async () => {
     try {
+      console.log('[UserContext] Starting initialization...');
       const storedUserId = await AsyncStorage.getItem('userId');
       const onboardingComplete = await AsyncStorage.getItem('onboardingComplete');
       const storedPremium = await AsyncStorage.getItem('isPremium');
@@ -60,15 +61,20 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       }
       
       if (storedUserId) {
+        console.log('[UserContext] Found stored user:', storedUserId);
         setUserId(storedUserId);
         setHasCompletedOnboarding(onboardingComplete === 'true');
-        await refreshUser(storedUserId);
+        // Don't await this - let it run in background
+        refreshUser(storedUserId).catch(console.error);
       } else {
+        console.log('[UserContext] No stored user, creating new...');
         await createUser();
       }
     } catch (error) {
-      console.error('Failed to initialize user:', error);
+      console.error('[UserContext] Failed to initialize user:', error);
+      // Even on error, we should stop loading to prevent infinite hang
     } finally {
+      console.log('[UserContext] Initialization complete');
       setIsLoading(false);
     }
   };
