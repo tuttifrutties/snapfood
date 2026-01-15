@@ -93,17 +93,45 @@ export default function SettingsScreen() {
     }
   };
 
+  const toggleSnackReminder = async (value: boolean) => {
+    if (value) {
+      await registerForPushNotificationsAsync();
+    }
+    await scheduleSnackReminder(value, i18n.language);
+    setSnackReminder(value);
+    
+    if (value) {
+      Alert.alert(
+        t('settings.notificationsEnabled'),
+        t('settings.snackReminderDesc')
+      );
+    }
+  };
+
+  const toggleFridayReminder = async (value: boolean) => {
+    if (value) {
+      await registerForPushNotificationsAsync();
+    }
+    await scheduleFridayReminder(value, i18n.language);
+    setFridayReminder(value);
+    
+    if (value) {
+      Alert.alert(
+        t('settings.notificationsEnabled'),
+        t('settings.fridayReminderDesc')
+      );
+    }
+  };
+
   const toggleLanguage = async () => {
     const newLang = i18n.language === 'en' ? 'es' : 'en';
     await changeLanguage(newLang);
     
-    // Update notifications with new language
-    if (lunchReminder) {
-      await scheduleLunchReminder(true, newLang);
-    }
-    if (dinnerReminder) {
-      await scheduleDinnerReminder(true, newLang);
-    }
+    // Update all notifications with new language
+    if (lunchReminder) await scheduleLunchReminder(true, newLang);
+    if (dinnerReminder) await scheduleDinnerReminder(true, newLang);
+    if (snackReminder) await scheduleSnackReminder(true, newLang);
+    if (fridayReminder) await scheduleFridayReminder(true, newLang);
   };
 
   return (
