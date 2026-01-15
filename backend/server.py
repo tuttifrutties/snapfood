@@ -98,6 +98,32 @@ class SetUserGoalsRequest(BaseModel):
     weight: float
     activityLevel: str
     goal: str
+    gender: Optional[str] = "male"  # male or female for more accurate calculations
+
+# New models for smart ingredients and notifications
+class UserIngredients(BaseModel):
+    userId: str
+    ingredients: List[str] = []
+    lastUpdated: datetime = Field(default_factory=datetime.utcnow)
+
+class SaveIngredientsRequest(BaseModel):
+    userId: str
+    ingredients: List[str]
+    append: bool = True  # If True, add to existing. If False, replace all.
+
+class SmartNotificationRequest(BaseModel):
+    userId: str
+    mealType: str  # "lunch" or "dinner"
+    language: Optional[str] = "en"
+
+class SmartNotificationResponse(BaseModel):
+    message: str
+    caloriesConsumed: int
+    caloriesRemaining: int
+    proteinConsumed: float
+    proteinRemaining: float
+    suggestedRecipes: List[str]  # Just recipe names
+    hasIngredients: bool
 
 class AnalyzeIngredientsRequest(BaseModel):
     userId: str
