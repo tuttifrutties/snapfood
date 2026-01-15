@@ -168,7 +168,7 @@ export default function SettingsScreen() {
             <View style={styles.settingInfo}>
               <Text style={styles.settingLabel}>{t('settings.language')}</Text>
               <Text style={styles.settingDescription}>
-                {i18n.language === 'en' ? 'English' : 'Español'}
+                {getCurrentLanguageDisplay()}
               </Text>
             </View>
             <Ionicons name="chevron-forward" size={20} color="#aaa" />
