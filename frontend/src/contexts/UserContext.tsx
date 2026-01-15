@@ -81,17 +81,28 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   const createUser = async () => {
     try {
-      const response = await fetch(`${API_URL}/api/users`, {
+      console.log('[UserContext] Creating new user...');
+      const response = await fetchWithTimeout(`${API_URL}/api/users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-      });
+      }, 15000); // 15 second timeout
+      
+      if (!response.ok) {
+        throw new Error(`Server responded with ${response.status}`);
+      }
       
       const data = await response.json();
       await AsyncStorage.setItem('userId', data.userId);
       setUserId(data.userId);
       setIsPremium(data.isPremium);
+      console.log('[UserContext] User created:', data.userId);
     } catch (error) {
-      console.error('Failed to create user:', error);
+      console.error('[UserContext] Failed to create user:', error);
+      // Generate a local UUID as fallback
+      const fallbackId = 'local_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+      await AsyncStorage.setItem('userId', fallbackId);
+      setUserId(fallbackId);
+      console.log('[UserContext] Using fallback user ID:', fallbackId);
     }
   };
 
