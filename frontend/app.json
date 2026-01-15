@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "FoodSnap",
-    "slug": "foodsnap",
+    "name": "Snapfood",
+    "slug": "snapfood",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
