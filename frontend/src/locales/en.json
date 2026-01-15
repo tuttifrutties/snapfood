@@ -19,7 +19,7 @@
     "settings": "Settings"
   },
   "onboarding": {
-    "welcome": "Welcome to FoodSnap!",
+    "welcome": "Welcome to Snapfood!",
     "subtitle": "Track your meals with AI-powered nutrition analysis",
     "feature1": "Snap photos of your meals",
     "feature2": "Get instant nutrition data",
@@ -133,7 +133,7 @@
     "privacyPolicy": "Privacy Policy",
     "termsOfService": "Terms of Service",
     "helpSupport": "Help & Support",
-    "version": "FoodSnap v1.0.0",
+    "version": "Snapfood v1.0.0",
     "developer": "Developer",
     "testPremium": "Test: Enable Premium",
     "testDisablePremium": "Test: Disable Premium",
@@ -153,7 +153,7 @@
   },
   "paywall": {
     "title": "Upgrade to Premium",
-    "subtitle": "Unlock the full FoodSnap experience",
+    "subtitle": "Unlock the full Snapfood experience",
     "feature1Title": "Unlimited Photo Tracking",
     "feature1Desc": "Log as many meals as you want, every day",
     "feature2Title": "Full Nutrition History",

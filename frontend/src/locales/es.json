@@ -19,7 +19,7 @@
     "settings": "Ajustes"
   },
   "onboarding": {
-    "welcome": "¡Bienvenido a FoodSnap!",
+    "welcome": "¡Bienvenido a Snapfood!",
     "subtitle": "Rastrea tus comidas con análisis nutricional impulsado por IA",
     "feature1": "Toma fotos de tus comidas",
     "feature2": "Obtén datos nutricionales instantáneos",
@@ -133,7 +133,7 @@
     "privacyPolicy": "Política de Privacidad",
     "termsOfService": "Términos de Servicio",
     "helpSupport": "Ayuda y Soporte",
-    "version": "FoodSnap v1.0.0",
+    "version": "Snapfood v1.0.0",
     "developer": "Desarrollador",
     "testPremium": "Prueba: Activar Premium",
     "testDisablePremium": "Prueba: Desactivar Premium",
@@ -153,7 +153,7 @@
   },
   "paywall": {
     "title": "Actualizar a Premium",
-    "subtitle": "Desbloquea la experiencia completa de FoodSnap",
+    "subtitle": "Desbloquea la experiencia completa de Snapfood",
     "feature1Title": "Rastreo Ilimitado de Fotos",
     "feature1Desc": "Registra tantas comidas como quieras, todos los días",
     "feature2Title": "Historial Nutricional Completo",

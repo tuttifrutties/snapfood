@@ -129,8 +129,8 @@ function getFallbackContent(mealType: 'lunch' | 'dinner', language: string): { t
     return {
       title: language === 'es' ? '🍽️ ¡Hora de planear tu almuerzo!' : '🍽️ Time to plan your lunch!',
       body: language === 'es' 
-        ? '¿Qué vas a comer hoy? Abre FoodSnap para ver sugerencias saludables.'
-        : "What are you having today? Open FoodSnap for healthy suggestions.",
+        ? '¿Qué vas a comer hoy? Abre Snapfood para ver sugerencias saludables.'
+        : "What are you having today? Open Snapfood for healthy suggestions.",
     };
   } else {
     return {
