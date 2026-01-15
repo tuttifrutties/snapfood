@@ -20,6 +20,8 @@ import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getIngredientsByCategory, searchIngredients, getTotalIngredientsCount } from '../../src/data/ingredients';
+import { saveIngredients } from '../../src/services/ingredients';
+import { refreshSmartNotifications } from '../../src/services/notifications';
 
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
