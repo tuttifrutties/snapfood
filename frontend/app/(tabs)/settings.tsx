@@ -128,14 +128,23 @@ export default function SettingsScreen() {
   };
 
   const toggleLanguage = async () => {
-    const newLang = i18n.language === 'en' ? 'es' : 'en';
-    await changeLanguage(newLang);
+    setLanguageModalVisible(true);
+  };
+
+  const selectLanguage = async (langCode: string) => {
+    await changeLanguage(langCode);
+    setLanguageModalVisible(false);
     
     // Update all notifications with new language
-    if (lunchReminder) await scheduleLunchReminder(true, newLang);
-    if (dinnerReminder) await scheduleDinnerReminder(true, newLang);
-    if (snackReminder) await scheduleSnackReminder(true, newLang);
-    if (fridayReminder) await scheduleFridayReminder(true, newLang);
+    if (lunchReminder) await scheduleLunchReminder(true, langCode);
+    if (dinnerReminder) await scheduleDinnerReminder(true, langCode);
+    if (snackReminder) await scheduleSnackReminder(true, langCode);
+    if (fridayReminder) await scheduleFridayReminder(true, langCode);
+  };
+
+  const getCurrentLanguageDisplay = () => {
+    const currentLang = supportedLanguages.find(l => l.code === i18n.language);
+    return currentLang ? `${currentLang.flag} ${currentLang.name}` : 'English';
   };
 
   return (
