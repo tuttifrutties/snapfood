@@ -151,33 +151,53 @@ class RecipeSuggestionsResponse(BaseModel):
     recipes: List[Recipe]
 
 # Helper function to calculate daily calorie needs
-def calculate_daily_needs(age: int, height: float, weight: float, activity_level: str, goal: str):
-    # Basal Metabolic Rate (BMR) using Mifflin-St Jeor equation (simplified for average person)
-    bmr = 10 * weight + 6.25 * height - 5 * age + 5  # Male formula (simplified)
+def calculate_daily_needs(age: int, height: float, weight: float, activity_level: str, goal: str, gender: str = "male"):
+    """
+    Calculate daily calorie and protein needs using Mifflin-St Jeor equation.
+    This is one of the most accurate formulas for estimating BMR.
     
-    # Activity multipliers
+    Note: These are estimates. Users should consult a nutritionist for personalized advice.
+    """
+    # Basal Metabolic Rate (BMR) using Mifflin-St Jeor equation
+    if gender == "female":
+        bmr = 10 * weight + 6.25 * height - 5 * age - 161
+    else:  # male or default
+        bmr = 10 * weight + 6.25 * height - 5 * age + 5
+    
+    # Activity multipliers (TDEE - Total Daily Energy Expenditure)
     activity_multipliers = {
-        "sedentary": 1.2,
-        "light": 1.375,
-        "moderate": 1.55,
-        "active": 1.725,
-        "very_active": 1.9
+        "sedentary": 1.2,       # Little or no exercise
+        "light": 1.375,         # Light exercise 1-3 days/week
+        "moderate": 1.55,       # Moderate exercise 3-5 days/week
+        "active": 1.725,        # Hard exercise 6-7 days/week
+        "very_active": 1.9      # Very hard exercise & physical job
     }
     
     tdee = bmr * activity_multipliers.get(activity_level, 1.2)
     
     # Adjust based on goal
     if goal == "lose":
-        daily_calories = int(tdee - 500)  # 500 calorie deficit
+        daily_calories = int(tdee - 500)  # 500 calorie deficit (~0.5kg/week loss)
+        daily_protein = int(weight * 1.2)  # Higher protein to preserve muscle
+        daily_carbs = int((daily_calories * 0.40) / 4)  # 40% from carbs
+        daily_fats = int((daily_calories * 0.30) / 9)   # 30% from fats
     elif goal == "gain":
-        daily_calories = int(tdee + 500)  # 500 calorie surplus
-    else:
+        daily_calories = int(tdee + 300)  # 300 calorie surplus (lean bulk)
+        daily_protein = int(weight * 1.8)  # High protein for muscle building
+        daily_carbs = int((daily_calories * 0.45) / 4)  # 45% from carbs
+        daily_fats = int((daily_calories * 0.25) / 9)   # 25% from fats
+    else:  # maintain
         daily_calories = int(tdee)
+        daily_protein = int(weight * 1.0)  # Moderate protein
+        daily_carbs = int((daily_calories * 0.45) / 4)  # 45% from carbs
+        daily_fats = int((daily_calories * 0.30) / 9)   # 30% from fats
     
-    # Protein: 1.6g per kg for muscle building, 0.8g for maintenance
-    daily_protein = int(weight * 1.6) if goal == "gain" else int(weight * 1.0)
-    
-    return daily_calories, daily_protein
+    return {
+        "calories": daily_calories,
+        "protein": daily_protein,
+        "carbs": daily_carbs,
+        "fats": daily_fats
+    }
 
 # Helper function to translate recipes to target language
 async def translate_recipes(recipes_data: list, target_language: str, api_key: str):
