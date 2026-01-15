@@ -40,6 +40,10 @@ export default function TermsScreen() {
         content: 'IMPORTANTE: FoodSnap proporciona ESTIMACIONES de información nutricional generadas por IA. Esta información es sólo para propósitos informativos y NO debe considerarse como consejo médico o nutricional profesional.\n\nNO GARANTIZAMOS:\n• La precisión absoluta de las estimaciones calóricas\n• La precisión de los valores de macronutrientes\n• La idoneidad de las sugerencias de recetas para condiciones de salud específicas\n\nConsulta siempre a un profesional de la salud calificado antes de hacer cambios significativos en tu dieta o estilo de vida.'
       },
       {
+        title: '5.1 Aviso Nutricional Importante',
+        content: 'ESTA APLICACIÓN NO REEMPLAZA A UN NUTRICIONISTA\n\nLos cálculos de calorías, proteínas, carbohidratos y grasas se basan en fórmulas científicas estándar (Mifflin-St Jeor) que son estimaciones generales.\n\nCADA PERSONA ES DIFERENTE:\n• Tu metabolismo es único\n• Tus condiciones de salud pueden requerir ajustes\n• Tus necesidades nutricionales varían según actividad, estrés, sueño, etc.\n\nLas sugerencias de recetas y notificaciones inteligentes son orientativas. Para un plan nutricional personalizado y seguro, consulta siempre con un nutricionista certificado o médico especialista.\n\nFoodSnap es una herramienta de seguimiento, NO un sustituto del asesoramiento profesional.'
+      },
+      {
         title: '6. Uso Aceptable',
         content: 'Al usar FoodSnap, aceptas NO:\n\n• Usar la aplicación para propósitos ilegales\n• Intentar hackear o comprometer la seguridad de la aplicación\n• Abusar del servicio al cliente o soporte\n• Compartir contenido inapropiado u ofensivo\n• Intentar eludir las limitaciones de la versión gratuita\n• Usar la aplicación de maneras que puedan dañar a otros usuarios'
       },
