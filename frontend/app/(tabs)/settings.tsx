@@ -210,6 +210,36 @@ export default function SettingsScreen() {
               thumbColor="#fff"
             />
           </View>
+
+          <View style={styles.settingRow}>
+            <View style={styles.settingInfo}>
+              <Text style={styles.settingLabel}>{t('settings.snackReminder')}</Text>
+              <Text style={styles.settingDescription}>
+                {t('settings.snackReminderDesc')}
+              </Text>
+            </View>
+            <Switch
+              value={snackReminder}
+              onValueChange={toggleSnackReminder}
+              trackColor={{ false: '#333', true: '#FF6B6B' }}
+              thumbColor="#fff"
+            />
+          </View>
+
+          <View style={styles.settingRow}>
+            <View style={styles.settingInfo}>
+              <Text style={styles.settingLabel}>{t('settings.fridayReminder')}</Text>
+              <Text style={styles.settingDescription}>
+                {t('settings.fridayReminderDesc')}
+              </Text>
+            </View>
+            <Switch
+              value={fridayReminder}
+              onValueChange={toggleFridayReminder}
+              trackColor={{ false: '#333', true: '#FF6B6B' }}
+              thumbColor="#fff"
+            />
+          </View>
         </View>
 
         <View style={styles.section}>
