@@ -37,6 +37,9 @@ export default function SettingsScreen() {
   const [dinnerReminder, setDinnerReminder] = useState(false);
   const [snackReminder, setSnackReminder] = useState(false);
   const [fridayReminder, setFridayReminder] = useState(false);
+  const [languageModalVisible, setLanguageModalVisible] = useState(false);
+  
+  const supportedLanguages = getSupportedLanguages();
 
   useEffect(() => {
     loadSettings();
