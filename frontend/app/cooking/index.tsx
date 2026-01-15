@@ -193,6 +193,14 @@ export default function CookingScreen() {
 
     setIsLoadingRecipes(true);
     try {
+      // Auto-save ingredients for smart notifications
+      if (userId && selectedIngredients.length > 0) {
+        saveIngredients(userId, selectedIngredients, true).then(() => {
+          // Refresh smart notifications with new ingredients
+          refreshSmartNotifications(currentLanguage).catch(console.error);
+        }).catch(console.error);
+      }
+
       const response = await fetch(`${API_URL}/api/recipe-suggestions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
