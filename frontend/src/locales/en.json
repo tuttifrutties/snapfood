@@ -194,6 +194,17 @@
     "enjoyFeatures": "You have access to all premium features.",
     "goBack": "Go Back"
   },
+  "recipe": {
+    "loadingImage": "Loading photo...",
+    "noImageFound": "Sorry, I couldn't find a photo of this recipe 😔",
+    "description": "Description",
+    "ingredients": "Ingredients",
+    "instructions": "Instructions",
+    "tips": "Chef Tips",
+    "protein": "Protein",
+    "carbs": "Carbs",
+    "fats": "Fats"
+  },
   "legal": {
     "privacyTitle": "Privacy Policy",
     "termsTitle": "Terms of Service",

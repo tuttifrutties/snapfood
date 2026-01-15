@@ -192,6 +192,17 @@
     "enjoyFeatures": "Tienes acceso a todas las funciones premium.",
     "goBack": "Volver"
   },
+  "recipe": {
+    "loadingImage": "Cargando foto...",
+    "noImageFound": "Lo siento, no encontré una foto de esta receta 😔",
+    "description": "Descripción",
+    "ingredients": "Ingredientes",
+    "instructions": "Instrucciones",
+    "tips": "Consejos del Chef",
+    "protein": "Proteína",
+    "carbs": "Carbos",
+    "fats": "Grasas"
+  },
   "legal": {
     "privacyTitle": "Política de Privacidad",
     "termsTitle": "Términos de Servicio",
