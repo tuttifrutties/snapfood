@@ -19,8 +19,12 @@ import {
   registerForPushNotificationsAsync,
   scheduleLunchReminder,
   scheduleDinnerReminder,
+  scheduleSnackReminder,
+  scheduleFridayReminder,
   getLunchReminderStatus,
   getDinnerReminderStatus,
+  getSnackReminderStatus,
+  getFridayReminderStatus,
 } from '../../src/services/notifications';
 
 export default function SettingsScreen() {
@@ -30,6 +34,8 @@ export default function SettingsScreen() {
   const [saveToGallery, setSaveToGallery] = useState(true);
   const [lunchReminder, setLunchReminder] = useState(false);
   const [dinnerReminder, setDinnerReminder] = useState(false);
+  const [snackReminder, setSnackReminder] = useState(false);
+  const [fridayReminder, setFridayReminder] = useState(false);
 
   useEffect(() => {
     loadSettings();
@@ -44,8 +50,12 @@ export default function SettingsScreen() {
     // Load notification settings
     const lunchStatus = await getLunchReminderStatus();
     const dinnerStatus = await getDinnerReminderStatus();
+    const snackStatus = await getSnackReminderStatus();
+    const fridayStatus = await getFridayReminderStatus();
     setLunchReminder(lunchStatus);
     setDinnerReminder(dinnerStatus);
+    setSnackReminder(snackStatus);
+    setFridayReminder(fridayStatus);
   };
 
   const toggleSaveToGallery = async (value: boolean) => {
