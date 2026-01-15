@@ -714,6 +714,294 @@ async def get_recipe_suggestions(request: AnalyzeIngredientsRequest):
         logger.error(f"Error getting recipe suggestions: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to get recipe suggestions: {str(e)}")
 
+# =============================================
+# SMART INGREDIENTS & NOTIFICATIONS ENDPOINTS
+# =============================================
+
+@api_router.post("/users/{user_id}/ingredients")
+async def save_user_ingredients(user_id: str, request: SaveIngredientsRequest):
+    """Save or update user's available ingredients"""
+    try:
+        existing = await db.user_ingredients.find_one({"userId": user_id})
+        
+        if request.append and existing:
+            # Append new ingredients (avoid duplicates)
+            current_ingredients = set(existing.get("ingredients", []))
+            new_ingredients = set(request.ingredients)
+            merged = list(current_ingredients.union(new_ingredients))
+            
+            await db.user_ingredients.update_one(
+                {"userId": user_id},
+                {"$set": {"ingredients": merged, "lastUpdated": datetime.utcnow()}}
+            )
+            return {"success": True, "ingredients": merged, "count": len(merged)}
+        else:
+            # Replace all ingredients
+            await db.user_ingredients.update_one(
+                {"userId": user_id},
+                {"$set": {
+                    "userId": user_id,
+                    "ingredients": request.ingredients,
+                    "lastUpdated": datetime.utcnow()
+                }},
+                upsert=True
+            )
+            return {"success": True, "ingredients": request.ingredients, "count": len(request.ingredients)}
+        
+    except Exception as e:
+        logger.error(f"Error saving ingredients: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to save ingredients: {str(e)}")
+
+@api_router.get("/users/{user_id}/ingredients")
+async def get_user_ingredients(user_id: str):
+    """Get user's saved ingredients"""
+    try:
+        doc = await db.user_ingredients.find_one({"userId": user_id})
+        if doc:
+            return {
+                "ingredients": doc.get("ingredients", []),
+                "lastUpdated": doc.get("lastUpdated"),
+                "count": len(doc.get("ingredients", []))
+            }
+        return {"ingredients": [], "lastUpdated": None, "count": 0}
+        
+    except Exception as e:
+        logger.error(f"Error getting ingredients: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to get ingredients: {str(e)}")
+
+@api_router.delete("/users/{user_id}/ingredients")
+async def clear_user_ingredients(user_id: str, ingredients_to_remove: Optional[List[str]] = None):
+    """Clear all or specific ingredients"""
+    try:
+        if ingredients_to_remove:
+            # Remove specific ingredients
+            await db.user_ingredients.update_one(
+                {"userId": user_id},
+                {"$pull": {"ingredients": {"$in": ingredients_to_remove}}}
+            )
+        else:
+            # Clear all
+            await db.user_ingredients.update_one(
+                {"userId": user_id},
+                {"$set": {"ingredients": [], "lastUpdated": datetime.utcnow()}}
+            )
+        return {"success": True}
+        
+    except Exception as e:
+        logger.error(f"Error clearing ingredients: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to clear ingredients: {str(e)}")
+
+@api_router.post("/users/{user_id}/smart-notification")
+async def get_smart_notification(user_id: str, request: SmartNotificationRequest):
+    """
+    Generate smart notification content based on:
+    - User's nutritional goals
+    - What they've eaten today
+    - Their available ingredients
+    """
+    try:
+        # Get user goals
+        user = await db.users.find_one({"id": user_id})
+        if not user or not user.get("goals"):
+            return SmartNotificationResponse(
+                message="Complete your profile to get personalized recommendations!",
+                caloriesConsumed=0,
+                caloriesRemaining=2000,
+                proteinConsumed=0,
+                proteinRemaining=100,
+                suggestedRecipes=[],
+                hasIngredients=False
+            )
+        
+        goals = user["goals"]
+        daily_calories = goals.get("dailyCalories", 2000)
+        daily_protein = goals.get("dailyProtein", 100)
+        goal_type = goals.get("goal", "maintain")
+        
+        # Get today's consumption
+        today_start = datetime.combine(date.today(), datetime.min.time())
+        today_end = datetime.combine(date.today(), datetime.max.time())
+        
+        meals_today = await db.meals.find({
+            "userId": user_id,
+            "timestamp": {"$gte": today_start, "$lte": today_end}
+        }).to_list(100)
+        
+        calories_consumed = sum(meal.get("calories", 0) for meal in meals_today)
+        protein_consumed = sum(meal.get("protein", 0) for meal in meals_today)
+        carbs_consumed = sum(meal.get("carbs", 0) for meal in meals_today)
+        fats_consumed = sum(meal.get("fats", 0) for meal in meals_today)
+        
+        calories_remaining = max(0, daily_calories - calories_consumed)
+        protein_remaining = max(0, daily_protein - protein_consumed)
+        
+        # Get user's ingredients
+        ingredients_doc = await db.user_ingredients.find_one({"userId": user_id})
+        user_ingredients = ingredients_doc.get("ingredients", []) if ingredients_doc else []
+        has_ingredients = len(user_ingredients) > 0
+        
+        # Generate smart recipe suggestions using AI
+        suggested_recipes = []
+        
+        if has_ingredients and calories_remaining > 100:
+            api_key = os.environ.get('EMERGENT_LLM_KEY')
+            if api_key:
+                try:
+                    # Language setup
+                    lang = request.language or "en"
+                    lang_instruction = "Respond in Spanish." if lang == "es" else "Respond in English."
+                    
+                    goal_context = {
+                        "lose": "losing weight (needs lower calorie, high protein options)",
+                        "gain": "building muscle (needs high protein, adequate calories)",
+                        "maintain": "maintaining weight (balanced nutrition)"
+                    }.get(goal_type, "maintaining a balanced diet")
+                    
+                    chat = LlmChat(
+                        api_key=api_key,
+                        session_id=f"smart_notif_{user_id}",
+                        system_message=f"""{lang_instruction}
+                        You are a helpful nutrition assistant. Suggest 2-3 quick recipe NAMES ONLY (not full recipes) 
+                        that the user can make with their available ingredients.
+                        
+                        User context:
+                        - Goal: {goal_context}
+                        - Needs approximately {calories_remaining} more calories today
+                        - Needs approximately {protein_remaining}g more protein today
+                        - Meal type: {request.mealType}
+                        
+                        Available ingredients: {', '.join(user_ingredients[:20])}
+                        
+                        Return ONLY a JSON array of recipe names, like: ["Recipe 1", "Recipe 2", "Recipe 3"]
+                        Keep names short and appetizing. Consider the user's nutritional needs.
+                        """
+                    ).with_model("openai", "gpt-4o-mini")
+                    
+                    response = await chat.send_message(UserMessage(text="Suggest recipes"))
+                    
+                    # Parse response
+                    import json
+                    response_text = response.strip()
+                    if "```json" in response_text:
+                        response_text = response_text.split("```json")[1].split("```")[0].strip()
+                    elif "```" in response_text:
+                        response_text = response_text.split("```")[1].split("```")[0].strip()
+                    
+                    suggested_recipes = json.loads(response_text)
+                    if not isinstance(suggested_recipes, list):
+                        suggested_recipes = []
+                    
+                except Exception as e:
+                    logger.error(f"Error generating recipe suggestions: {e}")
+                    suggested_recipes = []
+        
+        # Build message based on language
+        if request.language == "es":
+            if request.mealType == "lunch":
+                if calories_remaining > 500:
+                    message = f"🍽️ ¡Hora del almuerzo! Hoy puedes consumir ~{calories_remaining} cal más."
+                else:
+                    message = f"🥗 ¡Hora del almuerzo! Ya casi alcanzas tu meta. Te quedan {calories_remaining} cal."
+            else:  # dinner
+                if calories_consumed == 0:
+                    message = f"🌙 ¡Hora de cenar! Aún no registraste comidas hoy. Meta: {daily_calories} cal."
+                elif calories_remaining > 300:
+                    message = f"🌙 Consumiste {calories_consumed} cal hoy. Te faltan {calories_remaining} cal y {protein_remaining}g de proteína."
+                else:
+                    message = f"🌙 ¡Casi completas tu meta! Te quedan solo {calories_remaining} cal. Opta por algo ligero."
+            
+            if suggested_recipes:
+                message += f" Con tus ingredientes podrías hacer: {', '.join(suggested_recipes[:2])}"
+        else:
+            if request.mealType == "lunch":
+                if calories_remaining > 500:
+                    message = f"🍽️ Lunch time! You can still have ~{calories_remaining} cal today."
+                else:
+                    message = f"🥗 Lunch time! You're close to your goal. {calories_remaining} cal remaining."
+            else:  # dinner
+                if calories_consumed == 0:
+                    message = f"🌙 Dinner time! No meals logged today yet. Goal: {daily_calories} cal."
+                elif calories_remaining > 300:
+                    message = f"🌙 You've had {calories_consumed} cal today. Still need {calories_remaining} cal and {protein_remaining}g protein."
+                else:
+                    message = f"🌙 Almost at your goal! Only {calories_remaining} cal left. Go for something light."
+            
+            if suggested_recipes:
+                message += f" With your ingredients you could make: {', '.join(suggested_recipes[:2])}"
+        
+        return SmartNotificationResponse(
+            message=message,
+            caloriesConsumed=calories_consumed,
+            caloriesRemaining=calories_remaining,
+            proteinConsumed=protein_consumed,
+            proteinRemaining=protein_remaining,
+            suggestedRecipes=suggested_recipes,
+            hasIngredients=has_ingredients
+        )
+        
+    except Exception as e:
+        logger.error(f"Error generating smart notification: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to generate notification: {str(e)}")
+
+@api_router.get("/users/{user_id}/nutrition-summary")
+async def get_nutrition_summary(user_id: str):
+    """Get comprehensive nutrition summary for today vs goals"""
+    try:
+        # Get user goals
+        user = await db.users.find_one({"id": user_id})
+        goals = user.get("goals", {}) if user else {}
+        
+        # Get today's consumption
+        today_start = datetime.combine(date.today(), datetime.min.time())
+        today_end = datetime.combine(date.today(), datetime.max.time())
+        
+        meals_today = await db.meals.find({
+            "userId": user_id,
+            "timestamp": {"$gte": today_start, "$lte": today_end}
+        }).to_list(100)
+        
+        consumed = {
+            "calories": sum(meal.get("calories", 0) for meal in meals_today),
+            "protein": sum(meal.get("protein", 0) for meal in meals_today),
+            "carbs": sum(meal.get("carbs", 0) for meal in meals_today),
+            "fats": sum(meal.get("fats", 0) for meal in meals_today),
+        }
+        
+        daily_goals = {
+            "calories": goals.get("dailyCalories", 2000),
+            "protein": goals.get("dailyProtein", 100),
+            "carbs": goals.get("dailyCarbs", 250),
+            "fats": goals.get("dailyFats", 65),
+        }
+        
+        remaining = {
+            "calories": max(0, daily_goals["calories"] - consumed["calories"]),
+            "protein": max(0, daily_goals["protein"] - consumed["protein"]),
+            "carbs": max(0, daily_goals["carbs"] - consumed["carbs"]),
+            "fats": max(0, daily_goals["fats"] - consumed["fats"]),
+        }
+        
+        # Calculate percentages
+        percentages = {
+            "calories": min(100, int((consumed["calories"] / daily_goals["calories"]) * 100)) if daily_goals["calories"] > 0 else 0,
+            "protein": min(100, int((consumed["protein"] / daily_goals["protein"]) * 100)) if daily_goals["protein"] > 0 else 0,
+            "carbs": min(100, int((consumed["carbs"] / daily_goals["carbs"]) * 100)) if daily_goals["carbs"] > 0 else 0,
+            "fats": min(100, int((consumed["fats"] / daily_goals["fats"]) * 100)) if daily_goals["fats"] > 0 else 0,
+        }
+        
+        return {
+            "consumed": consumed,
+            "goals": daily_goals,
+            "remaining": remaining,
+            "percentages": percentages,
+            "mealCount": len(meals_today),
+            "userGoal": goals.get("goal", "maintain")
+        }
+        
+    except Exception as e:
+        logger.error(f"Error getting nutrition summary: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to get nutrition summary: {str(e)}")
+
 # Include the router in the main app
 app.include_router(api_router)
 
