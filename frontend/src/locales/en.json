@@ -179,6 +179,7 @@
     "startPremium": "Start Premium",
     "restorePurchase": "Restore Purchase",
     "notNow": "Not now",
+    "priceShownInStore": "Final price shown in Google Play before purchase confirmation.",
     "disclaimer": "Subscription automatically renews unless cancelled at least 24 hours before the end of the current period. Payment will be charged to your App Store or Google Play account.",
     "purchaseFailed": "Purchase Failed",
     "tryAgain": "Please try again later",
