@@ -500,4 +500,62 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#555',
   },
+  // Language Modal Styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: '#1a1a1a',
+    borderRadius: 16,
+    padding: 20,
+    width: '85%',
+    maxWidth: 320,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  languageOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 8,
+    backgroundColor: '#2a2a2a',
+  },
+  languageOptionSelected: {
+    backgroundColor: '#FF6B6B20',
+    borderWidth: 1,
+    borderColor: '#FF6B6B',
+  },
+  languageFlag: {
+    fontSize: 24,
+    marginRight: 12,
+  },
+  languageText: {
+    fontSize: 16,
+    color: '#fff',
+    flex: 1,
+  },
+  languageTextSelected: {
+    color: '#FF6B6B',
+    fontWeight: '600',
+  },
+  modalCloseButton: {
+    marginTop: 12,
+    padding: 16,
+    backgroundColor: '#333',
+    borderRadius: 12,
+    alignItems: 'center',
+  },
+  modalCloseText: {
+    fontSize: 16,
+    color: '#aaa',
+  },
 });
