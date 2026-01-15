@@ -500,12 +500,14 @@ async def get_user(user_id: str):
 async def set_user_goals(user_id: str, request: SetUserGoalsRequest):
     """Set user goals and calculate daily targets"""
     try:
-        daily_calories, daily_protein = calculate_daily_needs(
+        # Calculate daily needs with the new comprehensive function
+        daily_needs = calculate_daily_needs(
             request.age,
             request.height,
             request.weight,
             request.activityLevel,
-            request.goal
+            request.goal,
+            request.gender or "male"
         )
         
         goals = UserGoals(
@@ -514,16 +516,22 @@ async def set_user_goals(user_id: str, request: SetUserGoalsRequest):
             weight=request.weight,
             activityLevel=request.activityLevel,
             goal=request.goal,
-            dailyCalories=daily_calories,
-            dailyProtein=daily_protein
+            dailyCalories=daily_needs["calories"],
+            dailyProtein=daily_needs["protein"]
         )
+        
+        # Also store carbs and fats targets
+        goals_dict = goals.dict()
+        goals_dict["dailyCarbs"] = daily_needs["carbs"]
+        goals_dict["dailyFats"] = daily_needs["fats"]
+        goals_dict["gender"] = request.gender or "male"
         
         await db.users.update_one(
             {"id": user_id},
-            {"$set": {"goals": goals.dict()}}
+            {"$set": {"goals": goals_dict}}
         )
         
-        return {"success": True, "goals": goals.dict()}
+        return {"success": True, "goals": goals_dict}
         
     except Exception as e:
         logger.error(f"Error setting user goals: {str(e)}")
