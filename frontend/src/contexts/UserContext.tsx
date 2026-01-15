@@ -111,11 +111,20 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     if (!targetId) return;
     
     try {
-      const response = await fetch(`${API_URL}/api/users/${targetId}`);
+      console.log('[UserContext] Refreshing user data...');
+      const response = await fetchWithTimeout(`${API_URL}/api/users/${targetId}`, {}, 10000);
+      
+      if (!response.ok) {
+        console.warn('[UserContext] Server returned non-OK status:', response.status);
+        return;
+      }
+      
       const data = await response.json();
       setIsPremium(data.isPremium || false);
+      console.log('[UserContext] User refreshed, isPremium:', data.isPremium);
     } catch (error) {
-      console.error('Failed to refresh user:', error);
+      console.error('[UserContext] Failed to refresh user:', error);
+      // Don't throw - this is a non-critical operation
     }
   };
 
