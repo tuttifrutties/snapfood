@@ -590,10 +590,10 @@ async def analyze_ingredients(request: AnalyzeIngredientsRequest):
                 Be specific but concise."""
             ).with_model("openai", "gpt-4o")
             
-            # Add data URI prefix if not present (OpenAI requires this format)
+            # Remove data URI prefix if present (the library adds it automatically)
             image_base64 = request.imageBase64
-            if not image_base64.startswith('data:image'):
-                image_base64 = f"data:image/jpeg;base64,{image_base64}"
+            if image_base64.startswith('data:image'):
+                image_base64 = image_base64.split(',', 1)[1] if ',' in image_base64 else image_base64
             
             image_content = ImageContent(image_base64=image_base64)
             user_message = UserMessage(
