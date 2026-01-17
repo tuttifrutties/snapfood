@@ -1,10 +1,9 @@
 /**
  * Paywall Screen
- * Minimal paywall: no hardcoded prices, single CTA.
- * Purchase uses RevenueCat package (prefer monthly, fallback annual).
+ * Shows both Monthly and Annual subscription options
  */
 
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -33,15 +32,19 @@ export default function PaywallScreen() {
     isLoading: premiumLoading,
   } = usePremium();
 
+  const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'annual'>('monthly');
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
 
   const isProcessing = isPurchasing || isRestoring || premiumLoading;
 
-  // Prefer monthly; if not available, fallback to annual; if none, show graceful error.
-  const selectedPackage: PurchasesPackage | null = useMemo(() => {
+  // Get the selected package based on user choice
+  const getSelectedPackage = (): PurchasesPackage | null => {
+    if (selectedPlan === 'annual' && annualPackage) {
+      return annualPackage;
+    }
     return monthlyPackage || annualPackage || null;
-  }, [monthlyPackage, annualPackage]);
+  };
 
   // If already premium, redirect back
   if (isPremium) {
@@ -65,7 +68,8 @@ export default function PaywallScreen() {
   }
 
   const handlePurchase = async () => {
-    if (!selectedPackage) {
+    const pkg = getSelectedPackage();
+    if (!pkg) {
       Alert.alert(
         t('common.error'),
         Platform.OS === 'web'
@@ -77,7 +81,7 @@ export default function PaywallScreen() {
 
     setIsPurchasing(true);
     try {
-      const result = await purchase(selectedPackage);
+      const result = await purchase(pkg);
 
       if (result.success) {
         Alert.alert(
@@ -135,6 +139,10 @@ export default function PaywallScreen() {
     }
   };
 
+  // Get price strings from packages
+  const monthlyPrice = monthlyPackage?.product?.priceString || '$3.99';
+  const annualPrice = annualPackage?.product?.priceString || '$29.99';
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -161,7 +169,55 @@ export default function PaywallScreen() {
           <FeatureItem title={t('paywall.feature6Title')} description={t('paywall.feature6Desc')} />
         </View>
 
-        {/* Single CTA (no hardcoded prices) */}
+        {/* Plan Selection */}
+        <View style={styles.plansContainer}>
+          {/* Monthly Plan */}
+          {monthlyPackage && (
+            <TouchableOpacity
+              style={[
+                styles.planCard,
+                selectedPlan === 'monthly' && styles.planCardSelected
+              ]}
+              onPress={() => setSelectedPlan('monthly')}
+              disabled={isProcessing}
+            >
+              <View style={styles.planHeader}>
+                <Text style={styles.planTitle}>{t('paywall.monthly', 'Mensual')}</Text>
+                {selectedPlan === 'monthly' && (
+                  <Ionicons name="checkmark-circle" size={24} color="#FFD700" />
+                )}
+              </View>
+              <Text style={styles.planPrice}>{monthlyPrice}</Text>
+              <Text style={styles.planPeriod}>{t('paywall.perMonth', '/ mes')}</Text>
+            </TouchableOpacity>
+          )}
+
+          {/* Annual Plan */}
+          {annualPackage && (
+            <TouchableOpacity
+              style={[
+                styles.planCard,
+                selectedPlan === 'annual' && styles.planCardSelected
+              ]}
+              onPress={() => setSelectedPlan('annual')}
+              disabled={isProcessing}
+            >
+              <View style={styles.saveBadge}>
+                <Text style={styles.saveBadgeText}>{t('paywall.save', 'AHORRÁ')} 40%</Text>
+              </View>
+              <View style={styles.planHeader}>
+                <Text style={styles.planTitle}>{t('paywall.annual', 'Anual')}</Text>
+                {selectedPlan === 'annual' && (
+                  <Ionicons name="checkmark-circle" size={24} color="#FFD700" />
+                )}
+              </View>
+              <Text style={styles.planPrice}>{annualPrice}</Text>
+              <Text style={styles.planPeriod}>{t('paywall.perYear', '/ año')}</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {/* Purchase Button */}
         <TouchableOpacity
           style={[styles.purchaseButton, isProcessing && styles.purchaseButtonDisabled]}
           onPress={handlePurchase}
@@ -170,11 +226,12 @@ export default function PaywallScreen() {
           {isPurchasing ? (
             <ActivityIndicator color="#000" />
           ) : (
-            <Text style={styles.purchaseButtonText}>{t('paywall.startPremium')}</Text>
+            <Text style={styles.purchaseButtonText}>
+              {t('paywall.subscribe', 'Suscribirse')} - {selectedPlan === 'annual' ? annualPrice : monthlyPrice}
+            </Text>
           )}
         </TouchableOpacity>
 
-        {/* Optional hint to reduce confusion */}
         <Text style={styles.hint}>
           {t('paywall.priceShownInStore', 'El precio final se muestra en Google Play antes de confirmar.')}
         </Text>
@@ -226,11 +283,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   content: { padding: 24, paddingTop: 100 },
-  header: { alignItems: 'center', marginBottom: 40 },
+  header: { alignItems: 'center', marginBottom: 32 },
   title: { fontSize: 32, fontWeight: 'bold', color: '#fff', marginTop: 16, marginBottom: 8 },
   subtitle: { fontSize: 16, color: '#aaa', textAlign: 'center' },
-  featuresContainer: { marginBottom: 28 },
-  featureItem: { flexDirection: 'row', marginBottom: 20, gap: 16 },
+  featuresContainer: { marginBottom: 24 },
+  featureItem: { flexDirection: 'row', marginBottom: 16, gap: 16 },
   checkCircle: {
     width: 40, height: 40, borderRadius: 20,
     backgroundColor: '#FF6B6B', alignItems: 'center', justifyContent: 'center',
@@ -238,6 +295,61 @@ const styles = StyleSheet.create({
   featureText: { flex: 1 },
   featureTitle: { fontSize: 16, fontWeight: '600', color: '#fff', marginBottom: 4 },
   featureDescription: { fontSize: 14, color: '#aaa' },
+
+  // Plan selection styles
+  plansContainer: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 20,
+  },
+  planCard: {
+    flex: 1,
+    backgroundColor: '#1a1a1a',
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 2,
+    borderColor: '#333',
+    alignItems: 'center',
+  },
+  planCardSelected: {
+    borderColor: '#FFD700',
+    backgroundColor: '#1a1a1a',
+  },
+  planHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 8,
+  },
+  planTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#fff',
+  },
+  planPrice: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#FFD700',
+  },
+  planPeriod: {
+    fontSize: 14,
+    color: '#888',
+    marginTop: 4,
+  },
+  saveBadge: {
+    position: 'absolute',
+    top: -10,
+    right: -10,
+    backgroundColor: '#4CAF50',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  saveBadgeText: {
+    color: '#fff',
+    fontSize: 11,
+    fontWeight: 'bold',
+  },
 
   purchaseButton: {
     backgroundColor: '#FFD700',
