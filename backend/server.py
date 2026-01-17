@@ -421,6 +421,24 @@ async def get_today_meals_count(user_id: str):
         logger.error(f"Error getting meal count: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to get meal count: {str(e)}")
 
+@api_router.get("/analysis-count/{user_id}/today")
+async def get_today_analysis_count(user_id: str):
+    """Get count of analysis attempts today for a user (for daily limit)"""
+    try:
+        today_start = datetime.combine(date.today(), datetime.min.time())
+        today_end = datetime.combine(date.today(), datetime.max.time())
+        
+        count = await db.analysis_attempts.count_documents({
+            "user_id": user_id,
+            "timestamp": {"$gte": today_start, "$lte": today_end}
+        })
+        
+        return {"count": count}
+        
+    except Exception as e:
+        logger.error(f"Error getting analysis count: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to get analysis count: {str(e)}")
+
 @api_router.get("/meals/{user_id}")
 async def get_user_meals(user_id: str, limit: int = 50):
     """Get meal history for a user"""
