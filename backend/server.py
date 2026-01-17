@@ -590,7 +590,12 @@ async def analyze_ingredients(request: AnalyzeIngredientsRequest):
                 Be specific but concise."""
             ).with_model("openai", "gpt-4o")
             
-            image_content = ImageContent(image_base64=request.imageBase64)
+            # Add data URI prefix if not present (OpenAI requires this format)
+            image_base64 = request.imageBase64
+            if not image_base64.startswith('data:image'):
+                image_base64 = f"data:image/jpeg;base64,{image_base64}"
+            
+            image_content = ImageContent(image_base64=image_base64)
             user_message = UserMessage(
                 text="Please identify all ingredients visible in this photo and return them as a JSON array.",
                 file_contents=[image_content]
