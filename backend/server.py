@@ -84,12 +84,13 @@ class SaveMealRequest(BaseModel):
     photoBase64: str
     dishName: str
     ingredients: List[str]
-    calories: int
+    calories: float  # Changed to float for flexibility
     protein: float
     carbs: float
     fats: float
-    portionSize: str
-    warnings: List[str]
+    portionSize: Optional[str] = "medium"  # Made optional with default
+    portions: Optional[float] = 1.0  # Added portions field
+    warnings: Optional[List[str]] = []  # Made optional with default
 
 class SetUserGoalsRequest(BaseModel):
     userId: str
