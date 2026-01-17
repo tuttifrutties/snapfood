@@ -28,13 +28,16 @@ export default function HistoryScreen() {
   const [dailyTotals, setDailyTotals] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    if (!isPremium) {
-      setIsLoading(false);
-      return;
-    }
-    loadHistory();
-  }, [userId, isPremium]);
+  // Refresh data every time the screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      if (!isPremium) {
+        setIsLoading(false);
+        return;
+      }
+      loadHistory();
+    }, [userId, isPremium])
+  );
 
   const loadHistory = async () => {
     if (!userId) return;
