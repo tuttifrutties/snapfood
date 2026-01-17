@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useUser } from '../../src/contexts/UserContext';
 import { usePremium } from '../../src/contexts/PremiumContext';
 import { useRouter } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
 import { format } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 
