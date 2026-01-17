@@ -287,6 +287,14 @@ async def analyze_food(request: AnalyzeFoodRequest):
         logger.info(f"Image base64 starts with: {raw_base64[:50] if raw_base64 else 'EMPTY'}...")
         logger.info(f"Image base64 length: {len(raw_base64) if raw_base64 else 0}")
         
+        # Track this analysis attempt (counts towards daily limit)
+        await db.analysis_attempts.insert_one({
+            "user_id": request.userId,
+            "timestamp": datetime.utcnow(),
+            "type": "food"
+        })
+        logger.info(f"Recorded analysis attempt for user: {request.userId}")
+        
         # Initialize LLM chat with OpenAI GPT-4 Vision
         api_key = os.environ.get('EMERGENT_LLM_KEY')
         if not api_key:
