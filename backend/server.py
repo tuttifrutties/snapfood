@@ -327,8 +327,14 @@ async def analyze_food(request: AnalyzeFoodRequest):
             """
         ).with_model("openai", "gpt-4o")
         
-        # Create image content
-        image_content = ImageContent(image_base64=request.imageBase64)
+        # Create image content - ensure proper format for OpenAI
+        image_base64 = request.imageBase64
+        # Add data URI prefix if not present (OpenAI requires this format)
+        if not image_base64.startswith('data:image'):
+            # Default to JPEG as most camera photos are JPEG
+            image_base64 = f"data:image/jpeg;base64,{image_base64}"
+        
+        image_content = ImageContent(image_base64=image_base64)
         
         # Send message with image
         user_message = UserMessage(
