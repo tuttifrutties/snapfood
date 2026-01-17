@@ -327,12 +327,12 @@ async def analyze_food(request: AnalyzeFoodRequest):
             """
         ).with_model("openai", "gpt-4o")
         
-        # Create image content - ensure proper format for OpenAI
+        # Create image content - ensure clean base64 without data URI prefix
         image_base64 = request.imageBase64
-        # Add data URI prefix if not present (OpenAI requires this format)
-        if not image_base64.startswith('data:image'):
-            # Default to JPEG as most camera photos are JPEG
-            image_base64 = f"data:image/jpeg;base64,{image_base64}"
+        # Remove data URI prefix if present (the library adds it automatically)
+        if image_base64.startswith('data:image'):
+            # Extract just the base64 part after the comma
+            image_base64 = image_base64.split(',', 1)[1] if ',' in image_base64 else image_base64
         
         image_content = ImageContent(image_base64=image_base64)
         
