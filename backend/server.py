@@ -281,6 +281,11 @@ async def analyze_food(request: AnalyzeFoodRequest):
     try:
         logger.info(f"Analyzing food for user: {request.userId} in language: {request.language}")
         
+        # Log image info for debugging
+        raw_base64 = request.imageBase64
+        logger.info(f"Image base64 starts with: {raw_base64[:50] if raw_base64 else 'EMPTY'}...")
+        logger.info(f"Image base64 length: {len(raw_base64) if raw_base64 else 0}")
+        
         # Initialize LLM chat with OpenAI GPT-4 Vision
         api_key = os.environ.get('EMERGENT_LLM_KEY')
         if not api_key:
