@@ -29,7 +29,8 @@ export default function HomeScreen() {
   const checkTodayCount = async () => {
     if (!userId) return;
     try {
-      const response = await fetch(`${API_URL}/api/meals/${userId}/today`);
+      // Use analysis count instead of saved meals count
+      const response = await fetch(`${API_URL}/api/analysis-count/${userId}/today`);
       const data = await response.json();
       setTodayCount(data.count);
     } catch (error) {
