@@ -54,12 +54,19 @@ export function PremiumProvider({ children }: { children: React.ReactNode }) {
   // Extract monthly and annual packages from offering
   const monthlyPackage =
     offering?.availablePackages?.find(
-      (pkg: any) => pkg?.packageType === 'MONTHLY' || pkg?.identifier === '$rc_monthly'
+      (pkg: any) => 
+        pkg?.packageType === 'MONTHLY' || 
+        pkg?.identifier === '$rc_monthly' ||
+        pkg?.identifier?.toLowerCase()?.includes('monthly')
     ) || null;
 
   const annualPackage =
     offering?.availablePackages?.find(
-      (pkg: any) => pkg?.packageType === 'ANNUAL' || pkg?.identifier === '$rc_annual'
+      (pkg: any) => 
+        pkg?.packageType === 'ANNUAL' || 
+        pkg?.identifier === '$rc_annual' ||
+        pkg?.identifier?.toLowerCase()?.includes('annual') ||
+        pkg?.identifier?.toLowerCase()?.includes('yearly')
     ) || null;
 
   /**
