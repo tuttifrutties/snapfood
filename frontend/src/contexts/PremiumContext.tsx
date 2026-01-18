@@ -96,12 +96,24 @@ export function PremiumProvider({ children }: { children: React.ReactNode }) {
           setOffering(currentOffering);
         }
 
+        // Debug: Log all packages
         console.log('[PremiumContext] Initialized:', {
           premium,
           hasOffering: !!currentOffering,
           offeringId: currentOffering?.identifier ?? null,
           packagesCount: currentOffering?.availablePackages?.length ?? 0,
         });
+        
+        // Log each package for debugging
+        if (currentOffering?.availablePackages) {
+          currentOffering.availablePackages.forEach((pkg: any, index: number) => {
+            console.log(`[PremiumContext] Package ${index}:`, {
+              identifier: pkg?.identifier,
+              packageType: pkg?.packageType,
+              productId: pkg?.product?.identifier,
+            });
+          });
+        }
 
         // Set up listener for subscription changes
         unsubscribe = addCustomerInfoListener((customerInfo: any) => {
