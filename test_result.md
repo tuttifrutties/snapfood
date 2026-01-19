@@ -393,10 +393,12 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus: []
-  stuck_tasks: []
+  current_focus:
+    - "Recipe suggestions with translation system"
+  stuck_tasks:
+    - "Recipe suggestions with translation system"
   test_all: false
-  test_priority: "high_first"
+  test_priority: "stuck_first"
 
 agent_communication:
   - agent: "main"
