@@ -439,3 +439,43 @@ agent_communication:
       2. ✅ Translate all content to target language using OpenAI GPT-4o
       
       The translation system is production-ready and handles multiple languages correctly.
+  - agent: "main"
+    message: |
+      🔧 MAJOR RECIPE SYSTEM IMPROVEMENTS IMPLEMENTED
+      
+      Based on user feedback, I've made significant improvements to the recipe system:
+      
+      **BACKEND CHANGES (server.py):**
+      1. Improved recipe prompt to STRICTLY use only user's ingredients
+         - First 5-6 recipes: ONLY use provided ingredients (+ salt/pepper/oil/water)
+         - Last 2-3 recipes: "Bonus" recipes that need 1-2 common extra ingredients
+      2. Added new fields to Recipe model:
+         - requiresExtraIngredients: boolean
+         - extraIngredientsNeeded: array of strings
+      
+      **FRONTEND CHANGES:**
+      1. cooking/index.tsx:
+         - Recipes now shown in TWO SECTIONS:
+           * "Con tus ingredientes" (green checkmark) - recipes using only user's ingredients
+           * "¿Y si consigues algo más?" (gold sparkles) - bonus recipes needing extras
+         - Added ingredient memory: loads remembered ingredients on screen open
+         - Extra ingredients clearly shown with shopping cart icon
+      
+      2. cooking/recipe/[id].tsx:
+         - Added "¡Quiero preparar esto!" confirmation button
+         - Instructions are LOCKED until user confirms
+         - On confirm: unused ingredients saved to memory for next time
+      
+      3. services/ingredients.ts:
+         - New functions: saveIngredientsToMemory, getRememberedIngredients, confirmRecipeAndUpdateMemory
+         - Ingredients expire after 1 week
+         - Automatic cleanup of expired ingredients
+      
+      4. services/recipeImage.ts:
+         - Improved search query to be more food-focused
+         - Added cleaning of generic words for better image results
+      
+      **PLEASE TEST:**
+      - POST /api/recipe-suggestions with ingredients list
+      - Verify recipes are separated correctly (main vs bonus)
+      - Verify extraIngredientsNeeded field is populated for bonus recipes
