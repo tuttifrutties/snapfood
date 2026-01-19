@@ -516,3 +516,44 @@ agent_communication:
       - POST /api/recipe-suggestions with ingredients list
       - Verify recipes are separated correctly (main vs bonus)
       - Verify extraIngredientsNeeded field is populated for bonus recipes
+  - agent: "testing"
+    message: |
+      ❌ CRITICAL ISSUES FOUND IN RECIPE SUGGESTIONS ENDPOINT
+      
+      Tested POST /api/recipe-suggestions with exact payload from review request:
+      - userId: "test-user-123"
+      - ingredients: ["chicken breast", "potato", "carrot", "egg", "onion"]
+      - language: "es"
+      
+      🚨 MAJOR PROBLEMS IDENTIFIED:
+      
+      1. ❌ OPENAI API BUDGET EXHAUSTED:
+         * "Budget has been exceeded! Current cost: 1.4096667920496644, Max budget: 1.4"
+         * Translation failing intermittently due to budget limits
+         * Causing 500 errors and inconsistent behavior
+      
+      2. ❌ INGREDIENT RESTRICTION LOGIC BROKEN:
+         * Recipe 6 should require extra ingredients but doesn't (requiresExtraIngredients: false)
+         * Only 2 out of 3 bonus recipes correctly marked as requiring extras
+         * Logic for separating main vs bonus recipes is inconsistent
+      
+      3. ❌ PYDANTIC VALIDATION ERRORS:
+         * AI returning ingredients as objects: {'name': 'chicken', 'quantity': '500g'}
+         * Expected strings but getting dictionaries
+         * Causes 500 Internal Server Error for some requests
+      
+      4. ⚠️ PERFORMANCE DEGRADATION:
+         * Response time: 41.7 seconds (expected: 10-20 seconds)
+         * Significantly slower than previous tests
+      
+      ✅ WORKING ASPECTS:
+      - Returns 8 recipes as expected
+      - New fields (requiresExtraIngredients, extraIngredientsNeeded) present
+      - Spanish translation working when budget allows ("Sartén de Pollo y Papas")
+      - Main recipes correctly use only provided ingredients
+      
+      🔧 IMMEDIATE FIXES NEEDED:
+      1. Increase OpenAI API budget or implement fallback
+      2. Fix ingredient restriction logic for bonus recipes
+      3. Strengthen Pydantic validation to handle AI response variations
+      4. Optimize performance to meet 10-20 second target
