@@ -32,6 +32,14 @@ export default function PaywallScreen() {
     isLoading: premiumLoading,
   } = usePremium();
 
+  // Debug log for packages
+  console.log('[Paywall] Packages:', {
+    hasMonthly: !!monthlyPackage,
+    hasAnnual: !!annualPackage,
+    monthlyId: monthlyPackage?.identifier,
+    annualId: annualPackage?.identifier,
+  });
+
   const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'annual'>('monthly');
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [isRestoring, setIsRestoring] = useState(false);
