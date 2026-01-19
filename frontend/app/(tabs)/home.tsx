@@ -23,21 +23,25 @@ export default function HomeScreen() {
   const { t } = useTranslation();
   const [todayCount, setTodayCount] = useState(0);
 
-  useEffect(() => {
-    checkTodayCount();
-  }, [userId]);
-
-  const checkTodayCount = async () => {
+  const checkTodayCount = useCallback(async () => {
     if (!userId) return;
     try {
       // Use analysis count instead of saved meals count
       const response = await fetch(`${API_URL}/api/analysis-count/${userId}/today`);
       const data = await response.json();
+      console.log('[Home] Today analysis count:', data.count);
       setTodayCount(data.count);
     } catch (error) {
       console.error('Failed to check today count:', error);
     }
-  };
+  }, [userId]);
+
+  // Refresh count when screen comes into focus
+  useFocusEffect(
+    useCallback(() => {
+      checkTodayCount();
+    }, [checkTodayCount])
+  );
 
   const handleTrackFood = () => {
     if (!isPremium && todayCount >= 2) {
