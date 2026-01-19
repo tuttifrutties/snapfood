@@ -292,18 +292,19 @@ def test_get_user_meals(user_id):
         return None, False
 
 def test_recipe_suggestions_spanish():
-    """Test POST /api/recipe-suggestions with Spanish language"""
-    print("\n=== Testing Recipe Suggestions with Spanish Translation ===")
+    """Test POST /api/recipe-suggestions with Spanish language and new ingredient restrictions"""
+    print("\n=== Testing Recipe Suggestions with Spanish Translation & Ingredient Restrictions ===")
     
     try:
+        # Use the exact payload from the review request
         payload = {
             "userId": "test-user-123",
-            "ingredients": ["chicken", "rice", "tomatoes", "garlic"],
+            "ingredients": ["chicken breast", "potato", "carrot", "egg", "onion"],
             "language": "es"
         }
         
         print(f"📤 Request: {json.dumps(payload, indent=2)}")
-        print("⏳ This may take 10-15 seconds for AI generation + translation...")
+        print("⏳ This may take 10-20 seconds for AI generation + translation...")
         
         start_time = time.time()
         response = requests.post(f"{BACKEND_URL}/recipe-suggestions", json=payload, timeout=60)
@@ -317,15 +318,79 @@ def test_recipe_suggestions_spanish():
             
             print(f"✅ Received {len(recipes)} recipe suggestions")
             
-            # Check if recipes are in Spanish
+            # TEST 1: Check recipe count (should be 8)
+            recipe_count_ok = len(recipes) == 8
+            print(f"📊 Recipe Count: {len(recipes)}/8 {'✅' if recipe_count_ok else '❌'}")
+            
+            # TEST 2: Check new fields presence
+            new_fields_ok = True
+            missing_fields = []
+            
+            for i, recipe in enumerate(recipes):
+                if "requiresExtraIngredients" not in recipe:
+                    missing_fields.append(f"Recipe {i+1}: missing requiresExtraIngredients")
+                    new_fields_ok = False
+                if "extraIngredientsNeeded" not in recipe:
+                    missing_fields.append(f"Recipe {i+1}: missing extraIngredientsNeeded")
+                    new_fields_ok = False
+            
+            print(f"🔧 New Fields Present: {'✅' if new_fields_ok else '❌'}")
+            if missing_fields:
+                for field in missing_fields[:3]:  # Show first 3 issues
+                    print(f"   ❌ {field}")
+            
+            # TEST 3: Check first 5-6 recipes (should NOT require extra ingredients)
+            main_recipes = recipes[:6]
+            main_recipes_ok = True
+            main_violations = []
+            
+            for i, recipe in enumerate(main_recipes):
+                requires_extra = recipe.get("requiresExtraIngredients", True)
+                extra_needed = recipe.get("extraIngredientsNeeded", [])
+                
+                if requires_extra:
+                    main_violations.append(f"Recipe {i+1} '{recipe.get('name', 'Unknown')}' incorrectly requires extra ingredients")
+                    main_recipes_ok = False
+                
+                if len(extra_needed) > 0:
+                    main_violations.append(f"Recipe {i+1} '{recipe.get('name', 'Unknown')}' has extra ingredients: {extra_needed}")
+                    main_recipes_ok = False
+            
+            print(f"🥘 Main Recipes (No Extra): {'✅' if main_recipes_ok else '❌'}")
+            if main_violations:
+                for violation in main_violations[:3]:  # Show first 3 issues
+                    print(f"   ❌ {violation}")
+            
+            # TEST 4: Check last 2-3 recipes (should require extra ingredients)
+            bonus_recipes = recipes[-3:]
+            bonus_recipes_ok = True
+            bonus_issues = []
+            
+            for i, recipe in enumerate(bonus_recipes):
+                recipe_num = len(recipes) - 3 + i + 1
+                requires_extra = recipe.get("requiresExtraIngredients", False)
+                extra_needed = recipe.get("extraIngredientsNeeded", [])
+                
+                if not requires_extra:
+                    bonus_issues.append(f"Recipe {recipe_num} '{recipe.get('name', 'Unknown')}' should require extra ingredients")
+                    bonus_recipes_ok = False
+                
+                if len(extra_needed) == 0:
+                    bonus_issues.append(f"Recipe {recipe_num} '{recipe.get('name', 'Unknown')}' should list extra ingredients needed")
+                    bonus_recipes_ok = False
+                elif len(extra_needed) > 2:
+                    bonus_issues.append(f"Recipe {recipe_num} '{recipe.get('name', 'Unknown')}' has too many extra ingredients: {extra_needed}")
+                    bonus_recipes_ok = False
+            
+            print(f"🌟 Bonus Recipes (Extra Needed): {'✅' if bonus_recipes_ok else '❌'}")
+            if bonus_issues:
+                for issue in bonus_issues[:3]:  # Show first 3 issues
+                    print(f"   ❌ {issue}")
+            
+            # TEST 5: Check Spanish translation
             spanish_indicators = []
             
             for i, recipe in enumerate(recipes):
-                print(f"\n📝 Recipe {i+1}: {recipe.get('name', 'Unknown')}")
-                print(f"   Description: {recipe.get('description', '')[:100]}...")
-                print(f"   First ingredient: {recipe.get('ingredients', [''])[0] if recipe.get('ingredients') else 'None'}")
-                print(f"   First instruction: {recipe.get('instructions', [''])[0] if recipe.get('instructions') else 'None'}")
-                
                 # Check for Spanish content
                 name = recipe.get('name', '').lower()
                 description = recipe.get('description', '').lower()
@@ -333,7 +398,7 @@ def test_recipe_suggestions_spanish():
                 instructions = ' '.join(recipe.get('instructions', [])).lower()
                 
                 # Common Spanish words/patterns in cooking
-                spanish_words = ['pollo', 'arroz', 'tomate', 'ajo', 'con', 'de', 'en', 'el', 'la', 'los', 'las', 
+                spanish_words = ['pollo', 'papa', 'zanahoria', 'huevo', 'cebolla', 'con', 'de', 'en', 'el', 'la', 'los', 'las', 
                                'minutos', 'cocinar', 'agregar', 'añadir', 'mezclar', 'calentar', 'freír', 'hervir',
                                'cucharada', 'cucharadita', 'taza', 'gramos', 'aceite', 'sal', 'pimienta']
                 
@@ -344,17 +409,42 @@ def test_recipe_suggestions_spanish():
                         found_spanish.append(word)
                 
                 if found_spanish:
-                    spanish_indicators.append(f"Recipe {i+1}: {found_spanish[:3]}")
+                    spanish_indicators.extend(found_spanish)
             
-            if spanish_indicators:
-                print(f"\n🇪🇸 SPANISH CONTENT DETECTED:")
-                for indicator in spanish_indicators:
-                    print(f"   ✅ {indicator}")
-                return True
-            else:
-                print(f"\n❌ NO SPANISH CONTENT DETECTED - Recipes appear to be in English")
-                print("   This indicates translation is NOT working")
-                return False
+            spanish_translation_ok = len(spanish_indicators) > 0
+            print(f"🇪🇸 Spanish Translation: {'✅' if spanish_translation_ok else '❌'}")
+            if spanish_translation_ok:
+                unique_spanish = list(set(spanish_indicators))[:5]
+                print(f"   Found Spanish words: {unique_spanish}")
+            
+            # Show sample recipes for verification
+            print(f"\n📋 SAMPLE RECIPES:")
+            
+            # Show first 2 main recipes
+            for i in range(min(2, len(recipes))):
+                recipe = recipes[i]
+                print(f"   Recipe {i+1}: {recipe.get('name', 'Unknown')}")
+                print(f"   - Requires extra: {recipe.get('requiresExtraIngredients', 'N/A')}")
+                print(f"   - Extra needed: {recipe.get('extraIngredientsNeeded', [])}")
+                print(f"   - Ingredients: {recipe.get('ingredients', [])[:3]}...")
+                print()
+            
+            # Show last 2 bonus recipes
+            for i in range(max(0, len(recipes)-2), len(recipes)):
+                recipe = recipes[i]
+                print(f"   Recipe {i+1}: {recipe.get('name', 'Unknown')}")
+                print(f"   - Requires extra: {recipe.get('requiresExtraIngredients', 'N/A')}")
+                print(f"   - Extra needed: {recipe.get('extraIngredientsNeeded', [])}")
+                print(f"   - Ingredients: {recipe.get('ingredients', [])[:3]}...")
+                print()
+            
+            # Overall success
+            all_tests_passed = (recipe_count_ok and new_fields_ok and main_recipes_ok and 
+                              bonus_recipes_ok and spanish_translation_ok)
+            
+            print(f"\n🎯 OVERALL RESULT: {'✅ ALL TESTS PASSED' if all_tests_passed else '❌ SOME TESTS FAILED'}")
+            
+            return all_tests_passed
                 
         else:
             print(f"❌ Failed with status {response.status_code}: {response.text}")
