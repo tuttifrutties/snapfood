@@ -247,18 +247,57 @@ export default function RecipeDetailScreen() {
             ))}
           </View>
 
-          {/* Instructions */}
+          {/* Confirm Button - shows before instructions */}
+          {!isConfirmed && (
+            <TouchableOpacity 
+              style={styles.confirmButton}
+              onPress={handleConfirmRecipe}
+              disabled={isConfirming}
+            >
+              {isConfirming ? (
+                <ActivityIndicator color="#fff" size="small" />
+              ) : (
+                <>
+                  <Ionicons name="checkmark-circle" size={24} color="#fff" />
+                  <Text style={styles.confirmButtonText}>
+                    {i18n.language === 'es' 
+                      ? '¡Quiero preparar esto!' 
+                      : 'I want to prepare this!'}
+                  </Text>
+                </>
+              )}
+            </TouchableOpacity>
+          )}
+
+          {/* Instructions - shown after confirmation */}
           <Text style={styles.sectionTitle}>{t('recipe.instructions')}</Text>
-          <View style={styles.instructionsList}>
-            {recipe.instructions?.map((instruction: string, index: number) => (
-              <View key={index} style={styles.instructionItem}>
-                <View style={styles.stepNumber}>
-                  <Text style={styles.stepNumberText}>{index + 1}</Text>
+          
+          {!isConfirmed ? (
+            <View style={styles.lockedInstructions}>
+              <Ionicons name="lock-closed" size={40} color="#555" />
+              <Text style={styles.lockedText}>
+                {i18n.language === 'es'
+                  ? 'Presiona el botón de arriba para ver los pasos'
+                  : 'Press the button above to see the steps'}
+              </Text>
+              <Text style={styles.lockedSubtext}>
+                {i18n.language === 'es'
+                  ? 'Esto actualizará tu lista de ingredientes guardados'
+                  : 'This will update your saved ingredients list'}
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.instructionsList}>
+              {recipe.instructions?.map((instruction: string, index: number) => (
+                <View key={index} style={styles.instructionItem}>
+                  <View style={styles.stepNumber}>
+                    <Text style={styles.stepNumberText}>{index + 1}</Text>
+                  </View>
+                  <Text style={styles.instructionText}>{instruction}</Text>
                 </View>
-                <Text style={styles.instructionText}>{instruction}</Text>
-              </View>
-            ))}
-          </View>
+              ))}
+            </View>
+          )}
 
           {/* Tips if available */}
           {recipe.tips && recipe.tips.length > 0 && (
