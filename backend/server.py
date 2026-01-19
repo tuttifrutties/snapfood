@@ -766,7 +766,9 @@ Return as JSON array with requiresExtraIngredients and extraIngredientsNeeded fi
                     fats=recipe_dict.get("fats", 15.0),
                     healthierOption=recipe_dict.get("healthierOption"),
                     countryOfOrigin=recipe_dict.get("countryOfOrigin"),
-                    cuisine=recipe_dict.get("cuisine")
+                    cuisine=recipe_dict.get("cuisine"),
+                    requiresExtraIngredients=recipe_dict.get("requiresExtraIngredients", False),
+                    extraIngredientsNeeded=recipe_dict.get("extraIngredientsNeeded", [])
                 )
                 recipes.append(recipe)
             
