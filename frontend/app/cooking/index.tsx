@@ -244,6 +244,7 @@ export default function CookingScreen() {
     router.push({
       pathname: '/cooking/recipe/[id]',
       params: { 
+        id: recipe.id,
         recipeData: JSON.stringify(recipe),
         selectedIngredients: JSON.stringify(selectedIngredients),
       },
