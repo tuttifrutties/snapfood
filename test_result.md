@@ -237,9 +237,9 @@ backend:
 
   - task: "Recipe suggestions with translation system"
     implemented: true
-    working: true
+    working: false
     file: "server.py"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
@@ -270,6 +270,43 @@ backend:
           TECHNICAL FIX APPLIED:
           - Updated translation prompt to preserve exact JSON structure and keep ingredients as strings
           - Fixed Pydantic validation error where AI was restructuring ingredients as objects
+      - working: false
+        agent: "testing"
+        comment: |
+          ❌ CRITICAL ISSUES FOUND: Recipe suggestions endpoint has multiple problems affecting functionality.
+          
+          TESTED ENDPOINT: POST /api/recipe-suggestions with payload:
+          - userId: "test-user-123"
+          - ingredients: ["chicken breast", "potato", "carrot", "egg", "onion"]  
+          - language: "es"
+          
+          ISSUES IDENTIFIED:
+          1. ❌ INGREDIENT RESTRICTION LOGIC BROKEN:
+             * Recipe 6 "Egg and Potato Salad" should require extra ingredients but doesn't
+             * Only 2 out of 3 bonus recipes correctly marked as requiring extra ingredients
+             * First 5-6 recipes correctly use only provided ingredients ✅
+          
+          2. ❌ OPENAI API BUDGET EXCEEDED:
+             * Translation failing: "Budget has been exceeded! Current cost: 1.4096667920496644, Max budget: 1.4"
+             * Spanish translation partially working but inconsistent due to budget limits
+             * Backend logs show "Translation failed" errors
+          
+          3. ❌ PYDANTIC VALIDATION ERRORS:
+             * AI returning ingredients as objects instead of strings
+             * Error: "Input should be a valid string [type=string_type, input_value={'name': 'chicken', 'quantity': '500g'}]"
+             * Causes 500 errors for some requests
+          
+          4. ⚠️ PERFORMANCE ISSUES:
+             * Response time: 41.7 seconds (expected: 10-20 seconds)
+             * Significantly slower than expected
+          
+          WORKING ASPECTS:
+          ✅ Returns 8 recipes as expected
+          ✅ New fields (requiresExtraIngredients, extraIngredientsNeeded) present
+          ✅ Spanish translation working when budget allows
+          ✅ Main recipes correctly use only provided ingredients
+          
+          CRITICAL: API budget exhaustion is blocking translation functionality and causing intermittent failures.
 
 frontend:
   - task: "User context and state management"
