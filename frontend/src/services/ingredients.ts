@@ -145,3 +145,168 @@ export async function clearAllIngredients(userId: string): Promise<boolean> {
     return true;
   }
 }
+
+// ============================================
+// INGREDIENTS MEMORY FUNCTIONS
+// Stores unused ingredients for 1 week
+// ============================================
+
+/**
+ * Save ingredients to memory (with expiration)
+ * Called when user has ingredients they haven't used yet
+ */
+export async function saveIngredientsToMemory(ingredients: string[]): Promise<void> {
+  try {
+    const now = Date.now();
+    const memory = await getIngredientsMemory();
+    
+    // Add new ingredients with current timestamp
+    const existingNames = memory.items.map(i => i.ingredient.toLowerCase());
+    const newItems: IngredientMemoryItem[] = ingredients
+      .filter(ing => !existingNames.includes(ing.toLowerCase()))
+      .map(ingredient => ({
+        ingredient,
+        savedAt: now,
+      }));
+    
+    // Merge with existing (update timestamp for existing ones)
+    const updatedItems = memory.items.map(item => {
+      const match = ingredients.find(ing => ing.toLowerCase() === item.ingredient.toLowerCase());
+      if (match) {
+        return { ...item, savedAt: now }; // Refresh timestamp
+      }
+      return item;
+    });
+    
+    const finalMemory: IngredientsMemory = {
+      items: [...updatedItems, ...newItems],
+      lastUpdated: now,
+    };
+    
+    await AsyncStorage.setItem(INGREDIENTS_MEMORY_KEY, JSON.stringify(finalMemory));
+    console.log('[Ingredients] Saved to memory:', ingredients.length, 'ingredients');
+  } catch (error) {
+    console.error('[Ingredients] Error saving to memory:', error);
+  }
+}
+
+/**
+ * Get ingredients from memory (filters out expired ones)
+ */
+export async function getIngredientsMemory(): Promise<IngredientsMemory> {
+  try {
+    const stored = await AsyncStorage.getItem(INGREDIENTS_MEMORY_KEY);
+    if (!stored) {
+      return { items: [], lastUpdated: 0 };
+    }
+    
+    const memory: IngredientsMemory = JSON.parse(stored);
+    const now = Date.now();
+    
+    // Filter out expired ingredients (older than 1 week)
+    const validItems = memory.items.filter(item => {
+      const age = now - item.savedAt;
+      return age < MEMORY_EXPIRATION_MS;
+    });
+    
+    // If some items expired, update storage
+    if (validItems.length !== memory.items.length) {
+      const updatedMemory: IngredientsMemory = {
+        items: validItems,
+        lastUpdated: now,
+      };
+      await AsyncStorage.setItem(INGREDIENTS_MEMORY_KEY, JSON.stringify(updatedMemory));
+    }
+    
+    return { items: validItems, lastUpdated: memory.lastUpdated };
+  } catch (error) {
+    console.error('[Ingredients] Error getting memory:', error);
+    return { items: [], lastUpdated: 0 };
+  }
+}
+
+/**
+ * Get remembered ingredient names (non-expired)
+ */
+export async function getRememberedIngredients(): Promise<string[]> {
+  const memory = await getIngredientsMemory();
+  return memory.items.map(item => item.ingredient);
+}
+
+/**
+ * Remove ingredients from memory (when user uses them in a recipe)
+ */
+export async function removeIngredientsFromMemory(ingredientsToRemove: string[]): Promise<void> {
+  try {
+    const memory = await getIngredientsMemory();
+    const lowerCaseToRemove = ingredientsToRemove.map(i => i.toLowerCase());
+    
+    const filteredItems = memory.items.filter(item => 
+      !lowerCaseToRemove.some(remove => 
+        item.ingredient.toLowerCase().includes(remove) || 
+        remove.includes(item.ingredient.toLowerCase())
+      )
+    );
+    
+    const updatedMemory: IngredientsMemory = {
+      items: filteredItems,
+      lastUpdated: Date.now(),
+    };
+    
+    await AsyncStorage.setItem(INGREDIENTS_MEMORY_KEY, JSON.stringify(updatedMemory));
+    console.log('[Ingredients] Removed from memory:', ingredientsToRemove.length, 'ingredients');
+  } catch (error) {
+    console.error('[Ingredients] Error removing from memory:', error);
+  }
+}
+
+/**
+ * Clear all ingredients memory
+ */
+export async function clearIngredientsMemory(): Promise<void> {
+  try {
+    await AsyncStorage.removeItem(INGREDIENTS_MEMORY_KEY);
+    console.log('[Ingredients] Memory cleared');
+  } catch (error) {
+    console.error('[Ingredients] Error clearing memory:', error);
+  }
+}
+
+/**
+ * Process recipe confirmation: remove used ingredients from memory
+ * @param recipeIngredients - Ingredients used in the recipe
+ * @param allSelectedIngredients - All ingredients the user had selected
+ */
+export async function confirmRecipeAndUpdateMemory(
+  recipeIngredients: string[],
+  allSelectedIngredients: string[]
+): Promise<string[]> {
+  try {
+    // Find ingredients that were NOT used in the recipe
+    const unusedIngredients = allSelectedIngredients.filter(selected => {
+      const selectedLower = selected.toLowerCase();
+      // Check if this ingredient was used in the recipe
+      return !recipeIngredients.some(recipeIng => {
+        const recipeLower = recipeIng.toLowerCase();
+        return recipeLower.includes(selectedLower) || selectedLower.includes(recipeLower);
+      });
+    });
+    
+    // Save unused ingredients to memory for next time
+    if (unusedIngredients.length > 0) {
+      await saveIngredientsToMemory(unusedIngredients);
+      console.log('[Ingredients] Saved unused ingredients to memory:', unusedIngredients);
+    }
+    
+    // Remove used ingredients from memory (in case they were there)
+    const usedIngredients = allSelectedIngredients.filter(ing => !unusedIngredients.includes(ing));
+    if (usedIngredients.length > 0) {
+      await removeIngredientsFromMemory(usedIngredients);
+    }
+    
+    return unusedIngredients;
+  } catch (error) {
+    console.error('[Ingredients] Error updating memory after recipe:', error);
+    return [];
+  }
+}
