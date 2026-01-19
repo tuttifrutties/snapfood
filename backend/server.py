@@ -682,13 +682,26 @@ async def get_recipe_suggestions(request: AnalyzeIngredientsRequest):
             session_id=f"recipe_suggestions_{request.userId}",
             system_message="""You are a professional chef AI that creates diverse, international recipe suggestions.
             
-            Given a list of available ingredients, suggest 8 different recipes from around the world.
-            IMPORTANT: Include recipes from DIFFERENT cuisines and countries. Mix it up!
+            CRITICAL RULE - INGREDIENTS RESTRICTION:
+            You will receive a list of ingredients that the user HAS AVAILABLE.
+            
+            FOR THE FIRST 5-6 RECIPES: You MUST ONLY use the ingredients provided by the user.
+            - DO NOT add any ingredients that are not in the user's list
+            - The ONLY exceptions allowed are: salt, pepper, water, and cooking oil (these are assumed to be always available)
+            - If the user says they have "chicken", you can ONLY use chicken - do not add capers, olives, wine, or any other ingredient
+            - Be creative with ONLY what they have
+            - Set "requiresExtraIngredients": false for these recipes
+            
+            FOR THE LAST 2-3 RECIPES (BONUS SECTION): You may suggest 1-2 COMMON, EASY-TO-FIND extra ingredients
+            - These are "bonus" recipes that require buying just 1-2 simple items
+            - Only suggest very common ingredients like: rice, pasta, bread, milk, cheese, onion, garlic, tomato, lemon
+            - Set "requiresExtraIngredients": true for these recipes
+            - Add "extraIngredientsNeeded": ["ingredient1", "ingredient2"] listing ONLY the extra items needed
             
             Each recipe must include:
             - name: Recipe name
             - description: Brief description of the dish
-            - ingredients: List of ingredients with quantities. ALWAYS include "Salt and pepper to taste" as a standard ingredient
+            - ingredients: List of ingredients with quantities (ONLY from user's list + salt/pepper/oil/water for first 5-6 recipes)
             - instructions: Step-by-step cooking instructions (array of strings, each step is clear)
             - cookingTime: Total time in minutes
             - servings: Number of servings
@@ -697,17 +710,25 @@ async def get_recipe_suggestions(request: AnalyzeIngredientsRequest):
             - carbs: Carbohydrates in grams per serving
             - fats: Fats in grams per serving
             - healthierOption: Optional suggestion for making it healthier
-            - countryOfOrigin: Country where this dish originates (e.g., "Italy", "Mexico", "China", "India", "Japan", "Thailand", "France", "Peru", "Morocco", "Korea", etc.)
-            - cuisine: Type of cuisine (e.g., "Italian", "Mexican", "Chinese", "Indian", "Japanese", "Thai", "French", "Peruvian", "Moroccan", "Korean", "American", "Mediterranean", etc.)
+            - countryOfOrigin: Country where this dish originates
+            - cuisine: Type of cuisine
+            - requiresExtraIngredients: boolean (false for first 5-6, true for bonus recipes)
+            - extraIngredientsNeeded: array of strings (empty for first recipes, 1-2 items for bonus recipes)
             
-            Return as JSON array of 8 recipes.
+            Return as JSON array of 8 recipes total.
             Make recipes beginner-friendly with clear, sequential instructions.
             Include recipes from at least 5 different countries/cuisines.
             """
         ).with_model("openai", "gpt-4o")
         
         user_message = UserMessage(
-            text=f"Create 8 diverse recipe suggestions from different world cuisines using these available ingredients: {ingredients_str}. Include at least 5 different countries of origin. Return as JSON array."
+            text=f"""Create 8 recipe suggestions using ONLY these available ingredients: {ingredients_str}
+
+STRICT RULES:
+1. For the FIRST 5-6 recipes: Use ONLY the ingredients I listed above. Do NOT add anything else except salt, pepper, water, and cooking oil.
+2. For the LAST 2-3 recipes: You may add 1-2 VERY COMMON extra ingredients (like rice, pasta, onion, garlic) and mark them as bonus recipes.
+
+Return as JSON array with requiresExtraIngredients and extraIngredientsNeeded fields."""
         )
         
         response = await chat.send_message(user_message)
