@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -12,6 +12,7 @@ import { useUser } from '../../src/contexts/UserContext';
 import { usePremium } from '../../src/contexts/PremiumContext';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import { useFocusEffect } from '@react-navigation/native';
 
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
