@@ -51,7 +51,20 @@ export default function CookingScreen() {
 
   useEffect(() => {
     checkTodayCookingCount();
+    loadRememberedIngredients();
   }, [userId]);
+
+  const loadRememberedIngredients = async () => {
+    try {
+      const remembered = await getRememberedIngredients();
+      if (remembered.length > 0) {
+        setSelectedIngredients(remembered);
+        console.log('[Cooking] Loaded remembered ingredients:', remembered.length);
+      }
+    } catch (error) {
+      console.error('[Cooking] Failed to load remembered ingredients:', error);
+    }
+  };
 
   const checkTodayCookingCount = async () => {
     if (!userId) return;
