@@ -2,6 +2,7 @@
  * Recipe Detail Screen
  * Shows full recipe with photo (searched from Unsplash)
  * If no photo found, shows a cute "sad plate" placeholder
+ * Includes "I want to prepare this" button for memory feature
  */
 
 import React, { useState, useEffect } from 'react';
@@ -14,24 +15,29 @@ import {
   Image,
   ActivityIndicator,
   Dimensions,
+  Alert,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { getRecipeImage, getCountryFlag } from '../../../src/services/recipeImage';
+import { confirmRecipeAndUpdateMemory } from '../../../src/services/ingredients';
 
 const { width } = Dimensions.get('window');
 const IMAGE_HEIGHT = 280;
 
 export default function RecipeDetailScreen() {
   const router = useRouter();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const params = useLocalSearchParams();
   
   const [recipe, setRecipe] = useState<any>(null);
+  const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isLoadingImage, setIsLoadingImage] = useState(true);
   const [imageError, setImageError] = useState(false);
+  const [isConfirmed, setIsConfirmed] = useState(false);
+  const [isConfirming, setIsConfirming] = useState(false);
 
   useEffect(() => {
     if (params.recipeData) {
@@ -43,7 +49,16 @@ export default function RecipeDetailScreen() {
         console.error('Failed to parse recipe data:', error);
       }
     }
-  }, [params.recipeData]);
+    
+    if (params.selectedIngredients) {
+      try {
+        const ingredients = JSON.parse(params.selectedIngredients as string);
+        setSelectedIngredients(ingredients);
+      } catch (error) {
+        console.error('Failed to parse selected ingredients:', error);
+      }
+    }
+  }, [params.recipeData, params.selectedIngredients]);
 
   const loadRecipeImage = async (recipeData: any) => {
     setIsLoadingImage(true);
@@ -65,6 +80,40 @@ export default function RecipeDetailScreen() {
       setImageError(true);
     } finally {
       setIsLoadingImage(false);
+    }
+  };
+
+  const handleConfirmRecipe = async () => {
+    if (!recipe) return;
+    
+    setIsConfirming(true);
+    try {
+      // Update ingredients memory - remove used, save unused
+      const unusedIngredients = await confirmRecipeAndUpdateMemory(
+        recipe.ingredients || [],
+        selectedIngredients
+      );
+      
+      setIsConfirmed(true);
+      
+      // Show confirmation message
+      const message = i18n.language === 'es'
+        ? unusedIngredients.length > 0
+          ? `¡Perfecto! Los ingredientes que no usaste (${unusedIngredients.join(', ')}) quedarán guardados para la próxima vez.`
+          : '¡Perfecto! ¡A cocinar!'
+        : unusedIngredients.length > 0
+          ? `Great! Unused ingredients (${unusedIngredients.join(', ')}) will be saved for next time.`
+          : 'Great! Let\'s cook!';
+      
+      Alert.alert(
+        i18n.language === 'es' ? '¡Manos a la obra!' : 'Let\'s Cook!',
+        message,
+        [{ text: 'OK' }]
+      );
+    } catch (error) {
+      console.error('Failed to confirm recipe:', error);
+    } finally {
+      setIsConfirming(false);
     }
   };
 
