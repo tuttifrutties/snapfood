@@ -522,6 +522,10 @@ export default function CookingScreen() {
 
   // Mode: Recipe results
   if (mode === 'results') {
+    // Separate recipes into two groups
+    const mainRecipes = recipes.filter(r => !r.requiresExtraIngredients);
+    const bonusRecipes = recipes.filter(r => r.requiresExtraIngredients);
+    
     return (
       <View style={styles.container}>
         <View style={styles.header}>
@@ -540,46 +544,131 @@ export default function CookingScreen() {
           </View>
         ) : (
           <ScrollView contentContainerStyle={styles.recipeList}>
-            {recipes.map((recipe) => (
-              <TouchableOpacity
-                key={recipe.id}
-                style={styles.recipeCard}
-                onPress={() => viewRecipe(recipe)}
-              >
-                <View style={styles.recipeHeader}>
-                  <Text style={styles.recipeName}>{recipe.name}</Text>
-                  <View style={styles.recipeTimeContainer}>
-                    <Ionicons name="time" size={16} color="#aaa" />
-                    <Text style={styles.recipeTime}>
-                      {t('cooking.cookingTime', { time: recipe.cookingTime })}
-                    </Text>
-                  </View>
+            {/* Main recipes - using only user's ingredients */}
+            {mainRecipes.length > 0 && (
+              <>
+                <View style={styles.sectionHeader}>
+                  <Ionicons name="checkmark-circle" size={20} color="#4CAF50" />
+                  <Text style={styles.sectionTitle}>
+                    {i18n.language === 'es' ? 'Con tus ingredientes' : 'With your ingredients'}
+                  </Text>
                 </View>
                 
-                {/* Country/Cuisine badge */}
-                {(recipe.countryOfOrigin || recipe.cuisine) && (
-                  <View style={styles.cuisineBadge}>
-                    <Ionicons name="globe-outline" size={14} color="#FF6B6B" />
-                    <Text style={styles.cuisineText}>
-                      {recipe.cuisine || recipe.countryOfOrigin}
-                      {recipe.countryOfOrigin && recipe.cuisine ? ` • ${recipe.countryOfOrigin}` : ''}
+                {mainRecipes.map((recipe) => (
+                  <TouchableOpacity
+                    key={recipe.id}
+                    style={styles.recipeCard}
+                    onPress={() => viewRecipe(recipe)}
+                  >
+                    <View style={styles.recipeHeader}>
+                      <Text style={styles.recipeName}>{recipe.name}</Text>
+                      <View style={styles.recipeTimeContainer}>
+                        <Ionicons name="time" size={16} color="#aaa" />
+                        <Text style={styles.recipeTime}>
+                          {t('cooking.cookingTime', { time: recipe.cookingTime })}
+                        </Text>
+                      </View>
+                    </View>
+                    
+                    {/* Country/Cuisine badge */}
+                    {(recipe.countryOfOrigin || recipe.cuisine) && (
+                      <View style={styles.cuisineBadge}>
+                        <Ionicons name="globe-outline" size={14} color="#FF6B6B" />
+                        <Text style={styles.cuisineText}>
+                          {recipe.cuisine || recipe.countryOfOrigin}
+                          {recipe.countryOfOrigin && recipe.cuisine ? ` • ${recipe.countryOfOrigin}` : ''}
+                        </Text>
+                      </View>
+                    )}
+                    
+                    <Text style={styles.recipeDescription}>{recipe.description}</Text>
+                    <View style={styles.recipeMacros}>
+                      <Text style={styles.recipeMacroText}>{recipe.calories} cal</Text>
+                      <Text style={styles.recipeMacroText}>P: {recipe.protein}g</Text>
+                      <Text style={styles.recipeMacroText}>C: {recipe.carbs}g</Text>
+                      <Text style={styles.recipeMacroText}>F: {recipe.fats}g</Text>
+                    </View>
+                    <TouchableOpacity style={styles.viewRecipeButton}>
+                      <Text style={styles.viewRecipeButtonText}>{t('cooking.viewRecipe')}</Text>
+                      <Ionicons name="chevron-forward" size={20} color="#FF6B6B" />
+                    </TouchableOpacity>
+                  </TouchableOpacity>
+                ))}
+              </>
+            )}
+            
+            {/* Bonus recipes - need extra ingredients */}
+            {bonusRecipes.length > 0 && (
+              <>
+                <View style={styles.bonusSectionHeader}>
+                  <View style={styles.bonusSectionTitleRow}>
+                    <Ionicons name="sparkles" size={20} color="#FFD700" />
+                    <Text style={styles.bonusSectionTitle}>
+                      {i18n.language === 'es' 
+                        ? '¿Y si consigues algo más?' 
+                        : 'What if you get a bit more?'}
                     </Text>
                   </View>
-                )}
-                
-                <Text style={styles.recipeDescription}>{recipe.description}</Text>
-                <View style={styles.recipeMacros}>
-                  <Text style={styles.recipeMacroText}>{recipe.calories} cal</Text>
-                  <Text style={styles.recipeMacroText}>P: {recipe.protein}g</Text>
-                  <Text style={styles.recipeMacroText}>C: {recipe.carbs}g</Text>
-                  <Text style={styles.recipeMacroText}>F: {recipe.fats}g</Text>
+                  <Text style={styles.bonusSectionSubtitle}>
+                    {i18n.language === 'es'
+                      ? 'Estas recetas necesitan 1-2 ingredientes extra'
+                      : 'These recipes need 1-2 extra ingredients'}
+                  </Text>
                 </View>
-                <TouchableOpacity style={styles.viewRecipeButton}>
-                  <Text style={styles.viewRecipeButtonText}>{t('cooking.viewRecipe')}</Text>
-                  <Ionicons name="chevron-forward" size={20} color="#FF6B6B" />
-                </TouchableOpacity>
-              </TouchableOpacity>
-            ))}
+                
+                {bonusRecipes.map((recipe) => (
+                  <TouchableOpacity
+                    key={recipe.id}
+                    style={[styles.recipeCard, styles.bonusRecipeCard]}
+                    onPress={() => viewRecipe(recipe)}
+                  >
+                    <View style={styles.recipeHeader}>
+                      <Text style={styles.recipeName}>{recipe.name}</Text>
+                      <View style={styles.recipeTimeContainer}>
+                        <Ionicons name="time" size={16} color="#aaa" />
+                        <Text style={styles.recipeTime}>
+                          {t('cooking.cookingTime', { time: recipe.cookingTime })}
+                        </Text>
+                      </View>
+                    </View>
+                    
+                    {/* Extra ingredients needed badge */}
+                    {recipe.extraIngredientsNeeded && recipe.extraIngredientsNeeded.length > 0 && (
+                      <View style={styles.extraIngredientsBadge}>
+                        <Ionicons name="cart-outline" size={14} color="#FFD700" />
+                        <Text style={styles.extraIngredientsText}>
+                          {i18n.language === 'es' ? 'Necesitas: ' : 'You need: '}
+                          {recipe.extraIngredientsNeeded.join(', ')}
+                        </Text>
+                      </View>
+                    )}
+                    
+                    {/* Country/Cuisine badge */}
+                    {(recipe.countryOfOrigin || recipe.cuisine) && (
+                      <View style={styles.cuisineBadge}>
+                        <Ionicons name="globe-outline" size={14} color="#FF6B6B" />
+                        <Text style={styles.cuisineText}>
+                          {recipe.cuisine || recipe.countryOfOrigin}
+                          {recipe.countryOfOrigin && recipe.cuisine ? ` • ${recipe.countryOfOrigin}` : ''}
+                        </Text>
+                      </View>
+                    )}
+                    
+                    <Text style={styles.recipeDescription}>{recipe.description}</Text>
+                    <View style={styles.recipeMacros}>
+                      <Text style={styles.recipeMacroText}>{recipe.calories} cal</Text>
+                      <Text style={styles.recipeMacroText}>P: {recipe.protein}g</Text>
+                      <Text style={styles.recipeMacroText}>C: {recipe.carbs}g</Text>
+                      <Text style={styles.recipeMacroText}>F: {recipe.fats}g</Text>
+                    </View>
+                    <TouchableOpacity style={styles.viewRecipeButton}>
+                      <Text style={styles.viewRecipeButtonText}>{t('cooking.viewRecipe')}</Text>
+                      <Ionicons name="chevron-forward" size={20} color="#FF6B6B" />
+                    </TouchableOpacity>
+                  </TouchableOpacity>
+                ))}
+              </>
+            )}
           </ScrollView>
         )}
       </View>
