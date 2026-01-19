@@ -2,17 +2,30 @@
  * Ingredients Service
  * Handles saving and retrieving user's available ingredients
  * Auto-saves when user selects ingredients
+ * Includes memory feature with 1-week expiration
  */
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 const LOCAL_INGREDIENTS_KEY = 'user_ingredients_cache';
+const INGREDIENTS_MEMORY_KEY = 'ingredients_memory';
+const MEMORY_EXPIRATION_MS = 7 * 24 * 60 * 60 * 1000; // 1 week in milliseconds
 
 interface IngredientsResponse {
   ingredients: string[];
   lastUpdated: string | null;
   count: number;
+}
+
+interface IngredientMemoryItem {
+  ingredient: string;
+  savedAt: number; // timestamp
+}
+
+interface IngredientsMemory {
+  items: IngredientMemoryItem[];
+  lastUpdated: number;
 }
 
 /**
