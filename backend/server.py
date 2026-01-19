@@ -147,6 +147,8 @@ class Recipe(BaseModel):
     healthierOption: Optional[str] = None
     countryOfOrigin: Optional[str] = None  # Country or region where this dish originates
     cuisine: Optional[str] = None  # Type of cuisine (Italian, Mexican, Chinese, etc.)
+    requiresExtraIngredients: bool = False  # True if this is a "bonus" recipe needing extra items
+    extraIngredientsNeeded: List[str] = []  # List of extra ingredients needed for bonus recipes
 
 class RecipeSuggestionsResponse(BaseModel):
     recipes: List[Recipe]
