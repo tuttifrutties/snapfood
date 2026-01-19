@@ -61,9 +61,16 @@ async function searchUnsplash(query: string): Promise<{
   photographerUrl?: string;
 }> {
   try {
-    // Use Unsplash source (free, no API key needed for basic usage)
-    // This returns a random image matching the query
-    const searchQuery = encodeURIComponent(`${query} food dish plate`);
+    // Build a more specific search query for better results
+    // Remove generic words and add "food" context
+    const cleanedQuery = query
+      .replace(/con\s+/gi, '') // Remove Spanish "con" (with)
+      .replace(/with\s+/gi, '') // Remove English "with"
+      .replace(/a\s+la\s+/gi, '') // Remove Spanish "a la"
+      .trim();
+    
+    // Create a food-focused search query
+    const searchQuery = encodeURIComponent(`${cleanedQuery} food recipe dish prepared meal`);
     
     // Try the Unsplash API first (if key is configured)
     if (UNSPLASH_ACCESS_KEY && UNSPLASH_ACCESS_KEY !== 'your_unsplash_access_key') {
