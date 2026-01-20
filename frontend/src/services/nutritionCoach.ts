@@ -379,7 +379,7 @@ export async function getWeekSummary(): Promise<{
 }
 
 // ============================================
-// SMART SUGGESTIONS
+// SMART SUGGESTIONS - SNACKS BY COUNTRY
 // ============================================
 
 export interface SnackSuggestion {
@@ -388,48 +388,135 @@ export interface SnackSuggestion {
   description: string;
 }
 
-const SNACKS_BY_REGION: { [region: string]: SnackSuggestion[] } = {
-  latam: [
-    { name: 'Frutas frescas', calories: 80, description: 'Manzana, banana, naranja o uvas' },
+const SNACKS_BY_COUNTRY: { [countryCode: string]: SnackSuggestion[] } = {
+  // Argentina
+  AR: [
     { name: 'Yogur natural', calories: 100, description: 'Sin azúcar agregada' },
-    { name: 'Frutos secos', calories: 160, description: 'Un puñado de nueces o almendras' },
-    { name: 'Gelatina light', calories: 25, description: 'Opción dulce y baja en calorías' },
-    { name: 'Tostadas integrales', calories: 120, description: 'Con queso fresco o palta' },
-    { name: 'Mate o té verde', calories: 5, description: 'Para calmar el apetito' },
+    { name: 'Frutas frescas', calories: 80, description: 'Manzana, banana, naranja' },
+    { name: 'Mate', calories: 5, description: 'Para calmar el apetito' },
+    { name: 'Tostadas con queso untable', calories: 120, description: 'Light, 2 unidades' },
+    { name: 'Gelatina light', calories: 25, description: 'Postre bajo en calorías' },
+    { name: 'Barra de cereal', calories: 90, description: 'Sin azúcar' },
   ],
-  northam: [
-    { name: 'Greek yogurt', calories: 100, description: 'Plain, non-fat' },
-    { name: 'Apple with peanut butter', calories: 180, description: '1 tbsp peanut butter' },
-    { name: 'Rice cakes', calories: 70, description: 'With hummus' },
-    { name: 'Cottage cheese', calories: 110, description: 'Low-fat, 1/2 cup' },
-    { name: 'Mixed nuts', calories: 160, description: 'Small handful (1 oz)' },
-    { name: 'Baby carrots', calories: 40, description: 'With hummus dip' },
-  ],
-  europe: [
-    { name: 'Yogur griego', calories: 100, description: 'Natural sin azúcar' },
-    { name: 'Queso fresco', calories: 90, description: 'Con pepino o tomate' },
-    { name: 'Fruta de temporada', calories: 80, description: 'Manzana, pera, melocotón' },
-    { name: 'Tostada integral', calories: 100, description: 'Con aceite de oliva' },
+  // Chile
+  CL: [
+    { name: 'Frutas frescas', calories: 80, description: 'Manzana, pera, uva' },
+    { name: 'Yogur griego', calories: 100, description: 'Sin azúcar' },
     { name: 'Frutos secos', calories: 160, description: 'Nueces, almendras' },
-    { name: 'Infusión herbal', calories: 5, description: 'Sin azúcar' },
+    { name: 'Pan integral con palta', calories: 150, description: 'Media palta' },
+    { name: 'Leche descremada', calories: 80, description: '1 vaso' },
+    { name: 'Barrita de quinoa', calories: 100, description: 'Snack saludable' },
   ],
-  asia: [
-    { name: 'Edamame', calories: 120, description: 'Steamed soybeans' },
-    { name: 'Fresh fruit', calories: 80, description: 'Mango, papaya, dragon fruit' },
-    { name: 'Rice crackers', calories: 100, description: 'Light and crispy' },
-    { name: 'Miso soup', calories: 40, description: 'Warm and filling' },
-    { name: 'Green tea', calories: 5, description: 'Unsweetened' },
-    { name: 'Seaweed snacks', calories: 30, description: 'Roasted nori' },
+  // México
+  MX: [
+    { name: 'Jícama con limón', calories: 50, description: 'Con chile en polvo' },
+    { name: 'Pepino con limón', calories: 30, description: 'Snack refrescante' },
+    { name: 'Frutas frescas', calories: 80, description: 'Mango, papaya, sandía' },
+    { name: 'Yogur natural', calories: 100, description: 'Sin azúcar' },
+    { name: 'Palomitas naturales', calories: 90, description: 'Sin mantequilla' },
+    { name: 'Nopales', calories: 20, description: 'Asados o en ensalada' },
   ],
-  oceania: [
-    { name: 'Vegemite on toast', calories: 100, description: 'Whole grain bread' },
+  // Colombia
+  CO: [
+    { name: 'Frutas frescas', calories: 80, description: 'Guayaba, maracuyá, lulo' },
+    { name: 'Yogur natural', calories: 100, description: 'Sin azúcar' },
+    { name: 'Arepa pequeña', calories: 120, description: 'Con queso bajo en grasa' },
+    { name: 'Aguacate', calories: 80, description: 'Un cuarto de unidad' },
+    { name: 'Bocadillo con queso', calories: 130, description: 'Porción pequeña' },
+    { name: 'Agua de panela', calories: 60, description: 'Sin exceso' },
+  ],
+  // Brasil
+  BR: [
+    { name: 'Frutas frescas', calories: 80, description: 'Açaí light, mamão, abacaxi' },
+    { name: 'Iogurte natural', calories: 100, description: 'Sem açúcar' },
+    { name: 'Castanha do Pará', calories: 100, description: '3 unidades' },
+    { name: 'Tapioca leve', calories: 120, description: 'Com queijo cottage' },
+    { name: 'Água de coco', calories: 45, description: 'Natural' },
+    { name: 'Banana', calories: 90, description: 'Com canela' },
+  ],
+  // España
+  ES: [
+    { name: 'Yogur natural', calories: 100, description: 'Sin azúcar' },
+    { name: 'Frutas de temporada', calories: 80, description: 'Manzana, pera, naranja' },
+    { name: 'Tostada integral', calories: 100, description: 'Con tomate y aceite' },
+    { name: 'Jamón serrano', calories: 70, description: '2 lonchas finas' },
+    { name: 'Frutos secos', calories: 160, description: 'Almendras, nueces' },
+    { name: 'Infusión', calories: 5, description: 'Sin azúcar' },
+  ],
+  // Italia
+  IT: [
+    { name: 'Frutta fresca', calories: 80, description: 'Mela, pera, uva' },
+    { name: 'Yogurt greco', calories: 100, description: 'Senza zucchero' },
+    { name: 'Parmigiano', calories: 110, description: 'Piccola porzione' },
+    { name: 'Bruschetta', calories: 120, description: 'Con pomodoro' },
+    { name: 'Frutta secca', calories: 160, description: 'Mandorle, noci' },
+    { name: 'Tè verde', calories: 5, description: 'Senza zucchero' },
+  ],
+  // United States
+  US: [
+    { name: 'Greek yogurt', calories: 100, description: 'Plain, non-fat' },
+    { name: 'Apple with almond butter', calories: 180, description: '1 tbsp butter' },
+    { name: 'Baby carrots', calories: 40, description: 'With hummus' },
+    { name: 'Rice cakes', calories: 70, description: 'With avocado' },
+    { name: 'Mixed nuts', calories: 160, description: 'Small handful' },
+    { name: 'String cheese', calories: 80, description: '1 piece' },
+  ],
+  // Canada
+  CA: [
     { name: 'Greek yogurt', calories: 100, description: 'With berries' },
-    { name: 'Avocado toast', calories: 180, description: 'Half an avocado' },
-    { name: 'Mixed nuts', calories: 160, description: 'Raw, unsalted' },
-    { name: 'Fresh fruit', calories: 80, description: 'Apple, banana, or berries' },
-    { name: 'Flat white', calories: 80, description: 'Skim milk' },
+    { name: 'Apple slices', calories: 80, description: 'With peanut butter' },
+    { name: 'Trail mix', calories: 150, description: 'Small portion' },
+    { name: 'Cottage cheese', calories: 110, description: 'Low-fat' },
+    { name: 'Whole grain crackers', calories: 100, description: 'With cheese' },
+    { name: 'Maple water', calories: 20, description: 'Natural hydration' },
   ],
-  other: [
+  // France
+  FR: [
+    { name: 'Yaourt nature', calories: 100, description: 'Sans sucre ajouté' },
+    { name: 'Fruits frais', calories: 80, description: 'Pomme, poire, raisin' },
+    { name: 'Fromage blanc', calories: 90, description: '0% de matière grasse' },
+    { name: 'Pain complet', calories: 100, description: 'Avec un peu de beurre' },
+    { name: 'Amandes', calories: 160, description: 'Petite poignée' },
+    { name: 'Thé vert', calories: 5, description: 'Sans sucre' },
+  ],
+  // Germany
+  DE: [
+    { name: 'Naturjoghurt', calories: 100, description: 'Ohne Zucker' },
+    { name: 'Frisches Obst', calories: 80, description: 'Apfel, Birne, Trauben' },
+    { name: 'Vollkornbrot', calories: 100, description: 'Mit Käse' },
+    { name: 'Quark', calories: 90, description: 'Magerquark' },
+    { name: 'Nüsse', calories: 160, description: 'Kleine Portion' },
+    { name: 'Grüner Tee', calories: 5, description: 'Ohne Zucker' },
+  ],
+  // United Kingdom
+  GB: [
+    { name: 'Greek yogurt', calories: 100, description: 'Plain, low-fat' },
+    { name: 'Fresh fruit', calories: 80, description: 'Apple, pear, berries' },
+    { name: 'Oatcakes', calories: 90, description: 'With cottage cheese' },
+    { name: 'Rice cakes', calories: 70, description: 'With nut butter' },
+    { name: 'Mixed nuts', calories: 160, description: 'Unsalted' },
+    { name: 'Herbal tea', calories: 5, description: 'No sugar' },
+  ],
+  // Portugal
+  PT: [
+    { name: 'Iogurte natural', calories: 100, description: 'Sem açúcar' },
+    { name: 'Fruta fresca', calories: 80, description: 'Maçã, pera, laranja' },
+    { name: 'Tostas integrais', calories: 100, description: 'Com queijo fresco' },
+    { name: 'Frutos secos', calories: 160, description: 'Amêndoas, nozes' },
+    { name: 'Chá verde', calories: 5, description: 'Sem açúcar' },
+    { name: 'Queijo fresco', calories: 90, description: 'Porção pequena' },
+  ],
+  // Japan
+  JP: [
+    { name: '枝豆 (Edamame)', calories: 120, description: 'Steamed soybeans' },
+    { name: '果物 (Fresh fruit)', calories: 80, description: 'Apple, persimmon' },
+    { name: 'おにぎり (Onigiri)', calories: 150, description: 'Small rice ball' },
+    { name: '味噌汁 (Miso soup)', calories: 40, description: 'Warm and filling' },
+    { name: '緑茶 (Green tea)', calories: 5, description: 'Unsweetened' },
+    { name: '海苔 (Nori)', calories: 30, description: 'Roasted seaweed' },
+  ],
+  // Default / Other
+  OTHER: [
     { name: 'Fresh fruit', calories: 80, description: 'Any seasonal fruit' },
     { name: 'Yogurt', calories: 100, description: 'Plain, low-fat' },
     { name: 'Mixed nuts', calories: 160, description: 'Small handful' },
@@ -439,11 +526,26 @@ const SNACKS_BY_REGION: { [region: string]: SnackSuggestion[] } = {
   ],
 };
 
-export function getSnackSuggestions(region: string, remainingCalories: number): SnackSuggestion[] {
-  const regionSnacks = SNACKS_BY_REGION[region] || SNACKS_BY_REGION.other;
+// Fallback to region if country not found
+const REGION_FALLBACKS: { [region: string]: string } = {
+  latam: 'AR',
+  northam: 'US',
+  europe: 'ES',
+  asia: 'JP',
+  oceania: 'US',
+  other: 'OTHER',
+};
+
+export function getSnackSuggestions(country: string, region: string, remainingCalories: number): SnackSuggestion[] {
+  // Try country first, then region fallback
+  let snacks = SNACKS_BY_COUNTRY[country];
+  if (!snacks) {
+    const fallbackCountry = REGION_FALLBACKS[region] || 'OTHER';
+    snacks = SNACKS_BY_COUNTRY[fallbackCountry] || SNACKS_BY_COUNTRY.OTHER;
+  }
   
   // Filter snacks that fit within remaining calories
-  return regionSnacks.filter(s => s.calories <= remainingCalories).slice(0, 3);
+  return snacks.filter(s => s.calories <= remainingCalories).slice(0, 3);
 }
 
 export async function getDailyCoachMessage(language: string): Promise<string | null> {
