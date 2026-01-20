@@ -7,6 +7,8 @@ import en from '../locales/en.json';
 import es from '../locales/es.json';
 import pt from '../locales/pt.json';
 import it from '../locales/it.json';
+import fr from '../locales/fr.json';
+import de from '../locales/de.json';
 
 const LANGUAGE_STORAGE_KEY = 'app_language';
 
