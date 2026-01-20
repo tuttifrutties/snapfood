@@ -17,6 +17,8 @@ const resources = {
   es: { translation: es },
   pt: { translation: pt },
   it: { translation: it },
+  fr: { translation: fr },
+  de: { translation: de },
 };
 
 // Supported languages for device language detection
