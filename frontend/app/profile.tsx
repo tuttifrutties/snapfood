@@ -109,7 +109,6 @@ export default function PersonalProfileScreen() {
   const router = useRouter();
   const { t, i18n } = useTranslation();
   const { isPremium } = usePremium();
-  const viewShotRef = useRef<ViewShot>(null);
 
   const [profile, setProfile] = useState<UserNutritionProfile | null>(null);
   const [weekSummary, setWeekSummary] = useState<any>(null);
