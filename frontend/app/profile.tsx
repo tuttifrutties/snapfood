@@ -31,7 +31,6 @@ import {
   PhysicalActivity,
   UserNutritionProfile,
 } from '../src/services/nutritionCoach';
-import ViewShot from 'react-native-view-shot';
 
 const { width } = Dimensions.get('window');
 
