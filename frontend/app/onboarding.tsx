@@ -16,6 +16,12 @@ import { useUser } from '../src/contexts/UserContext';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  PHYSICAL_ACTIVITIES,
+  getActivityLabel,
+  saveUserNutritionProfile,
+  PhysicalActivity,
+} from '../src/services/nutritionCoach';
 
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
