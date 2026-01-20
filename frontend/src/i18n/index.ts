@@ -22,7 +22,7 @@ const resources = {
 };
 
 // Supported languages for device language detection
-const supportedLanguages = ['en', 'es', 'pt', 'it'];
+const supportedLanguages = ['en', 'es', 'pt', 'it', 'fr', 'de'];
 
 const initI18n = async () => {
   // Try to get saved language
