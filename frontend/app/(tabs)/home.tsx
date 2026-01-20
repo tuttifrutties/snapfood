@@ -113,6 +113,33 @@ export default function HomeScreen() {
           <Ionicons name="chevron-forward" size={24} color="#aaa" />
         </TouchableOpacity>
 
+        {/* Mi Ficha Personal - Premium Feature */}
+        <TouchableOpacity 
+          style={styles.actionCard} 
+          onPress={() => router.push('/profile')}
+        >
+          <View style={[styles.iconContainer, { backgroundColor: '#FFD70020' }]}>
+            <Ionicons name="person-circle" size={48} color="#FFD700" />
+          </View>
+          <View style={styles.cardContent}>
+            <Text style={styles.cardTitle}>
+              {i18n.language === 'es' ? 'Mi Ficha Personal' : 'My Profile'}
+            </Text>
+            <Text style={styles.cardDescription}>
+              {i18n.language === 'es' 
+                ? 'Tu progreso, estadísticas y objetivos' 
+                : 'Your progress, stats and goals'}
+            </Text>
+            {!isPremium && (
+              <View style={styles.premiumBadge}>
+                <Ionicons name="lock-closed" size={14} color="#FFD700" />
+                <Text style={styles.premiumText}>Premium</Text>
+              </View>
+            )}
+          </View>
+          <Ionicons name="chevron-forward" size={24} color="#aaa" />
+        </TouchableOpacity>
+
         {!isPremium && todayCount >= 2 && (
           <View style={styles.upgradePrompt}>
             <Text style={styles.upgradeText}>{t('home.dailyLimitReached')}</Text>
