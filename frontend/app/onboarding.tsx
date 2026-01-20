@@ -74,7 +74,7 @@ const COUNTRIES = [
 export default function OnboardingScreen() {
   const router = useRouter();
   const { userId, completeOnboarding } = useUser();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [step, setStep] = useState(1);
 
   const [country, setCountry] = useState<string>('');
@@ -85,6 +85,12 @@ export default function OnboardingScreen() {
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
   const [activityLevel, setActivityLevel] = useState<string>('moderate');
+  
+  // Physical activities state
+  const [selectedActivities, setSelectedActivities] = useState<PhysicalActivity[]>([]);
+  const [editingActivity, setEditingActivity] = useState<string | null>(null);
+  const [activityDuration, setActivityDuration] = useState('30');
+  const [activityDays, setActivityDays] = useState<number[]>([]);
 
   const filteredCountries = COUNTRIES.filter(c => 
     c.name.toLowerCase().includes(countrySearch.toLowerCase()) ||
