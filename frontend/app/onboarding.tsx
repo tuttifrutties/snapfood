@@ -71,6 +71,16 @@ const COUNTRIES = [
   { code: 'OTHER', name: 'Otro / Other', region: 'other', flag: '🌍' },
 ];
 
+const DAYS_OF_WEEK = [
+  { id: 0, short: 'D', label: 'Domingo' },
+  { id: 1, short: 'L', label: 'Lunes' },
+  { id: 2, short: 'M', label: 'Martes' },
+  { id: 3, short: 'X', label: 'Miércoles' },
+  { id: 4, short: 'J', label: 'Jueves' },
+  { id: 5, short: 'V', label: 'Viernes' },
+  { id: 6, short: 'S', label: 'Sábado' },
+];
+
 export default function OnboardingScreen() {
   const router = useRouter();
   const { userId, completeOnboarding } = useUser();
@@ -84,7 +94,6 @@ export default function OnboardingScreen() {
   const [age, setAge] = useState('');
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
-  const [activityLevel, setActivityLevel] = useState<string>('moderate');
   
   // Physical activities state
   const [selectedActivities, setSelectedActivities] = useState<PhysicalActivity[]>([]);
@@ -99,6 +108,59 @@ export default function OnboardingScreen() {
 
   const selectedCountryData = COUNTRIES.find(c => c.code === country);
 
+  const toggleActivitySelection = (activityId: string) => {
+    const existing = selectedActivities.find(a => a.id === activityId);
+    if (existing) {
+      // Remove activity
+      setSelectedActivities(selectedActivities.filter(a => a.id !== activityId));
+    } else {
+      // Start editing this activity
+      setEditingActivity(activityId);
+      setActivityDuration('30');
+      setActivityDays([]);
+    }
+  };
+
+  const confirmActivity = () => {
+    if (!editingActivity || activityDays.length === 0) {
+      Alert.alert(
+        i18n.language === 'es' ? 'Selecciona días' : 'Select days',
+        i18n.language === 'es' ? 'Elige al menos un día de la semana' : 'Choose at least one day of the week'
+      );
+      return;
+    }
+
+    const activityData = PHYSICAL_ACTIVITIES.find(a => a.id === editingActivity);
+    if (!activityData) return;
+
+    const newActivity: PhysicalActivity = {
+      id: editingActivity,
+      type: activityData.type,
+      icon: activityData.icon,
+      durationMinutes: parseInt(activityDuration) || 30,
+      daysPerWeek: activityDays,
+    };
+
+    setSelectedActivities([...selectedActivities, newActivity]);
+    setEditingActivity(null);
+    setActivityDuration('30');
+    setActivityDays([]);
+  };
+
+  const cancelActivityEdit = () => {
+    setEditingActivity(null);
+    setActivityDuration('30');
+    setActivityDays([]);
+  };
+
+  const toggleDay = (dayId: number) => {
+    if (activityDays.includes(dayId)) {
+      setActivityDays(activityDays.filter(d => d !== dayId));
+    } else {
+      setActivityDays([...activityDays, dayId]);
+    }
+  };
+
   const handleFinish = async () => {
     if (!age || !height || !weight) {
       Alert.alert(t('onboarding.missingInfo'), t('onboarding.fillAllFields'));
@@ -112,6 +174,7 @@ export default function OnboardingScreen() {
       await AsyncStorage.setItem('user_region', countryData?.region || 'other');
       await AsyncStorage.setItem('user_gender', gender);
 
+      // Save to backend
       await fetch(`${API_URL}/api/users/${userId}/goals`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -120,12 +183,26 @@ export default function OnboardingScreen() {
           age: parseInt(age),
           height: parseFloat(height),
           weight: parseFloat(weight),
-          activityLevel,
+          activityLevel: selectedActivities.length > 3 ? 'very_active' : 
+                        selectedActivities.length > 1 ? 'active' : 
+                        selectedActivities.length > 0 ? 'moderate' : 'sedentary',
           goal,
           gender,
           country: country || 'OTHER',
           region: countryData?.region || 'other',
         }),
+      });
+
+      // Save nutrition profile locally with full calculations
+      await saveUserNutritionProfile({
+        age: parseInt(age),
+        height: parseFloat(height),
+        weight: parseFloat(weight),
+        gender,
+        goal,
+        country: country || 'OTHER',
+        region: countryData?.region || 'other',
+        activities: selectedActivities,
       });
 
       await completeOnboarding();
@@ -327,7 +404,172 @@ export default function OnboardingScreen() {
     );
   }
 
-  // Step 5: Personal info
+  // Step 5: Physical activities
+  if (step === 5) {
+    const activityTexts = {
+      es: {
+        title: '¿Qué actividad física realizas?',
+        subtitle: 'Selecciona todas las que apliquen y configura cada una',
+        skip: 'No hago ejercicio',
+        duration: 'Duración por sesión',
+        minutes: 'minutos',
+        days: '¿Qué días?',
+        add: 'Agregar actividad',
+        cancel: 'Cancelar',
+        selected: 'actividades seleccionadas',
+      },
+      en: {
+        title: 'What physical activity do you do?',
+        subtitle: 'Select all that apply and configure each one',
+        skip: "I don't exercise",
+        duration: 'Duration per session',
+        minutes: 'minutes',
+        days: 'Which days?',
+        add: 'Add activity',
+        cancel: 'Cancel',
+        selected: 'activities selected',
+      },
+    };
+    const texts = activityTexts[i18n.language as keyof typeof activityTexts] || activityTexts.en;
+
+    return (
+      <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.content}>
+          <Text style={styles.title}>{texts.title}</Text>
+          <Text style={styles.subtitle}>{texts.subtitle}</Text>
+
+          {selectedActivities.length > 0 && (
+            <View style={styles.selectedActivitiesBadge}>
+              <Ionicons name="fitness" size={18} color="#4CAF50" />
+              <Text style={styles.selectedActivitiesText}>
+                {selectedActivities.length} {texts.selected}
+              </Text>
+            </View>
+          )}
+
+          {/* Activity being edited */}
+          {editingActivity && (
+            <View style={styles.activityEditor}>
+              <View style={styles.activityEditorHeader}>
+                <Ionicons 
+                  name={PHYSICAL_ACTIVITIES.find(a => a.id === editingActivity)?.icon as any || 'fitness'} 
+                  size={24} 
+                  color="#FF6B6B" 
+                />
+                <Text style={styles.activityEditorTitle}>
+                  {getActivityLabel(editingActivity, i18n.language)}
+                </Text>
+              </View>
+
+              <Text style={styles.editorLabel}>{texts.duration}</Text>
+              <View style={styles.durationRow}>
+                {['15', '30', '45', '60', '90'].map(dur => (
+                  <TouchableOpacity
+                    key={dur}
+                    style={[
+                      styles.durationButton,
+                      activityDuration === dur && styles.durationButtonSelected,
+                    ]}
+                    onPress={() => setActivityDuration(dur)}
+                  >
+                    <Text style={[
+                      styles.durationText,
+                      activityDuration === dur && styles.durationTextSelected,
+                    ]}>
+                      {dur}'
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              <Text style={styles.editorLabel}>{texts.days}</Text>
+              <View style={styles.daysRow}>
+                {DAYS_OF_WEEK.map(day => (
+                  <TouchableOpacity
+                    key={day.id}
+                    style={[
+                      styles.dayButton,
+                      activityDays.includes(day.id) && styles.dayButtonSelected,
+                    ]}
+                    onPress={() => toggleDay(day.id)}
+                  >
+                    <Text style={[
+                      styles.dayText,
+                      activityDays.includes(day.id) && styles.dayTextSelected,
+                    ]}>
+                      {day.short}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+
+              <View style={styles.editorButtons}>
+                <TouchableOpacity style={styles.cancelButton} onPress={cancelActivityEdit}>
+                  <Text style={styles.cancelButtonText}>{texts.cancel}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.addButton} onPress={confirmActivity}>
+                  <Text style={styles.addButtonText}>{texts.add}</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          )}
+
+          {/* Activity list */}
+          {!editingActivity && (
+            <View style={styles.activitiesGrid}>
+              {PHYSICAL_ACTIVITIES.map(activity => {
+                const isSelected = selectedActivities.some(a => a.id === activity.id);
+                const selectedActivity = selectedActivities.find(a => a.id === activity.id);
+                
+                return (
+                  <TouchableOpacity
+                    key={activity.id}
+                    style={[
+                      styles.activityCard,
+                      isSelected && styles.activityCardSelected,
+                    ]}
+                    onPress={() => toggleActivitySelection(activity.id)}
+                  >
+                    <Ionicons
+                      name={activity.icon as any}
+                      size={28}
+                      color={isSelected ? '#FF6B6B' : '#aaa'}
+                    />
+                    <Text style={[
+                      styles.activityName,
+                      isSelected && styles.activityNameSelected,
+                    ]}>
+                      {getActivityLabel(activity.id, i18n.language)}
+                    </Text>
+                    {isSelected && selectedActivity && (
+                      <Text style={styles.activityDetails}>
+                        {selectedActivity.durationMinutes}' × {selectedActivity.daysPerWeek.length}d
+                      </Text>
+                    )}
+                    {isSelected && (
+                      <View style={styles.checkBadge}>
+                        <Ionicons name="checkmark" size={14} color="#fff" />
+                      </View>
+                    )}
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          )}
+
+          <TouchableOpacity style={styles.button} onPress={() => setStep(6)}>
+            <Text style={styles.buttonText}>{t('common.continue')}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.skipButton} onPress={() => setStep(6)}>
+            <Text style={styles.skipButtonText}>{texts.skip}</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
+    );
+  }
+
+  // Step 6: Personal info (final step)
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -342,6 +584,16 @@ export default function OnboardingScreen() {
           <View style={styles.selectedCountryBadge}>
             <Text style={styles.selectedCountryFlag}>{selectedCountryData.flag}</Text>
             <Text style={styles.selectedCountryName}>{selectedCountryData.name}</Text>
+          </View>
+        )}
+
+        {/* Selected activities summary */}
+        {selectedActivities.length > 0 && (
+          <View style={styles.activitiesSummary}>
+            <Ionicons name="fitness" size={18} color="#4CAF50" />
+            <Text style={styles.activitiesSummaryText}>
+              {selectedActivities.map(a => getActivityLabel(a.id, i18n.language)).join(', ')}
+            </Text>
           </View>
         )}
 
@@ -381,37 +633,6 @@ export default function OnboardingScreen() {
           />
         </View>
 
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>{t('onboarding.activityLevel')}</Text>
-          <View style={styles.activityButtons}>
-            {[
-              { key: 'sedentary', label: t('onboarding.sedentary') },
-              { key: 'light', label: t('onboarding.light') },
-              { key: 'moderate', label: t('onboarding.moderate') },
-              { key: 'active', label: t('onboarding.active') },
-              { key: 'very_active', label: t('onboarding.veryActive') },
-            ].map((item) => (
-              <TouchableOpacity
-                key={item.key}
-                style={[
-                  styles.activityButton,
-                  activityLevel === item.key && styles.activityButtonSelected,
-                ]}
-                onPress={() => setActivityLevel(item.key)}
-              >
-                <Text
-                  style={[
-                    styles.activityButtonText,
-                    activityLevel === item.key && styles.activityButtonTextSelected,
-                  ]}
-                >
-                  {item.label}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        </View>
-
         <TouchableOpacity style={styles.button} onPress={handleFinish}>
           <Text style={styles.buttonText}>{t('onboarding.finishSetup')}</Text>
         </TouchableOpacity>
@@ -428,10 +649,10 @@ const styles = StyleSheet.create({
   content: {
     padding: 24,
     paddingTop: 60,
-    flex: 1,
+    flexGrow: 1,
   },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: 'bold',
     color: '#fff',
     textAlign: 'center',
@@ -574,7 +795,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 20,
     alignSelf: 'center',
-    marginBottom: 20,
+    marginBottom: 12,
     gap: 8,
   },
   selectedCountryFlag: {
@@ -583,6 +804,22 @@ const styles = StyleSheet.create({
   selectedCountryName: {
     color: '#fff',
     fontSize: 14,
+  },
+  activitiesSummary: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#4CAF5020',
+    padding: 12,
+    borderRadius: 12,
+    marginBottom: 20,
+    gap: 8,
+  },
+  activitiesSummaryText: {
+    color: '#4CAF50',
+    fontSize: 14,
+    flex: 1,
+    flexWrap: 'wrap',
   },
   inputContainer: {
     marginBottom: 20,
@@ -599,29 +836,173 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     fontSize: 18,
   },
-  activityButtons: {
+  // Physical activities
+  selectedActivitiesBadge: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#4CAF5020',
+    padding: 10,
+    borderRadius: 20,
+    marginBottom: 16,
     gap: 8,
   },
-  activityButton: {
+  selectedActivitiesText: {
+    color: '#4CAF50',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  activitiesGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+    justifyContent: 'center',
+  },
+  activityCard: {
+    width: '45%',
     backgroundColor: '#1a1a1a',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 20,
+    padding: 16,
+    borderRadius: 12,
+    alignItems: 'center',
     borderWidth: 2,
     borderColor: 'transparent',
+    position: 'relative',
   },
-  activityButtonSelected: {
+  activityCardSelected: {
     borderColor: '#FF6B6B',
-    backgroundColor: '#FF6B6B20',
+    backgroundColor: '#FF6B6B10',
   },
-  activityButtonText: {
+  activityName: {
+    fontSize: 13,
+    color: '#aaa',
+    marginTop: 8,
+    textAlign: 'center',
+  },
+  activityNameSelected: {
+    color: '#FF6B6B',
+    fontWeight: '600',
+  },
+  activityDetails: {
+    fontSize: 11,
+    color: '#4CAF50',
+    marginTop: 4,
+  },
+  checkBadge: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    backgroundColor: '#4CAF50',
+    borderRadius: 10,
+    width: 20,
+    height: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  // Activity editor
+  activityEditor: {
+    backgroundColor: '#1a1a1a',
+    padding: 20,
+    borderRadius: 16,
+    marginBottom: 20,
+    borderWidth: 2,
+    borderColor: '#FF6B6B',
+  },
+  activityEditorHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    marginBottom: 20,
+  },
+  activityEditorTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#FF6B6B',
+  },
+  editorLabel: {
+    fontSize: 14,
+    color: '#aaa',
+    marginBottom: 8,
+  },
+  durationRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginBottom: 16,
+  },
+  durationButton: {
+    flex: 1,
+    backgroundColor: '#2a2a2a',
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  durationButtonSelected: {
+    backgroundColor: '#FF6B6B',
+  },
+  durationText: {
     color: '#aaa',
     fontSize: 14,
+    fontWeight: '600',
   },
-  activityButtonTextSelected: {
-    color: '#FF6B6B',
+  durationTextSelected: {
+    color: '#fff',
+  },
+  daysRow: {
+    flexDirection: 'row',
+    gap: 6,
+    marginBottom: 20,
+  },
+  dayButton: {
+    flex: 1,
+    backgroundColor: '#2a2a2a',
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  dayButtonSelected: {
+    backgroundColor: '#4CAF50',
+  },
+  dayText: {
+    color: '#aaa',
+    fontSize: 12,
     fontWeight: 'bold',
+  },
+  dayTextSelected: {
+    color: '#fff',
+  },
+  editorButtons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  cancelButton: {
+    flex: 1,
+    backgroundColor: '#333',
+    padding: 14,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  cancelButtonText: {
+    color: '#aaa',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  addButton: {
+    flex: 1,
+    backgroundColor: '#4CAF50',
+    padding: 14,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  addButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  skipButton: {
+    padding: 16,
+    alignItems: 'center',
+  },
+  skipButtonText: {
+    color: '#666',
+    fontSize: 16,
   },
 });
