@@ -116,7 +116,7 @@ export default function HomeScreen() {
         {/* Mi Ficha Personal - Premium Feature */}
         <TouchableOpacity 
           style={styles.actionCard} 
-          onPress={() => router.push('/profile')}
+          onPress={() => router.push('/profile' as any)}
         >
           <View style={[styles.iconContainer, { backgroundColor: '#FFD70020' }]}>
             <Ionicons name="person-circle" size={48} color="#FFD700" />
