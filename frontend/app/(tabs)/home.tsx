@@ -20,7 +20,7 @@ export default function HomeScreen() {
   const { userId } = useUser();
   const { isPremium } = usePremium();
   const router = useRouter();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [todayCount, setTodayCount] = useState(0);
 
   const checkTodayCount = useCallback(async () => {
