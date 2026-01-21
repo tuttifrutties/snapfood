@@ -16,6 +16,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { useUser } from '../../src/contexts/UserContext';
 import { usePremium } from '../../src/contexts/PremiumContext';
+import { useTheme } from '../../src/contexts/ThemeContext';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -28,6 +29,7 @@ const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 export default function CookingScreen() {
   const { userId } = useUser();
   const { isPremium } = usePremium();
+  const { theme } = useTheme();
   const router = useRouter();
   const { t, i18n } = useTranslation();
   const [mode, setMode] = useState<'select' | 'photo' | 'manual' | 'results'>('select');
