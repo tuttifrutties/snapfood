@@ -71,20 +71,23 @@ export default function RootLayout() {
 
   return (
     <ErrorBoundary>
-      <UserProvider>
-        <PremiumProvider>
-          <StatusBar style="light" />
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="index" />
-            <Stack.Screen name="(tabs)" />
-            <Stack.Screen name="onboarding" />
-            <Stack.Screen name="paywall" />
-            <Stack.Screen name="cooking" />
-            <Stack.Screen name="track-food" />
-            <Stack.Screen name="legal" />
-          </Stack>
-        </PremiumProvider>
-      </UserProvider>
+      <ThemeProvider>
+        <UserProvider>
+          <PremiumProvider>
+            <StatusBar style="light" />
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="index" />
+              <Stack.Screen name="(tabs)" />
+              <Stack.Screen name="onboarding" />
+              <Stack.Screen name="paywall" />
+              <Stack.Screen name="cooking" />
+              <Stack.Screen name="track-food" />
+              <Stack.Screen name="legal" />
+              <Stack.Screen name="profile" />
+            </Stack>
+          </PremiumProvider>
+        </UserProvider>
+      </ThemeProvider>
     </ErrorBoundary>
   );
 }
