@@ -187,12 +187,12 @@ export default function TrackFoodScreen() {
 
   if (selectedImage) {
     return (
-      <ScrollView style={styles.container}>
-        <View style={styles.header}>
+      <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
+        <View style={[styles.header, { backgroundColor: theme.surface }]}>
           <TouchableOpacity onPress={cancel}>
-            <Ionicons name="arrow-back" size={24} color="#fff" />
+            <Ionicons name="arrow-back" size={24} color={theme.text} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>{t('trackFood.title')}</Text>
+          <Text style={[styles.headerTitle, { color: theme.text }]}>{t('trackFood.title')}</Text>
           <View style={{ width: 24 }} />
         </View>
 
@@ -202,30 +202,32 @@ export default function TrackFoodScreen() {
 
         {isAnalyzing ? (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#FF6B6B" />
-            <Text style={styles.loadingText}>{t('trackFood.analyzing')}</Text>
+            <ActivityIndicator size="large" color={theme.primary} />
+            <Text style={[styles.loadingText, { color: theme.text }]}>{t('trackFood.analyzing')}</Text>
           </View>
         ) : analysisResult ? (
-          <View style={styles.resultContainer}>
-            <Text style={styles.dishName}>{analysisResult.dishName}</Text>
+          <View style={[styles.resultContainer, { backgroundColor: theme.surface }]}>
+            <Text style={[styles.dishName, { color: theme.text }]}>{analysisResult.dishName}</Text>
 
             {/* Portion Selector */}
             <View style={styles.portionContainer}>
-              <Text style={styles.portionLabel}>{t('trackFood.portionSize')}</Text>
+              <Text style={[styles.portionLabel, { color: theme.textSecondary }]}>{t('trackFood.portionSize')}</Text>
               <View style={styles.portionButtons}>
                 {PORTION_OPTIONS.map((option) => (
                   <TouchableOpacity
                     key={option}
                     style={[
                       styles.portionButton,
-                      portions === option && styles.portionButtonActive,
+                      { backgroundColor: theme.surfaceVariant },
+                      portions === option && { backgroundColor: theme.primary },
                     ]}
                     onPress={() => setPortions(option)}
                   >
                     <Text
                       style={[
                         styles.portionButtonText,
-                        portions === option && styles.portionButtonTextActive,
+                        { color: theme.textMuted },
+                        portions === option && { color: '#fff' },
                       ]}
                     >
                       {option}
@@ -236,21 +238,21 @@ export default function TrackFoodScreen() {
             </View>
 
             <View style={styles.macrosContainer}>
-              <View style={styles.macroBox}>
-                <Text style={styles.macroValue}>{getAdjustedValue(analysisResult.calories)}</Text>
-                <Text style={styles.macroLabel}>{t('trackFood.calories')}</Text>
+              <View style={[styles.macroBox, { backgroundColor: theme.surfaceVariant }]}>
+                <Text style={[styles.macroValue, { color: theme.primary }]}>{getAdjustedValue(analysisResult.calories)}</Text>
+                <Text style={[styles.macroLabel, { color: theme.textMuted }]}>{t('trackFood.calories')}</Text>
               </View>
-              <View style={styles.macroBox}>
-                <Text style={styles.macroValue}>{getAdjustedDecimal(analysisResult.protein)}g</Text>
-                <Text style={styles.macroLabel}>{t('trackFood.protein')}</Text>
+              <View style={[styles.macroBox, { backgroundColor: theme.surfaceVariant }]}>
+                <Text style={[styles.macroValue, { color: theme.primary }]}>{getAdjustedDecimal(analysisResult.protein)}g</Text>
+                <Text style={[styles.macroLabel, { color: theme.textMuted }]}>{t('trackFood.protein')}</Text>
               </View>
-              <View style={styles.macroBox}>
-                <Text style={styles.macroValue}>{getAdjustedDecimal(analysisResult.carbs)}g</Text>
-                <Text style={styles.macroLabel}>{t('trackFood.carbs')}</Text>
+              <View style={[styles.macroBox, { backgroundColor: theme.surfaceVariant }]}>
+                <Text style={[styles.macroValue, { color: theme.primary }]}>{getAdjustedDecimal(analysisResult.carbs)}g</Text>
+                <Text style={[styles.macroLabel, { color: theme.textMuted }]}>{t('trackFood.carbs')}</Text>
               </View>
-              <View style={styles.macroBox}>
-                <Text style={styles.macroValue}>{getAdjustedDecimal(analysisResult.fats)}g</Text>
-                <Text style={styles.macroLabel}>{t('trackFood.fats')}</Text>
+              <View style={[styles.macroBox, { backgroundColor: theme.surfaceVariant }]}>
+                <Text style={[styles.macroValue, { color: theme.primary }]}>{getAdjustedDecimal(analysisResult.fats)}g</Text>
+                <Text style={[styles.macroLabel, { color: theme.textMuted }]}>{t('trackFood.fats')}</Text>
               </View>
             </View>
 
@@ -258,25 +260,25 @@ export default function TrackFoodScreen() {
               <View style={styles.warningsContainer}>
                 {analysisResult.warnings.map((warning: string, index: number) => (
                   <View key={index} style={styles.warningItem}>
-                    <Ionicons name="warning" size={16} color="#FFA500" />
-                    <Text style={styles.warningText}>{warning}</Text>
+                    <Ionicons name="warning" size={16} color={theme.warning} />
+                    <Text style={[styles.warningText, { color: theme.warning }]}>{warning}</Text>
                   </View>
                 ))}
               </View>
             )}
 
             <View style={styles.ingredientsContainer}>
-              <Text style={styles.sectionTitle}>{t('trackFood.ingredients')}</Text>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('trackFood.ingredients')}</Text>
               {analysisResult.ingredients.map((ingredient: string, index: number) => (
-                <Text key={index} style={styles.ingredientText}>• {ingredient}</Text>
+                <Text key={index} style={[styles.ingredientText, { color: theme.textSecondary }]}>• {ingredient}</Text>
               ))}
             </View>
 
             <View style={styles.buttonRow}>
-              <TouchableOpacity style={styles.cancelButton} onPress={cancel}>
-                <Text style={styles.cancelButtonText}>{t('common.cancel')}</Text>
+              <TouchableOpacity style={[styles.cancelButton, { backgroundColor: theme.surfaceVariant }]} onPress={cancel}>
+                <Text style={[styles.cancelButtonText, { color: theme.textMuted }]}>{t('common.cancel')}</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.saveButton} onPress={saveMeal}>
+              <TouchableOpacity style={[styles.saveButton, { backgroundColor: theme.primary }]} onPress={saveMeal}>
                 <Text style={styles.saveButtonText}>{t('trackFood.saveMeal')}</Text>
               </TouchableOpacity>
             </View>
