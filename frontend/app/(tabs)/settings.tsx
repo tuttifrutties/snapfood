@@ -152,38 +152,52 @@ export default function SettingsScreen() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerSubtitle}>{t('settings.subtitle')}</Text>
+      <View style={[styles.header, { backgroundColor: theme.surface }]}>
+        <Text style={[styles.headerSubtitle, { color: theme.textSecondary }]}>
+          {t('settings.subtitle')}
+        </Text>
       </View>
 
       <ScrollView style={styles.content}>
         {isPremium && (
-          <View style={styles.premiumBadge}>
-            <Ionicons name="star" size={24} color="#FFD700" />
-            <Text style={styles.premiumText}>{t('settings.premiumMember')}</Text>
+          <View style={[styles.premiumBadge, { backgroundColor: theme.premium + '20' }]}>
+            <Ionicons name="star" size={24} color={theme.premium} />
+            <Text style={[styles.premiumText, { color: theme.premium }]}>
+              {t('settings.premiumMember')}
+            </Text>
           </View>
         )}
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{t('settings.general')}</Text>
+          <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>
+            {t('settings.general')}
+          </Text>
           
-          <TouchableOpacity style={styles.settingRow} onPress={toggleLanguage}>
+          <TouchableOpacity 
+            style={[styles.settingRow, { backgroundColor: theme.surface }]} 
+            onPress={toggleLanguage}
+          >
             <View style={styles.settingInfo}>
-              <Text style={styles.settingLabel}>{t('settings.language')}</Text>
-              <Text style={styles.settingDescription}>
+              <Text style={[styles.settingLabel, { color: theme.text }]}>
+                {t('settings.language')}
+              </Text>
+              <Text style={[styles.settingDescription, { color: theme.textMuted }]}>
                 {getCurrentLanguageDisplay()}
               </Text>
             </View>
-            <Ionicons name="chevron-forward" size={20} color="#aaa" />
+            <Ionicons name="chevron-forward" size={20} color={theme.textMuted} />
           </TouchableOpacity>
 
           {/* Theme Settings */}
-          <TouchableOpacity style={styles.settingRow} onPress={() => setThemeModalVisible(true)}>
+          <TouchableOpacity 
+            style={[styles.settingRow, { backgroundColor: theme.surface }]} 
+            onPress={() => setThemeModalVisible(true)}
+          >
             <View style={styles.settingInfo}>
-              <Text style={styles.settingLabel}>
+              <Text style={[styles.settingLabel, { color: theme.text }]}>
                 {i18n.language === 'es' ? 'Tema' : 'Theme'}
               </Text>
-              <Text style={styles.settingDescription}>
+              <Text style={[styles.settingDescription, { color: theme.textMuted }]}>
                 {themeMode === 'dark' 
                   ? (i18n.language === 'es' ? 'Oscuro' : 'Dark')
                   : (i18n.language === 'es' ? 'Claro' : 'Light')}
@@ -191,20 +205,22 @@ export default function SettingsScreen() {
               </Text>
             </View>
             <View style={[styles.colorPreview, { backgroundColor: theme.primary }]} />
-            <Ionicons name="chevron-forward" size={20} color="#aaa" />
+            <Ionicons name="chevron-forward" size={20} color={theme.textMuted} />
           </TouchableOpacity>
 
-          <View style={styles.settingRow}>
+          <View style={[styles.settingRow, { backgroundColor: theme.surface }]}>
             <View style={styles.settingInfo}>
-              <Text style={styles.settingLabel}>{t('settings.saveToGallery')}</Text>
-              <Text style={styles.settingDescription}>
+              <Text style={[styles.settingLabel, { color: theme.text }]}>
+                {t('settings.saveToGallery')}
+              </Text>
+              <Text style={[styles.settingDescription, { color: theme.textMuted }]}>
                 {t('settings.saveToGalleryDesc')}
               </Text>
             </View>
             <Switch
               value={saveToGallery}
               onValueChange={toggleSaveToGallery}
-              trackColor={{ false: '#333', true: theme.primary }}
+              trackColor={{ false: theme.border, true: theme.primary }}
               thumbColor="#fff"
             />
           </View>
@@ -212,12 +228,16 @@ export default function SettingsScreen() {
 
         {/* Notifications Section */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{t('settings.notifications')}</Text>
+          <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>
+            {t('settings.notifications')}
+          </Text>
           
-          <View style={styles.settingRow}>
+          <View style={[styles.settingRow, { backgroundColor: theme.surface }]}>
             <View style={styles.settingInfo}>
-              <Text style={styles.settingLabel}>{t('settings.lunchReminder')}</Text>
-              <Text style={styles.settingDescription}>
+              <Text style={[styles.settingLabel, { color: theme.text }]}>
+                {t('settings.lunchReminder')}
+              </Text>
+              <Text style={[styles.settingDescription, { color: theme.textMuted }]}>
                 {t('settings.lunchReminderDesc')}
               </Text>
             </View>
