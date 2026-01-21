@@ -12,6 +12,7 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { useUser } from '@/src/contexts/UserContext';
+import { useTheme } from '@/src/contexts/ThemeContext';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 
@@ -19,6 +20,7 @@ const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 export default function TrackFoodScreen() {
   const { userId } = useUser();
+  const { theme } = useTheme();
   const router = useRouter();
   const { t, i18n } = useTranslation();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
