@@ -436,3 +436,80 @@ export async function sendSmartNotificationNow(
     trigger: null,
   });
 }
+
+// ============================================
+// WEEKLY MOTIVATIONAL NOTIFICATION
+// ============================================
+
+const WEEKLY_NOTIFICATION_KEY = 'weekly_notification_enabled';
+
+export async function getWeeklyReminderStatus(): Promise<boolean> {
+  const status = await AsyncStorage.getItem(WEEKLY_NOTIFICATION_KEY);
+  return status === 'true';
+}
+
+export async function scheduleWeeklyMotivationalNotification(
+  enabled: boolean,
+  language: string = 'en',
+  goal: 'lose' | 'maintain' | 'gain' = 'maintain'
+): Promise<void> {
+  // Cancel existing weekly notifications
+  const allNotifications = await Notifications.getAllScheduledNotificationsAsync();
+  for (const notification of allNotifications) {
+    if (notification.identifier.startsWith('weekly-')) {
+      await Notifications.cancelScheduledNotificationAsync(notification.identifier);
+    }
+  }
+
+  if (!enabled) {
+    await AsyncStorage.setItem(WEEKLY_NOTIFICATION_KEY, 'false');
+    return;
+  }
+
+  await AsyncStorage.setItem(WEEKLY_NOTIFICATION_KEY, 'true');
+
+  // Get motivational message based on goal
+  let title = '';
+  let body = '';
+
+  if (language === 'es') {
+    title = '📊 ¡Tu resumen semanal!';
+    if (goal === 'lose') {
+      body = 'Revisá cómo fue tu semana en tu Ficha Personal. Cada día en déficit te acerca a tu meta. ¡Seguí así!';
+    } else if (goal === 'gain') {
+      body = 'Revisá tu progreso semanal. Cada día en superávit te ayuda a ganar masa muscular. ¡Vamos por más!';
+    } else {
+      body = 'Mirá tu resumen semanal en tu Ficha Personal. Mantener el equilibrio es clave para tu bienestar.';
+    }
+  } else {
+    title = '📊 Your weekly summary!';
+    if (goal === 'lose') {
+      body = "Check your weekly progress in your Profile. Every day in deficit brings you closer to your goal. Keep it up!";
+    } else if (goal === 'gain') {
+      body = "Review your weekly progress. Every day in surplus helps you build muscle. Let's keep going!";
+    } else {
+      body = "Check your weekly summary in your Profile. Maintaining balance is key to your wellbeing.";
+    }
+  }
+
+  // Schedule for Sunday at 8 PM (end of week review)
+  await Notifications.scheduleNotificationAsync({
+    identifier: 'weekly-motivation',
+    content: {
+      title,
+      body,
+      sound: true,
+      priority: Notifications.AndroidNotificationPriority.DEFAULT,
+      data: { type: 'weekly_summary', language, goal },
+    },
+    trigger: {
+      type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
+      weekday: 1, // Sunday (1 = Sunday)
+      hour: 20,
+      minute: 0,
+    },
+  });
+
+  console.log('[Notifications] Weekly motivational notification scheduled for Sundays at 8 PM');
+}
+
