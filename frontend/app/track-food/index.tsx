@@ -289,27 +289,27 @@ export default function TrackFoodScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <View style={[styles.header, { backgroundColor: theme.surface }]}>
         <TouchableOpacity onPress={cancel}>
-          <Ionicons name="arrow-back" size={24} color="#fff" />
+          <Ionicons name="arrow-back" size={24} color={theme.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{t('trackFood.title')}</Text>
+        <Text style={[styles.headerTitle, { color: theme.text }]}>{t('trackFood.title')}</Text>
         <View style={{ width: 24 }} />
       </View>
 
       <View style={styles.content}>
-        <Ionicons name="camera" size={120} color="#FF6B6B" />
-        <Text style={styles.instructionText}>{t('trackFood.instruction')}</Text>
+        <Ionicons name="camera" size={120} color={theme.primary} />
+        <Text style={[styles.instructionText, { color: theme.textSecondary }]}>{t('trackFood.instruction')}</Text>
 
-        <TouchableOpacity style={styles.primaryButton} onPress={pickImage}>
+        <TouchableOpacity style={[styles.primaryButton, { backgroundColor: theme.primary }]} onPress={pickImage}>
           <Ionicons name="camera" size={24} color="#fff" />
           <Text style={styles.primaryButtonText}>{t('trackFood.takePhoto')}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.secondaryButton} onPress={pickFromGallery}>
-          <Ionicons name="images" size={24} color="#FF6B6B" />
-          <Text style={styles.secondaryButtonText}>{t('trackFood.chooseGallery')}</Text>
+        <TouchableOpacity style={[styles.secondaryButton, { borderColor: theme.primary }]} onPress={pickFromGallery}>
+          <Ionicons name="images" size={24} color={theme.primary} />
+          <Text style={[styles.secondaryButtonText, { color: theme.primary }]}>{t('trackFood.chooseGallery')}</Text>
         </TouchableOpacity>
       </View>
     </View>
