@@ -151,7 +151,7 @@ export default function SettingsScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={[styles.header, { backgroundColor: theme.surface }]}>
         <Text style={[styles.headerSubtitle, { color: theme.textSecondary }]}>
           {t('settings.subtitle')}
