@@ -177,6 +177,23 @@ export default function SettingsScreen() {
             <Ionicons name="chevron-forward" size={20} color="#aaa" />
           </TouchableOpacity>
 
+          {/* Theme Settings */}
+          <TouchableOpacity style={styles.settingRow} onPress={() => setThemeModalVisible(true)}>
+            <View style={styles.settingInfo}>
+              <Text style={styles.settingLabel}>
+                {i18n.language === 'es' ? 'Tema' : 'Theme'}
+              </Text>
+              <Text style={styles.settingDescription}>
+                {themeMode === 'dark' 
+                  ? (i18n.language === 'es' ? 'Oscuro' : 'Dark')
+                  : (i18n.language === 'es' ? 'Claro' : 'Light')}
+                {' • '}{accentColor.name}
+              </Text>
+            </View>
+            <View style={[styles.colorPreview, { backgroundColor: theme.primary }]} />
+            <Ionicons name="chevron-forward" size={20} color="#aaa" />
+          </TouchableOpacity>
+
           <View style={styles.settingRow}>
             <View style={styles.settingInfo}>
               <Text style={styles.settingLabel}>{t('settings.saveToGallery')}</Text>
@@ -187,7 +204,7 @@ export default function SettingsScreen() {
             <Switch
               value={saveToGallery}
               onValueChange={toggleSaveToGallery}
-              trackColor={{ false: '#333', true: '#FF6B6B' }}
+              trackColor={{ false: '#333', true: theme.primary }}
               thumbColor="#fff"
             />
           </View>
