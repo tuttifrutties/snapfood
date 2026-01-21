@@ -675,4 +675,60 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#aaa',
   },
+  // Theme Modal Styles
+  colorPreview: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    marginRight: 8,
+  },
+  themeSubtitle: {
+    fontSize: 14,
+    color: '#aaa',
+    marginBottom: 12,
+    marginTop: 8,
+  },
+  themeModeRow: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 16,
+  },
+  themeModeButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: '#2a2a2a',
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: 'transparent',
+  },
+  themeModeButtonSelected: {
+    borderColor: '#FF6B6B',
+    backgroundColor: '#FF6B6B10',
+  },
+  themeModeText: {
+    fontSize: 16,
+    color: '#aaa',
+  },
+  colorGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+    justifyContent: 'center',
+    marginBottom: 16,
+  },
+  colorOption: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  colorOptionSelected: {
+    borderWidth: 3,
+    borderColor: '#fff',
+  },
 });
