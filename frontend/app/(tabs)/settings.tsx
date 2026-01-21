@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { usePremium } from '../../src/contexts/PremiumContext';
+import { useTheme, ACCENT_COLORS, ThemeMode } from '../../src/contexts/ThemeContext';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from 'react-i18next';
@@ -30,6 +31,7 @@ import {
 
 export default function SettingsScreen() {
   const { isPremium } = usePremium();
+  const { theme, themeMode, accentColor, setThemeMode, setAccentColor } = useTheme();
   const router = useRouter();
   const { t, i18n } = useTranslation();
   const [saveToGallery, setSaveToGallery] = useState(true);
@@ -38,6 +40,7 @@ export default function SettingsScreen() {
   const [snackReminder, setSnackReminder] = useState(false);
   const [fridayReminder, setFridayReminder] = useState(false);
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
+  const [themeModalVisible, setThemeModalVisible] = useState(false);
   
   const supportedLanguages = getSupportedLanguages();
 
