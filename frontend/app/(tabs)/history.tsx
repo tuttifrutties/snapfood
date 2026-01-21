@@ -1,3 +1,9 @@
+/**
+ * History Screen - Collapsible Hierarchical View
+ * Shows meals organized by: Today > Days of Month > Previous Months
+ * Premium feature with folder-like structure
+ */
+
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
@@ -12,23 +18,61 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useUser } from '../../src/contexts/UserContext';
 import { usePremium } from '../../src/contexts/PremiumContext';
+import { useTheme } from '../../src/contexts/ThemeContext';
 import { useRouter } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
-import { format } from 'date-fns';
+import { format, isToday, isThisMonth, startOfMonth, isSameDay } from 'date-fns';
+import { es, enUS, ptBR, it, fr, de } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
 
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
+interface Meal {
+  id: string;
+  dishName: string;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fats: number;
+  photoBase64?: string;
+  timestamp: string;
+}
+
+interface DayGroup {
+  date: Date;
+  dateKey: string;
+  meals: Meal[];
+  totalCalories: number;
+}
+
+interface MonthGroup {
+  month: string;
+  monthKey: string;
+  days: DayGroup[];
+  totalCalories: number;
+}
+
+const getDateLocale = (lang: string) => {
+  const locales: { [key: string]: any } = { es, en: enUS, pt: ptBR, it, fr, de };
+  return locales[lang] || enUS;
+};
+
 export default function HistoryScreen() {
   const { userId } = useUser();
   const { isPremium } = usePremium();
+  const { theme } = useTheme();
   const router = useRouter();
-  const { t } = useTranslation();
-  const [meals, setMeals] = useState<any[]>([]);
+  const { t, i18n } = useTranslation();
+  const [meals, setMeals] = useState<Meal[]>([]);
   const [dailyTotals, setDailyTotals] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  
+  // Collapsible state
+  const [expandedDays, setExpandedDays] = useState<Set<string>>(new Set(['today']));
+  const [expandedMonths, setExpandedMonths] = useState<Set<string>>(new Set());
 
-  // Refresh data every time the screen comes into focus
+  const dateLocale = getDateLocale(i18n.language);
+
   useFocusEffect(
     useCallback(() => {
       if (!isPremium) {
@@ -51,7 +95,7 @@ export default function HistoryScreen() {
       const mealsData = await mealsResponse.json();
       const totalsData = await totalsResponse.json();
 
-      setMeals(mealsData.meals);
+      setMeals(mealsData.meals || []);
       setDailyTotals(totalsData);
     } catch (error) {
       console.error('Failed to load history:', error);
@@ -71,12 +115,8 @@ export default function HistoryScreen() {
           style: 'destructive',
           onPress: async () => {
             try {
-              await fetch(`${API_URL}/api/meals/${mealId}`, {
-                method: 'DELETE',
-              });
-              // Remove from local state
+              await fetch(`${API_URL}/api/meals/${mealId}`, { method: 'DELETE' });
               setMeals(meals.filter((meal) => meal.id !== mealId));
-              // Reload totals
               const totalsResponse = await fetch(`${API_URL}/api/meals/${userId}/daily-totals`);
               const totalsData = await totalsResponse.json();
               setDailyTotals(totalsData);
@@ -90,18 +130,243 @@ export default function HistoryScreen() {
     );
   };
 
+  // Group meals by day and month
+  const groupMeals = (): { today: DayGroup | null; thisMonth: DayGroup[]; previousMonths: MonthGroup[] } => {
+    if (!meals || meals.length === 0) {
+      return { today: null, thisMonth: [], previousMonths: [] };
+    }
+
+    const todayMeals: Meal[] = [];
+    const thisMonthDays: Map<string, Meal[]> = new Map();
+    const previousMonthsMap: Map<string, Map<string, Meal[]>> = new Map();
+
+    meals.forEach(meal => {
+      const mealDate = new Date(meal.timestamp);
+      const dateKey = format(mealDate, 'yyyy-MM-dd');
+      const monthKey = format(mealDate, 'yyyy-MM');
+
+      if (isToday(mealDate)) {
+        todayMeals.push(meal);
+      } else if (isThisMonth(mealDate)) {
+        if (!thisMonthDays.has(dateKey)) {
+          thisMonthDays.set(dateKey, []);
+        }
+        thisMonthDays.get(dateKey)!.push(meal);
+      } else {
+        if (!previousMonthsMap.has(monthKey)) {
+          previousMonthsMap.set(monthKey, new Map());
+        }
+        const monthMap = previousMonthsMap.get(monthKey)!;
+        if (!monthMap.has(dateKey)) {
+          monthMap.set(dateKey, []);
+        }
+        monthMap.get(dateKey)!.push(meal);
+      }
+    });
+
+    // Build today group
+    const today: DayGroup | null = todayMeals.length > 0 ? {
+      date: new Date(),
+      dateKey: 'today',
+      meals: todayMeals,
+      totalCalories: todayMeals.reduce((sum, m) => sum + m.calories, 0),
+    } : null;
+
+    // Build this month days
+    const thisMonth: DayGroup[] = Array.from(thisMonthDays.entries())
+      .map(([dateKey, dayMeals]) => ({
+        date: new Date(dateKey),
+        dateKey,
+        meals: dayMeals,
+        totalCalories: dayMeals.reduce((sum, m) => sum + m.calories, 0),
+      }))
+      .sort((a, b) => b.date.getTime() - a.date.getTime());
+
+    // Build previous months
+    const previousMonths: MonthGroup[] = Array.from(previousMonthsMap.entries())
+      .map(([monthKey, daysMap]) => {
+        const days: DayGroup[] = Array.from(daysMap.entries())
+          .map(([dateKey, dayMeals]) => ({
+            date: new Date(dateKey),
+            dateKey,
+            meals: dayMeals,
+            totalCalories: dayMeals.reduce((sum, m) => sum + m.calories, 0),
+          }))
+          .sort((a, b) => b.date.getTime() - a.date.getTime());
+
+        return {
+          month: format(new Date(monthKey + '-01'), 'MMMM yyyy', { locale: dateLocale }),
+          monthKey,
+          days,
+          totalCalories: days.reduce((sum, d) => sum + d.totalCalories, 0),
+        };
+      })
+      .sort((a, b) => b.monthKey.localeCompare(a.monthKey));
+
+    return { today, thisMonth, previousMonths };
+  };
+
+  const toggleDay = (dateKey: string) => {
+    const newExpanded = new Set(expandedDays);
+    if (newExpanded.has(dateKey)) {
+      newExpanded.delete(dateKey);
+    } else {
+      newExpanded.add(dateKey);
+    }
+    setExpandedDays(newExpanded);
+  };
+
+  const toggleMonth = (monthKey: string) => {
+    const newExpanded = new Set(expandedMonths);
+    if (newExpanded.has(monthKey)) {
+      newExpanded.delete(monthKey);
+    } else {
+      newExpanded.add(monthKey);
+    }
+    setExpandedMonths(newExpanded);
+  };
+
+  const renderMealCard = (meal: Meal) => (
+    <View key={meal.id} style={[styles.mealCard, { backgroundColor: theme.surface }]}>
+      {meal.photoBase64 && (
+        <Image
+          source={{ uri: `data:image/jpeg;base64,${meal.photoBase64}` }}
+          style={styles.mealImage}
+        />
+      )}
+      <View style={styles.mealInfo}>
+        <Text style={[styles.mealName, { color: theme.text }]}>{meal.dishName}</Text>
+        <Text style={[styles.mealTime, { color: theme.textMuted }]}>
+          {format(new Date(meal.timestamp), 'h:mm a', { locale: dateLocale })}
+        </Text>
+        <View style={styles.mealMacros}>
+          <Text style={[styles.mealMacroText, { color: theme.primary }]}>{meal.calories} cal</Text>
+          <Text style={[styles.mealMacroText, { color: theme.primary }]}>P: {meal.protein}g</Text>
+          <Text style={[styles.mealMacroText, { color: theme.primary }]}>C: {meal.carbs}g</Text>
+          <Text style={[styles.mealMacroText, { color: theme.primary }]}>F: {meal.fats}g</Text>
+        </View>
+      </View>
+      <TouchableOpacity style={styles.deleteButton} onPress={() => deleteMeal(meal.id)}>
+        <Ionicons name="trash-outline" size={20} color={theme.primary} />
+      </TouchableOpacity>
+    </View>
+  );
+
+  const renderDayGroup = (day: DayGroup, isNested: boolean = false) => {
+    const isExpanded = expandedDays.has(day.dateKey);
+    const dayLabel = day.dateKey === 'today' 
+      ? (i18n.language === 'es' ? 'Hoy' : 'Today')
+      : format(day.date, 'EEEE d', { locale: dateLocale });
+
+    return (
+      <View key={day.dateKey} style={[styles.dayContainer, isNested && styles.nestedDay]}>
+        <TouchableOpacity 
+          style={[styles.dayHeader, { backgroundColor: theme.surfaceVariant }]}
+          onPress={() => toggleDay(day.dateKey)}
+        >
+          <View style={styles.dayHeaderLeft}>
+            <Ionicons 
+              name={isExpanded ? 'folder-open' : 'folder'} 
+              size={20} 
+              color={day.dateKey === 'today' ? theme.primary : theme.textSecondary} 
+            />
+            <Text style={[
+              styles.dayTitle, 
+              { color: day.dateKey === 'today' ? theme.primary : theme.text }
+            ]}>
+              {dayLabel}
+            </Text>
+            <View style={[styles.mealCountBadge, { backgroundColor: theme.primary + '30' }]}>
+              <Text style={[styles.mealCountText, { color: theme.primary }]}>
+                {day.meals.length}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.dayHeaderRight}>
+            <Text style={[styles.dayCalories, { color: theme.textSecondary }]}>
+              {day.totalCalories} cal
+            </Text>
+            <Ionicons 
+              name={isExpanded ? 'chevron-up' : 'chevron-down'} 
+              size={20} 
+              color={theme.textMuted} 
+            />
+          </View>
+        </TouchableOpacity>
+
+        {isExpanded && (
+          <View style={styles.dayContent}>
+            {day.meals.map(renderMealCard)}
+          </View>
+        )}
+      </View>
+    );
+  };
+
+  const renderMonthGroup = (month: MonthGroup) => {
+    const isExpanded = expandedMonths.has(month.monthKey);
+
+    return (
+      <View key={month.monthKey} style={styles.monthContainer}>
+        <TouchableOpacity 
+          style={[styles.monthHeader, { backgroundColor: theme.surface }]}
+          onPress={() => toggleMonth(month.monthKey)}
+        >
+          <View style={styles.monthHeaderLeft}>
+            <Ionicons 
+              name={isExpanded ? 'folder-open' : 'folder'} 
+              size={24} 
+              color={theme.warning} 
+            />
+            <Text style={[styles.monthTitle, { color: theme.text }]}>
+              {month.month}
+            </Text>
+            <View style={[styles.dayCountBadge, { backgroundColor: theme.warning + '30' }]}>
+              <Text style={[styles.dayCountText, { color: theme.warning }]}>
+                {month.days.length} {i18n.language === 'es' ? 'días' : 'days'}
+              </Text>
+            </View>
+          </View>
+          <View style={styles.monthHeaderRight}>
+            <Text style={[styles.monthCalories, { color: theme.textSecondary }]}>
+              {month.totalCalories} cal
+            </Text>
+            <Ionicons 
+              name={isExpanded ? 'chevron-up' : 'chevron-down'} 
+              size={20} 
+              color={theme.textMuted} 
+            />
+          </View>
+        </TouchableOpacity>
+
+        {isExpanded && (
+          <View style={styles.monthContent}>
+            {month.days.map(day => renderDayGroup(day, true))}
+          </View>
+        )}
+      </View>
+    );
+  };
+
+  // Premium gate
   if (!isPremium) {
     return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.headerSubtitle}>{t('history.subtitle')}</Text>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
+        <View style={[styles.header, { backgroundColor: theme.surface }]}>
+          <Text style={[styles.headerSubtitle, { color: theme.textSecondary }]}>
+            {t('history.subtitle')}
+          </Text>
         </View>
         <View style={styles.lockedContainer}>
-          <Ionicons name="lock-closed" size={80} color="#555" />
-          <Text style={styles.lockedTitle}>{t('history.premiumFeature')}</Text>
-          <Text style={styles.lockedText}>{t('history.premiumMessage')}</Text>
+          <Ionicons name="lock-closed" size={80} color={theme.textMuted} />
+          <Text style={[styles.lockedTitle, { color: theme.text }]}>
+            {t('history.premiumFeature')}
+          </Text>
+          <Text style={[styles.lockedText, { color: theme.textSecondary }]}>
+            {t('history.premiumMessage')}
+          </Text>
           <TouchableOpacity
-            style={styles.upgradeButton}
+            style={[styles.upgradeButton, { backgroundColor: theme.premium }]}
             onPress={() => router.push('/paywall')}
           >
             <Text style={styles.upgradeButtonText}>{t('history.upgradeNow')}</Text>
@@ -113,81 +378,108 @@ export default function HistoryScreen() {
 
   if (isLoading) {
     return (
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.headerSubtitle}>{t('history.subtitle')}</Text>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
+        <View style={[styles.header, { backgroundColor: theme.surface }]}>
+          <Text style={[styles.headerSubtitle, { color: theme.textSecondary }]}>
+            {t('history.subtitle')}
+          </Text>
         </View>
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#FF6B6B" />
+          <ActivityIndicator size="large" color={theme.primary} />
         </View>
       </View>
     );
   }
 
+  const { today, thisMonth, previousMonths } = groupMeals();
+
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerSubtitle}>{t('history.subtitle')}</Text>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <View style={[styles.header, { backgroundColor: theme.surface }]}>
+        <Text style={[styles.headerSubtitle, { color: theme.textSecondary }]}>
+          {t('history.subtitle')}
+        </Text>
       </View>
 
+      {/* Today's Summary */}
       {dailyTotals && dailyTotals.mealCount > 0 && (
-        <View style={styles.dailySummary}>
-          <Text style={styles.summaryTitle}>{t('history.todaySummary')}</Text>
+        <View style={[styles.dailySummary, { backgroundColor: theme.surface }]}>
+          <Text style={[styles.summaryTitle, { color: theme.text }]}>
+            {t('history.todaySummary')}
+          </Text>
           <View style={styles.summaryRow}>
             <View style={styles.summaryItem}>
-              <Text style={styles.summaryValue}>{dailyTotals.calories}</Text>
-              <Text style={styles.summaryLabel}>{t('trackFood.calories')}</Text>
+              <Text style={[styles.summaryValue, { color: theme.primary }]}>
+                {dailyTotals.calories}
+              </Text>
+              <Text style={[styles.summaryLabel, { color: theme.textMuted }]}>
+                {t('trackFood.calories')}
+              </Text>
             </View>
             <View style={styles.summaryItem}>
-              <Text style={styles.summaryValue}>{dailyTotals.protein.toFixed(1)}g</Text>
-              <Text style={styles.summaryLabel}>{t('trackFood.protein')}</Text>
+              <Text style={[styles.summaryValue, { color: theme.primary }]}>
+                {dailyTotals.protein.toFixed(1)}g
+              </Text>
+              <Text style={[styles.summaryLabel, { color: theme.textMuted }]}>
+                {t('trackFood.protein')}
+              </Text>
             </View>
             <View style={styles.summaryItem}>
-              <Text style={styles.summaryValue}>{dailyTotals.carbs.toFixed(1)}g</Text>
-              <Text style={styles.summaryLabel}>{t('trackFood.carbs')}</Text>
+              <Text style={[styles.summaryValue, { color: theme.primary }]}>
+                {dailyTotals.carbs.toFixed(1)}g
+              </Text>
+              <Text style={[styles.summaryLabel, { color: theme.textMuted }]}>
+                {t('trackFood.carbs')}
+              </Text>
             </View>
             <View style={styles.summaryItem}>
-              <Text style={styles.summaryValue}>{dailyTotals.fats.toFixed(1)}g</Text>
-              <Text style={styles.summaryLabel}>{t('trackFood.fats')}</Text>
+              <Text style={[styles.summaryValue, { color: theme.primary }]}>
+                {dailyTotals.fats.toFixed(1)}g
+              </Text>
+              <Text style={[styles.summaryLabel, { color: theme.textMuted }]}>
+                {t('trackFood.fats')}
+              </Text>
             </View>
           </View>
         </View>
       )}
 
-      <ScrollView style={styles.mealsList}>
-        {meals.length === 0 ? (
+      <ScrollView style={styles.historyList} contentContainerStyle={styles.historyContent}>
+        {!today && thisMonth.length === 0 && previousMonths.length === 0 ? (
           <View style={styles.emptyState}>
-            <Ionicons name="restaurant" size={60} color="#555" />
-            <Text style={styles.emptyText}>{t('history.noMeals')}</Text>
-            <Text style={styles.emptySubtext}>{t('history.noMealsSubtext')}</Text>
+            <Ionicons name="restaurant" size={60} color={theme.textMuted} />
+            <Text style={[styles.emptyText, { color: theme.text }]}>
+              {t('history.noMeals')}
+            </Text>
+            <Text style={[styles.emptySubtext, { color: theme.textSecondary }]}>
+              {t('history.noMealsSubtext')}
+            </Text>
           </View>
         ) : (
-          meals.map((meal: any) => (
-            <View key={meal.id} style={styles.mealCard}>
-              <Image
-                source={{ uri: `data:image/jpeg;base64,${meal.photoBase64}` }}
-                style={styles.mealImage}
-              />
-              <View style={styles.mealInfo}>
-                <Text style={styles.mealName}>{meal.dishName}</Text>
-                <Text style={styles.mealTime}>
-                  {format(new Date(meal.timestamp), 'MMM d, h:mm a')}
+          <>
+            {/* Today */}
+            {today && renderDayGroup(today)}
+
+            {/* This Month's Other Days */}
+            {thisMonth.length > 0 && (
+              <View style={styles.sectionContainer}>
+                <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>
+                  {i18n.language === 'es' ? 'Este mes' : 'This month'}
                 </Text>
-                <View style={styles.mealMacros}>
-                  <Text style={styles.mealMacroText}>{meal.calories} cal</Text>
-                  <Text style={styles.mealMacroText}>P: {meal.protein}g</Text>
-                  <Text style={styles.mealMacroText}>C: {meal.carbs}g</Text>
-                  <Text style={styles.mealMacroText}>F: {meal.fats}g</Text>
-                </View>
+                {thisMonth.map(day => renderDayGroup(day))}
               </View>
-              <TouchableOpacity
-                style={styles.deleteButton}
-                onPress={() => deleteMeal(meal.id)}
-              >
-                <Ionicons name="trash-outline" size={20} color="#FF6B6B" />
-              </TouchableOpacity>
-            </View>
-          ))
+            )}
+
+            {/* Previous Months */}
+            {previousMonths.length > 0 && (
+              <View style={styles.sectionContainer}>
+                <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>
+                  {i18n.language === 'es' ? 'Meses anteriores' : 'Previous months'}
+                </Text>
+                {previousMonths.map(renderMonthGroup)}
+              </View>
+            )}
+          </>
         )}
       </ScrollView>
     </View>
@@ -197,22 +489,18 @@ export default function HistoryScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0c0c0c',
   },
   header: {
     padding: 20,
     paddingTop: 60,
-    backgroundColor: '#1a1a1a',
-  },
-  headerTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#fff',
   },
   headerSubtitle: {
     fontSize: 14,
-    color: '#aaa',
-    marginTop: 4,
+  },
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   lockedContainer: {
     flex: 1,
@@ -223,18 +511,15 @@ const styles = StyleSheet.create({
   lockedTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#fff',
     marginTop: 20,
     marginBottom: 12,
   },
   lockedText: {
     fontSize: 16,
-    color: '#aaa',
     textAlign: 'center',
     marginBottom: 30,
   },
   upgradeButton: {
-    backgroundColor: '#FFD700',
     paddingHorizontal: 32,
     paddingVertical: 16,
     borderRadius: 12,
@@ -244,13 +529,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-  loadingContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   dailySummary: {
-    backgroundColor: '#1a1a1a',
     padding: 20,
     margin: 16,
     borderRadius: 12,
@@ -258,7 +537,6 @@ const styles = StyleSheet.create({
   summaryTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#fff',
     marginBottom: 16,
   },
   summaryRow: {
@@ -271,17 +549,149 @@ const styles = StyleSheet.create({
   summaryValue: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#FF6B6B',
   },
   summaryLabel: {
     fontSize: 12,
-    color: '#aaa',
     marginTop: 4,
   },
-  mealsList: {
+  historyList: {
     flex: 1,
-    padding: 16,
   },
+  historyContent: {
+    padding: 16,
+    paddingBottom: 40,
+  },
+  sectionContainer: {
+    marginTop: 24,
+  },
+  sectionTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+    marginBottom: 12,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+  },
+  // Day styles
+  dayContainer: {
+    marginBottom: 8,
+  },
+  nestedDay: {
+    marginLeft: 16,
+  },
+  dayHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 14,
+    borderRadius: 12,
+  },
+  dayHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  dayHeaderRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  dayTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  mealCountBadge: {
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    borderRadius: 10,
+  },
+  mealCountText: {
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  dayCalories: {
+    fontSize: 14,
+  },
+  dayContent: {
+    paddingTop: 8,
+    paddingLeft: 8,
+  },
+  // Month styles
+  monthContainer: {
+    marginBottom: 12,
+  },
+  monthHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 16,
+    borderRadius: 12,
+  },
+  monthHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  monthHeaderRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  monthTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  dayCountBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+  },
+  dayCountText: {
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  monthCalories: {
+    fontSize: 14,
+  },
+  monthContent: {
+    paddingTop: 8,
+  },
+  // Meal card
+  mealCard: {
+    borderRadius: 12,
+    marginBottom: 8,
+    overflow: 'hidden',
+    flexDirection: 'row',
+  },
+  mealImage: {
+    width: 80,
+    height: 80,
+  },
+  mealInfo: {
+    flex: 1,
+    padding: 12,
+  },
+  mealName: {
+    fontSize: 14,
+    fontWeight: '600',
+    marginBottom: 2,
+  },
+  mealTime: {
+    fontSize: 11,
+    marginBottom: 6,
+  },
+  mealMacros: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  mealMacroText: {
+    fontSize: 11,
+  },
+  deleteButton: {
+    padding: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  // Empty state
   emptyState: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -290,51 +700,10 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#fff',
     marginTop: 16,
   },
   emptySubtext: {
     fontSize: 14,
-    color: '#aaa',
     marginTop: 8,
-  },
-  mealCard: {
-    backgroundColor: '#1a1a1a',
-    borderRadius: 12,
-    marginBottom: 16,
-    overflow: 'hidden',
-    flexDirection: 'row',
-  },
-  mealImage: {
-    width: 100,
-    height: 100,
-  },
-  mealInfo: {
-    flex: 1,
-    padding: 12,
-  },
-  mealName: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#fff',
-    marginBottom: 4,
-  },
-  mealTime: {
-    fontSize: 12,
-    color: '#aaa',
-    marginBottom: 8,
-  },
-  mealMacros: {
-    flexDirection: 'row',
-    gap: 12,
-  },
-  mealMacroText: {
-    fontSize: 12,
-    color: '#FF6B6B',
-  },
-  deleteButton: {
-    padding: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
