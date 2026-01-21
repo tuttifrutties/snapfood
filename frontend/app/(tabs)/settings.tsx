@@ -379,6 +379,103 @@ export default function SettingsScreen() {
           </View>
         </TouchableOpacity>
       </Modal>
+
+      {/* Theme Modal */}
+      <Modal
+        visible={themeModalVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setThemeModalVisible(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setThemeModalVisible(false)}
+        >
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>
+              {i18n.language === 'es' ? 'Tema' : 'Theme'}
+            </Text>
+            
+            {/* Mode selection */}
+            <Text style={styles.themeSubtitle}>
+              {i18n.language === 'es' ? 'Modo' : 'Mode'}
+            </Text>
+            <View style={styles.themeModeRow}>
+              <TouchableOpacity
+                style={[
+                  styles.themeModeButton,
+                  themeMode === 'light' && styles.themeModeButtonSelected
+                ]}
+                onPress={() => setThemeMode('light')}
+              >
+                <Ionicons 
+                  name="sunny" 
+                  size={24} 
+                  color={themeMode === 'light' ? theme.primary : '#aaa'} 
+                />
+                <Text style={[
+                  styles.themeModeText,
+                  themeMode === 'light' && { color: theme.primary }
+                ]}>
+                  {i18n.language === 'es' ? 'Claro' : 'Light'}
+                </Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity
+                style={[
+                  styles.themeModeButton,
+                  themeMode === 'dark' && styles.themeModeButtonSelected
+                ]}
+                onPress={() => setThemeMode('dark')}
+              >
+                <Ionicons 
+                  name="moon" 
+                  size={24} 
+                  color={themeMode === 'dark' ? theme.primary : '#aaa'} 
+                />
+                <Text style={[
+                  styles.themeModeText,
+                  themeMode === 'dark' && { color: theme.primary }
+                ]}>
+                  {i18n.language === 'es' ? 'Oscuro' : 'Dark'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* Color selection */}
+            <Text style={styles.themeSubtitle}>
+              {i18n.language === 'es' ? 'Color' : 'Accent Color'}
+            </Text>
+            <View style={styles.colorGrid}>
+              {ACCENT_COLORS.map((color) => (
+                <TouchableOpacity
+                  key={color.id}
+                  style={[
+                    styles.colorOption,
+                    { backgroundColor: color.primary },
+                    accentColor.id === color.id && styles.colorOptionSelected
+                  ]}
+                  onPress={() => setAccentColor(color.id)}
+                >
+                  {accentColor.id === color.id && (
+                    <Ionicons name="checkmark" size={20} color="#fff" />
+                  )}
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <TouchableOpacity
+              style={[styles.modalCloseButton, { backgroundColor: theme.primary }]}
+              onPress={() => setThemeModalVisible(false)}
+            >
+              <Text style={[styles.modalCloseText, { color: '#fff' }]}>
+                {i18n.language === 'es' ? 'Listo' : 'Done'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </View>
   );
 }
