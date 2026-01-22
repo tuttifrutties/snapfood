@@ -132,6 +132,7 @@ export default function PersonalProfileScreen() {
     es: {
       title: 'Mi Ficha Personal',
       weekSummary: 'Resumen Semanal',
+      monthSummary: 'Resumen Mensual',
       daysTracked: 'días registrados',
       avgCalories: 'Promedio diario',
       cal: 'cal',
@@ -150,16 +151,21 @@ export default function PersonalProfileScreen() {
       targetCalories: 'Calorías objetivo',
       tdee: 'Gasto diario',
       noData: 'Sin datos esta semana',
+      noMonthData: 'Sin datos del mes anterior',
       startTracking: 'Empieza a registrar tus comidas',
       weeklyProgress: 'Tu progreso esta semana',
+      monthlyProgress: 'Tu progreso del mes',
       onTrack: '¡Vas muy bien!',
       needsWork: 'Puedes mejorar',
       premiumRequired: 'Función Premium',
       premiumMessage: 'Accede a tu ficha personal con estadísticas detalladas',
+      swipeHint: 'Desliza para ver mensual →',
+      swipeBack: '← Desliza para ver semanal',
     },
     en: {
       title: 'My Personal Profile',
       weekSummary: 'Weekly Summary',
+      monthSummary: 'Monthly Summary',
       daysTracked: 'days tracked',
       avgCalories: 'Daily average',
       cal: 'cal',
@@ -178,12 +184,16 @@ export default function PersonalProfileScreen() {
       targetCalories: 'Target calories',
       tdee: 'Daily expenditure',
       noData: 'No data this week',
+      noMonthData: 'No data from last month',
       startTracking: 'Start tracking your meals',
       weeklyProgress: 'Your progress this week',
+      monthlyProgress: 'Your monthly progress',
       onTrack: "You're doing great!",
       needsWork: 'Room for improvement',
       premiumRequired: 'Premium Feature',
       premiumMessage: 'Access your personal profile with detailed stats',
+      swipeHint: 'Swipe for monthly →',
+      swipeBack: '← Swipe for weekly',
     },
   };
   const t2 = texts[i18n.language as keyof typeof texts] || texts.en;
@@ -191,13 +201,15 @@ export default function PersonalProfileScreen() {
   const loadData = async () => {
     setIsLoading(true);
     try {
-      const [profileData, summaryData] = await Promise.all([
+      const [profileData, summaryData, monthData] = await Promise.all([
         getUserNutritionProfile(),
         getWeekSummary(),
+        getMonthSummary(-1), // Previous month
       ]);
       
       setProfile(profileData);
       setWeekSummary(summaryData);
+      setMonthSummary(monthData);
       
       if (profileData) {
         setEditWeight(profileData.weight.toString());
