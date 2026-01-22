@@ -1028,7 +1028,12 @@ const styles = StyleSheet.create({
   },
   foodItemCalories: {
     fontSize: 12,
-    marginTop: 4,
+    marginTop: 2,
+  },
+  foodItemServing: {
+    fontSize: 13,
+    marginTop: 2,
+    fontStyle: 'italic',
   },
   emptySearchContainer: {
     flex: 1,
