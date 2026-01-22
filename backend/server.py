@@ -1070,6 +1070,114 @@ async def get_nutrition_summary(user_id: str):
         logger.error(f"Error getting nutrition summary: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to get nutrition summary: {str(e)}")
 
+# =============================================
+# RECIPE SEARCH ENDPOINT
+# =============================================
+
+class RecipeSearchRequest(BaseModel):
+    query: str
+    userIngredients: Optional[List[str]] = []
+    language: Optional[str] = "es"
+
+@api_router.post("/search-recipes")
+async def search_recipes(request: RecipeSearchRequest):
+    """
+    Search for recipes by name and rank by ingredient match
+    Returns recipes sorted by how many ingredients the user already has
+    """
+    try:
+        logger.info(f"Searching recipes for: {request.query}")
+        
+        api_key = os.environ.get('EMERGENT_LLM_KEY')
+        if not api_key:
+            raise HTTPException(status_code=500, detail="API key not configured")
+        
+        # Language setup
+        lang = request.language or "es"
+        lang_instruction = "Respond ONLY in Spanish." if lang == "es" else "Respond ONLY in English."
+        
+        chat = LlmChat(
+            api_key=api_key,
+            session_id=f"recipe_search_{request.query[:20]}",
+            system_message=f"""{lang_instruction}
+            
+            You are a culinary expert helping users find recipes.
+            When given a search query, generate 8 relevant recipes.
+            
+            Each recipe must include:
+            - id: unique string ID (use snake_case like "chicken_rice_123")
+            - name: Recipe name
+            - description: Brief appetizing description (1-2 sentences)
+            - ingredients: List of ingredients with quantities (simple strings)
+            - instructions: Step-by-step cooking instructions (array of clear steps)
+            - cookingTime: Total time in minutes
+            - servings: Number of servings
+            - calories: Estimated calories per serving
+            - protein: Protein in grams per serving
+            - carbs: Carbohydrates in grams per serving
+            - fats: Fats in grams per serving
+            - countryOfOrigin: Country where this dish originates
+            - cuisine: Type of cuisine
+            
+            Return ONLY a JSON array of 8 recipes. No explanations.
+            """
+        ).with_model("openai", "gpt-4o")
+        
+        user_message = UserMessage(
+            text=f"Find 8 recipes matching this search: '{request.query}'. Return as JSON array."
+        )
+        
+        response = await chat.send_message(user_message)
+        
+        import json
+        try:
+            response_text = response.strip()
+            if "```json" in response_text:
+                response_text = response_text.split("```json")[1].split("```")[0].strip()
+            elif "```" in response_text:
+                response_text = response_text.split("```")[1].split("```")[0].strip()
+            
+            recipes_data = json.loads(response_text)
+            
+            # Calculate ingredient match for each recipe
+            user_ingredients_lower = [ing.lower().strip() for ing in request.userIngredients]
+            
+            for recipe in recipes_data:
+                recipe_ingredients = recipe.get("ingredients", [])
+                matching_count = 0
+                missing_ingredients = []
+                
+                for ing in recipe_ingredients:
+                    ing_lower = ing.lower()
+                    found = False
+                    for user_ing in user_ingredients_lower:
+                        if user_ing in ing_lower or ing_lower in user_ing:
+                            found = True
+                            matching_count += 1
+                            break
+                    if not found:
+                        # Extract just the main ingredient name for missing list
+                        missing_ingredients.append(ing)
+                
+                total_ingredients = len(recipe_ingredients)
+                recipe["matchCount"] = matching_count
+                recipe["totalIngredients"] = total_ingredients
+                recipe["matchPercentage"] = round((matching_count / total_ingredients * 100) if total_ingredients > 0 else 0)
+                recipe["missingIngredients"] = missing_ingredients[:5]  # Limit to 5 for UI
+            
+            # Sort by match percentage (highest first)
+            recipes_data.sort(key=lambda r: r.get("matchPercentage", 0), reverse=True)
+            
+            return {"recipes": recipes_data, "query": request.query}
+            
+        except Exception as e:
+            logger.error(f"Failed to parse recipe search: {e}")
+            raise HTTPException(status_code=500, detail="Failed to parse recipe search results")
+            
+    except Exception as e:
+        logger.error(f"Error searching recipes: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to search recipes: {str(e)}")
+
 # Include the router in the main app
 app.include_router(api_router)
 
