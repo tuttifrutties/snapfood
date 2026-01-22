@@ -845,6 +845,28 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '600',
   },
+  // Summary Tabs
+  summaryTabs: {
+    flexDirection: 'row',
+    marginBottom: 20,
+  },
+  summaryTab: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#33333350',
+  },
+  summaryTabText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  monthLabel: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 16,
+  },
   editButtons: {
     flexDirection: 'row',
     gap: 12,
