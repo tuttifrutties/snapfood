@@ -302,11 +302,38 @@ export default function HistoryScreen() {
           style={styles.mealImage}
         />
       )}
+      {meal.isCooked && (
+        <View style={[styles.cookedBadge, { backgroundColor: theme.primary + '20' }]}>
+          <Ionicons name="restaurant" size={14} color={theme.primary} />
+          <Text style={[styles.cookedBadgeText, { color: theme.primary }]}>
+            {i18n.language === 'es' ? 'Cocinado' : 'Cooked'}
+          </Text>
+        </View>
+      )}
       <View style={styles.mealInfo}>
         <Text style={[styles.mealName, { color: theme.text }]}>{meal.dishName}</Text>
         <Text style={[styles.mealTime, { color: theme.textMuted }]}>
           {format(new Date(meal.timestamp), 'h:mm a', { locale: dateLocale })}
         </Text>
+        {meal.portions && (
+          <TouchableOpacity 
+            style={[styles.portionBadge, { backgroundColor: theme.surfaceVariant }]}
+            onPress={() => {
+              if (meal.isCooked) {
+                setEditingMeal(meal);
+                setShowPortionModal(true);
+              }
+            }}
+          >
+            <Ionicons name="restaurant-outline" size={12} color={theme.textSecondary} />
+            <Text style={[styles.portionText, { color: theme.textSecondary }]}>
+              {meal.portions} {i18n.language === 'es' ? (meal.portions === 1 ? 'porción' : 'porciones') : (meal.portions === 1 ? 'serving' : 'servings')}
+            </Text>
+            {meal.isCooked && (
+              <Ionicons name="pencil" size={10} color={theme.textMuted} />
+            )}
+          </TouchableOpacity>
+        )}
         <View style={styles.mealMacros}>
           <Text style={[styles.mealMacroText, { color: theme.primary }]}>{meal.calories} cal</Text>
           <Text style={[styles.mealMacroText, { color: theme.primary }]}>P: {meal.protein}g</Text>
@@ -314,7 +341,7 @@ export default function HistoryScreen() {
           <Text style={[styles.mealMacroText, { color: theme.primary }]}>F: {meal.fats}g</Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.deleteButton} onPress={() => deleteMeal(meal.id)}>
+      <TouchableOpacity style={styles.deleteButton} onPress={() => deleteMeal(meal.id, meal.isCooked)}>
         <Ionicons name="trash-outline" size={20} color={theme.primary} />
       </TouchableOpacity>
     </View>
