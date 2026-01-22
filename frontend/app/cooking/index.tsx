@@ -11,6 +11,8 @@ import {
   TextInput,
   FlatList,
   SectionList,
+  Modal,
+  Dimensions,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
@@ -23,8 +25,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getIngredientsByCategory, searchIngredients, getTotalIngredientsCount } from '../../src/data/ingredients';
 import { saveIngredients, getRememberedIngredients } from '../../src/services/ingredients';
 import { refreshSmartNotifications } from '../../src/services/notifications';
+import { getUserName } from '../../src/services/nutritionCoach';
 
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
+const { width, height } = Dimensions.get('window');
 
 export default function CookingScreen() {
   const { userId } = useUser();
@@ -41,6 +45,9 @@ export default function CookingScreen() {
   const [isLoadingRecipes, setIsLoadingRecipes] = useState(false);
   const [todayCookingCount, setTodayCookingCount] = useState(0);
   const [expandedCategories, setExpandedCategories] = useState<string[]>([]);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showLoadingScreen, setShowLoadingScreen] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
 
   // Get ingredients by category based on current language
   const ingredientCategories = getIngredientsByCategory(i18n.language as 'en' | 'es');
