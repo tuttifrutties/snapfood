@@ -1074,27 +1074,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 22,
   },
-  categoriesGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    gap: 10,
-  },
-  categoryChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: 20,
-    gap: 6,
-  },
-  categoryChipIcon: {
-    fontSize: 18,
-  },
-  categoryChipText: {
-    fontSize: 13,
-    fontWeight: '500',
-  },
   // Food detail styles
   foodDetailContainer: {
     padding: 20,
