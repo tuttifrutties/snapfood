@@ -41,6 +41,13 @@ interface Meal {
   timestamp: string;
   portions?: number;
   isCooked?: boolean;
+  isSearched?: boolean;
+  icon?: string;
+  recipeData?: any;
+  baseCalories?: number;
+  baseProtein?: number;
+  baseCarbs?: number;
+  baseFats?: number;
 }
 
 interface DayGroup {
