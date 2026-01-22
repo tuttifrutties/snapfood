@@ -358,7 +358,15 @@ export default function HistoryScreen() {
   };
 
   const renderMealCard = (meal: Meal) => (
-    <View key={meal.id} style={[styles.mealCard, { backgroundColor: theme.surface }]}>
+    <TouchableOpacity 
+      key={meal.id} 
+      style={[styles.mealCard, { backgroundColor: theme.surface }]}
+      onPress={() => openMealDetail(meal)}
+      activeOpacity={0.7}
+    >
+      {meal.icon && !meal.photoBase64 && (
+        <Text style={styles.mealIcon}>{meal.icon}</Text>
+      )}
       {meal.photoBase64 && (
         <Image
           source={{ uri: `data:image/jpeg;base64,${meal.photoBase64}` }}
@@ -373,29 +381,26 @@ export default function HistoryScreen() {
           </Text>
         </View>
       )}
+      {meal.isSearched && !meal.isCooked && (
+        <View style={[styles.cookedBadge, { backgroundColor: '#4CAF5020' }]}>
+          <Ionicons name="search" size={14} color="#4CAF50" />
+          <Text style={[styles.cookedBadgeText, { color: '#4CAF50' }]}>
+            {i18n.language === 'es' ? 'Buscado' : 'Searched'}
+          </Text>
+        </View>
+      )}
       <View style={styles.mealInfo}>
         <Text style={[styles.mealName, { color: theme.text }]}>{meal.dishName}</Text>
         <Text style={[styles.mealTime, { color: theme.textMuted }]}>
           {format(new Date(meal.timestamp), 'h:mm a', { locale: dateLocale })}
         </Text>
         {meal.portions && (
-          <TouchableOpacity 
-            style={[styles.portionBadge, { backgroundColor: theme.surfaceVariant }]}
-            onPress={() => {
-              if (meal.isCooked) {
-                setEditingMeal(meal);
-                setShowPortionModal(true);
-              }
-            }}
-          >
+          <View style={[styles.portionBadge, { backgroundColor: theme.surfaceVariant }]}>
             <Ionicons name="restaurant-outline" size={12} color={theme.textSecondary} />
             <Text style={[styles.portionText, { color: theme.textSecondary }]}>
               {meal.portions} {i18n.language === 'es' ? (meal.portions === 1 ? 'porción' : 'porciones') : (meal.portions === 1 ? 'serving' : 'servings')}
             </Text>
-            {meal.isCooked && (
-              <Ionicons name="pencil" size={10} color={theme.textMuted} />
-            )}
-          </TouchableOpacity>
+          </View>
         )}
         <View style={styles.mealMacros}>
           <Text style={[styles.mealMacroText, { color: theme.primary }]}>{meal.calories} cal</Text>
@@ -404,10 +409,8 @@ export default function HistoryScreen() {
           <Text style={[styles.mealMacroText, { color: theme.primary }]}>F: {meal.fats}g</Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.deleteButton} onPress={() => deleteMeal(meal.id, meal.isCooked)}>
-        <Ionicons name="trash-outline" size={20} color={theme.primary} />
-      </TouchableOpacity>
-    </View>
+      <Ionicons name="chevron-forward" size={20} color={theme.textMuted} />
+    </TouchableOpacity>
   );
 
   const renderDayGroup = (day: DayGroup, isNested: boolean = false) => {
