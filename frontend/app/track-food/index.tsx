@@ -50,6 +50,72 @@ export default function TrackFoodScreen() {
     return (value * portions).toFixed(1);
   };
 
+  // Search functions
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    if (query.length >= 2) {
+      const results = searchFoods(query, i18n.language as 'es' | 'en');
+      setSearchResults(results);
+    } else {
+      setSearchResults([]);
+    }
+  };
+
+  const selectFoodFromSearch = (food: FoodItem) => {
+    setSelectedFood(food);
+    setFoodPortions(1);
+  };
+
+  const saveFoodFromSearch = async () => {
+    if (!userId || !selectedFood) return;
+
+    try {
+      const adjustedCalories = Math.round(selectedFood.calories * foodPortions);
+      const adjustedProtein = Math.round(selectedFood.protein * foodPortions * 10) / 10;
+      const adjustedCarbs = Math.round(selectedFood.carbs * foodPortions * 10) / 10;
+      const adjustedFats = Math.round(selectedFood.fats * foodPortions * 10) / 10;
+
+      // Save to local history
+      const historyKey = `food_history_${userId}`;
+      const existingHistory = await AsyncStorage.getItem(historyKey);
+      const history = existingHistory ? JSON.parse(existingHistory) : [];
+
+      const newEntry = {
+        id: `food_${Date.now()}`,
+        userId,
+        timestamp: new Date().toISOString(),
+        foodName: selectedFood.name[i18n.language as 'es' | 'en'] || selectedFood.name.es,
+        mealType: 'food',
+        portions: foodPortions,
+        calories: adjustedCalories,
+        protein: adjustedProtein,
+        carbs: adjustedCarbs,
+        fats: adjustedFats,
+        icon: selectedFood.icon,
+        isSearched: true,
+        baseCalories: selectedFood.calories,
+        baseProtein: selectedFood.protein,
+        baseCarbs: selectedFood.carbs,
+        baseFats: selectedFood.fats,
+      };
+
+      history.unshift(newEntry);
+      await AsyncStorage.setItem(historyKey, JSON.stringify(history));
+
+      // Update daily calories
+      await updateDailyCalories(adjustedCalories);
+
+      Alert.alert(
+        t('common.success'), 
+        i18n.language === 'es' ? '¡Alimento guardado!' : 'Food saved!'
+      );
+      router.back();
+    } catch (error) {
+      console.error('Failed to save food:', error);
+      Alert.alert(t('common.error'), 'Failed to save food');
+    }
+  };
+
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
     if (!permissionResult.granted) {
