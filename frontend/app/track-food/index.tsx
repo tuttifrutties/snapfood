@@ -53,9 +53,10 @@ export default function TrackFoodScreen() {
   
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<FoodItem[]>([]);
-  const [selectedFood, setSelectedFood] = useState<FoodItem | null>(null);
+  const [searchResults, setSearchResults] = useState<ApiFoodItem[]>([]);
+  const [selectedFood, setSelectedFood] = useState<ApiFoodItem | null>(null);
   const [foodPortions, setFoodPortions] = useState(1);
+  const [isSearching, setIsSearching] = useState(false);
 
   const PORTION_OPTIONS = [0.5, 1, 1.5, 2, 2.5, 3];
 
