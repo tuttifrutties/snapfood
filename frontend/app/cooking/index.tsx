@@ -188,7 +188,7 @@ export default function CookingScreen() {
     }
   };
 
-  const getRecipeSuggestions = async () => {
+  const handleGetSuggestionsPress = () => {
     if (!canUseCooking()) {
       Alert.alert(
         t('cooking.premiumFeature'),
@@ -205,6 +205,14 @@ export default function CookingScreen() {
       Alert.alert(t('common.error'), 'Please select at least one ingredient.');
       return;
     }
+
+    // Show confirmation modal
+    setShowConfirmModal(true);
+  };
+
+  const getRecipeSuggestions = async () => {
+    setShowConfirmModal(false);
+    setShowLoadingScreen(true);
 
     // Get language from AsyncStorage to ensure we have the correct one
     let currentLanguage = i18n.language || 'en';
