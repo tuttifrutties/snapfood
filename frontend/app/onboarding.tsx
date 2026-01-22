@@ -163,7 +163,7 @@ export default function OnboardingScreen() {
   };
 
   const handleFinish = async () => {
-    if (!age || !height || !weight) {
+    if (!userName.trim() || !age || !height || !weight) {
       Alert.alert(t('onboarding.missingInfo'), t('onboarding.fillAllFields'));
       return;
     }
@@ -174,6 +174,7 @@ export default function OnboardingScreen() {
       await AsyncStorage.setItem('user_country', country || 'OTHER');
       await AsyncStorage.setItem('user_region', countryData?.region || 'other');
       await AsyncStorage.setItem('user_gender', gender);
+      await AsyncStorage.setItem('user_name', userName.trim());
 
       // Save to backend
       await fetch(`${API_URL}/api/users/${userId}/goals`, {
@@ -181,6 +182,7 @@ export default function OnboardingScreen() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userId,
+          name: userName.trim(),
           age: parseInt(age),
           height: parseFloat(height),
           weight: parseFloat(weight),
@@ -196,6 +198,7 @@ export default function OnboardingScreen() {
 
       // Save nutrition profile locally with full calculations
       await saveUserNutritionProfile({
+        name: userName.trim(),
         age: parseInt(age),
         height: parseFloat(height),
         weight: parseFloat(weight),
