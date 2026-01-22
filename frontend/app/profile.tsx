@@ -111,11 +111,15 @@ export default function PersonalProfileScreen() {
   const router = useRouter();
   const { t, i18n } = useTranslation();
   const { isPremium } = usePremium();
+  const { theme } = useTheme();
+  const summaryScrollRef = useRef<ScrollView>(null);
 
   const [profile, setProfile] = useState<UserNutritionProfile | null>(null);
   const [weekSummary, setWeekSummary] = useState<any>(null);
+  const [monthSummary, setMonthSummary] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
+  const [showingMonthly, setShowingMonthly] = useState(false);
   
   // Editable fields
   const [editWeight, setEditWeight] = useState('');
