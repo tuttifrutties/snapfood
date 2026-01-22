@@ -308,6 +308,58 @@ backend:
           
           CRITICAL: API budget exhaustion is blocking translation functionality and causing intermittent failures.
 
+  - task: "External food search API endpoint"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: |
+          Implemented POST /api/search-food endpoint using OpenAI GPT-4o to search for any food or drink and return nutritional information.
+          Supports language parameter (es, en, etc.) and returns structured nutrition data with all required fields.
+      - working: true
+        agent: "testing"
+        comment: |
+          ✅ TESTED: External food search API endpoint working perfectly. All test scenarios passed successfully.
+          
+          TESTED SCENARIOS (as requested):
+          1. ✅ "manzana" (apple in Spanish) - Response time: 12.41s
+             * Returned 5 food items with proper Spanish names
+             * Category: fruit, is_drink: false
+             * Sample: "Manzana Roja" - 95 cal, serving: "1 manzana mediana"
+          
+          2. ✅ "daiquiri" (cocktail) - Response time: 2.03s  
+             * Returned 1 drink item correctly classified
+             * Category: drink, is_drink: true
+             * Sample: "Daiquiri" - 240 cal, serving: "1 glass (250ml)"
+          
+          3. ✅ "pizza" - Response time: 7.61s
+             * Returned 5 food items with proper classification
+             * Category: prepared_dish, is_drink: false
+             * Sample: "Pizza Margherita" - 200 cal, serving: "1 slice"
+          
+          4. ✅ "café con leche" (coffee with milk) - Response time: 7.62s
+             * Returned 4 drink items correctly classified
+             * Category: drink, is_drink: true
+             * Sample: "Café con Leche" - 120 cal, serving: "1 taza (250ml)"
+          
+          RESPONSE FORMAT VALIDATION: ✅ ALL PASSED
+          * All required fields present: id, name, category, description, serving_size, serving_unit, is_drink, calories, protein, carbs, fats, fiber, sugar, icon
+          * Correct data types for all numeric and boolean fields
+          * Query echo working correctly
+          * Spanish language responses working as expected
+          
+          PERFORMANCE: ✅ ACCEPTABLE
+          * Average response time: 7.41 seconds
+          * All requests completed successfully (HTTP 200)
+          * Backend logs show successful GPT-4o API calls
+          
+          The external food search API is production-ready and handles all test scenarios correctly with proper Spanish language support.
+
 frontend:
   - task: "User context and state management"
     implemented: true
