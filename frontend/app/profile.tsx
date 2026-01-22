@@ -475,36 +475,16 @@ export default function PersonalProfileScreen() {
             </>
           )}
         </View>
-                  <>
-                    <Ionicons name="checkmark-circle" size={24} color="#4CAF50" />
-                    <Text style={styles.progressTextGood}>{t2.onTrack}</Text>
-                  </>
-                ) : (
-                  <>
-                    <Ionicons name="trending-up" size={24} color="#FFC107" />
-                    <Text style={styles.progressTextNeutral}>{t2.needsWork}</Text>
-                  </>
-                )}
-              </View>
-            </>
-          ) : (
-            <View style={styles.noDataContainer}>
-              <Ionicons name="calendar-outline" size={48} color="#555" />
-              <Text style={styles.noDataText}>{t2.noData}</Text>
-              <Text style={styles.noDataSubtext}>{t2.startTracking}</Text>
-            </View>
-          )}
-        </View>
 
         {/* Profile Data Card */}
-        <View style={styles.profileCard}>
+        <View style={[styles.profileCard, { backgroundColor: theme.surface }]}>
           <View style={styles.profileHeader}>
-            <Text style={styles.sectionTitle}>
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>
               {isEditing ? t2.editProfile : (i18n.language === 'es' ? 'Mis Datos' : 'My Data')}
             </Text>
             {!isEditing && (
               <TouchableOpacity onPress={() => setIsEditing(true)}>
-                <Ionicons name="pencil" size={20} color="#FF6B6B" />
+                <Ionicons name="pencil" size={20} color={theme.primary} />
               </TouchableOpacity>
             )}
           </View>
@@ -512,9 +492,9 @@ export default function PersonalProfileScreen() {
           {isEditing ? (
             <>
               <View style={styles.inputRow}>
-                <Text style={styles.inputLabel}>{t2.weight}</Text>
+                <Text style={[styles.inputLabel, { color: theme.textMuted }]}>{t2.weight}</Text>
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input, { backgroundColor: theme.surfaceVariant, color: theme.text }]}
                   value={editWeight}
                   onChangeText={setEditWeight}
                   keyboardType="decimal-pad"
