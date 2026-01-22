@@ -124,7 +124,7 @@ export default function TrackFoodScreen() {
     setSearchTimeout(timeout);
   };
 
-  const selectFoodFromSearch = (food: FoodItem) => {
+  const selectFoodFromSearch = (food: ApiFoodItem) => {
     setSelectedFood(food);
     setFoodPortions(1);
   };
