@@ -568,33 +568,77 @@ export default function TrackFoodScreen() {
     );
   }
 
+  // Mode: Select option
+  if (mode === 'select') {
+    return (
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
+        <View style={[styles.header, { backgroundColor: theme.surface }]}>
+          <TouchableOpacity onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={24} color={theme.text} />
+          </TouchableOpacity>
+          <Text style={[styles.headerTitle, { color: theme.text }]}>{t('trackFood.title')}</Text>
+          <View style={{ width: 24 }} />
+        </View>
+
+        <View style={styles.content}>
+          <Ionicons name="nutrition" size={80} color={theme.primary} />
+          <Text style={[styles.instructionText, { color: theme.textSecondary }]}>
+            {i18n.language === 'es' ? '¿Cómo quieres registrar tu comida?' : 'How do you want to track your food?'}
+          </Text>
+
+          <TouchableOpacity 
+            style={[styles.methodCard, { backgroundColor: theme.surface }]} 
+            onPress={() => { setMode('photo'); pickImage(); }}
+          >
+            <Ionicons name="camera" size={40} color={theme.primary} />
+            <View style={styles.methodCardText}>
+              <Text style={[styles.methodCardTitle, { color: theme.text }]}>
+                {t('trackFood.takePhoto')}
+              </Text>
+              <Text style={[styles.methodCardDesc, { color: theme.textMuted }]}>
+                {i18n.language === 'es' ? 'Toma una foto de tu plato' : 'Take a photo of your plate'}
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={24} color={theme.textMuted} />
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={[styles.methodCard, { backgroundColor: theme.surface }]} 
+            onPress={() => { setMode('photo'); pickFromGallery(); }}
+          >
+            <Ionicons name="images" size={40} color={theme.primary} />
+            <View style={styles.methodCardText}>
+              <Text style={[styles.methodCardTitle, { color: theme.text }]}>
+                {t('trackFood.chooseGallery')}
+              </Text>
+              <Text style={[styles.methodCardDesc, { color: theme.textMuted }]}>
+                {i18n.language === 'es' ? 'Selecciona una imagen guardada' : 'Select a saved image'}
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={24} color={theme.textMuted} />
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={[styles.methodCard, { backgroundColor: theme.surface }]} 
+            onPress={() => setMode('search')}
+          >
+            <Ionicons name="search" size={40} color={theme.primary} />
+            <View style={styles.methodCardText}>
+              <Text style={[styles.methodCardTitle, { color: theme.text }]}>
+                {i18n.language === 'es' ? 'Buscar alimento' : 'Search Food'}
+              </Text>
+              <Text style={[styles.methodCardDesc, { color: theme.textMuted }]}>
+                {i18n.language === 'es' ? 'Busca en la base de datos' : 'Search in the database'}
+              </Text>
+            </View>
+            <Ionicons name="chevron-forward" size={24} color={theme.textMuted} />
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
+
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <View style={[styles.header, { backgroundColor: theme.surface }]}>
-        <TouchableOpacity onPress={cancel}>
-          <Ionicons name="arrow-back" size={24} color={theme.text} />
-        </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: theme.text }]}>{t('trackFood.title')}</Text>
-        <View style={{ width: 24 }} />
-      </View>
-
-      <View style={styles.content}>
-        <Ionicons name="camera" size={120} color={theme.primary} />
-        <Text style={[styles.instructionText, { color: theme.textSecondary }]}>{t('trackFood.instruction')}</Text>
-
-        <TouchableOpacity style={[styles.primaryButton, { backgroundColor: theme.primary }]} onPress={pickImage}>
-          <Ionicons name="camera" size={24} color="#fff" />
-          <Text style={styles.primaryButtonText}>{t('trackFood.takePhoto')}</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={[styles.secondaryButton, { borderColor: theme.primary }]} onPress={pickFromGallery}>
-          <Ionicons name="images" size={24} color={theme.primary} />
-          <Text style={[styles.secondaryButtonText, { color: theme.primary }]}>{t('trackFood.chooseGallery')}</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
-}
 
 const styles = StyleSheet.create({
   container: {
