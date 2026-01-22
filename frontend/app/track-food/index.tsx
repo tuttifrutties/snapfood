@@ -68,15 +68,60 @@ export default function TrackFoodScreen() {
     return (value * portions).toFixed(1);
   };
 
-  // Search functions
-  const handleSearch = (query: string) => {
+  // Search functions - using external API
+  const handleSearch = async (query: string) => {
     setSearchQuery(query);
-    if (query.length >= 2) {
-      const results = searchFoods(query, i18n.language as 'es' | 'en');
-      setSearchResults(results);
-    } else {
+    
+    if (query.length < 2) {
       setSearchResults([]);
+      return;
     }
+
+    setIsSearching(true);
+    try {
+      const response = await fetch(`${API_URL}/api/search-food`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: query,
+          language: i18n.language,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Search failed');
+      }
+
+      const data = await response.json();
+      setSearchResults(data.foods || []);
+    } catch (error) {
+      console.error('Food search error:', error);
+      setSearchResults([]);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // Debounce search to avoid too many API calls
+  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
+  
+  const debouncedSearch = (query: string) => {
+    setSearchQuery(query);
+    
+    if (searchTimeout) {
+      clearTimeout(searchTimeout);
+    }
+    
+    if (query.length < 2) {
+      setSearchResults([]);
+      return;
+    }
+    
+    const timeout = setTimeout(() => {
+      handleSearch(query);
+    }, 400); // Wait 400ms after user stops typing
+    
+    setSearchTimeout(timeout);
   };
 
   const selectFoodFromSearch = (food: FoodItem) => {
