@@ -82,6 +82,8 @@ export default function HistoryScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [editingMeal, setEditingMeal] = useState<Meal | null>(null);
   const [showPortionModal, setShowPortionModal] = useState(false);
+  const [detailMeal, setDetailMeal] = useState<Meal | null>(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
   
   // Collapsible state
   const [expandedDays, setExpandedDays] = useState<Set<string>>(new Set(['today']));
