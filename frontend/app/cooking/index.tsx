@@ -249,6 +249,7 @@ export default function CookingScreen() {
 
       const data = await response.json();
       setRecipes(data.recipes || []);
+      setShowLoadingScreen(false);
       setMode('results');
       
       // Increment cooking count for free users
