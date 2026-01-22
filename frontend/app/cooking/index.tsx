@@ -653,6 +653,18 @@ export default function CookingScreen() {
     const mainRecipes = recipes.filter(r => !r.requiresExtraIngredients);
     const bonusRecipes = recipes.filter(r => r.requiresExtraIngredients);
     
+    // Get current date in Spanish
+    const today = new Date();
+    const dateOptions: Intl.DateTimeFormatOptions = { 
+      weekday: 'long', 
+      day: 'numeric', 
+      month: 'long' 
+    };
+    const formattedDate = today.toLocaleDateString(
+      i18n.language === 'es' ? 'es-ES' : 'en-US', 
+      dateOptions
+    );
+    
     return (
       <View style={styles.container}>
         <View style={styles.header}>
@@ -671,6 +683,24 @@ export default function CookingScreen() {
           </View>
         ) : (
           <ScrollView contentContainerStyle={styles.recipeList}>
+            {/* Personalized Title */}
+            <View style={styles.chefTitleContainer}>
+              <Text style={styles.chefTitle}>
+                {i18n.language === 'es' 
+                  ? `Menú del Chef ${userName || 'Chef'}` 
+                  : `Chef ${userName || 'Chef'}'s Menu`}
+              </Text>
+              <Text style={styles.chefSubtitle}>
+                {i18n.language === 'es' 
+                  ? `para el día de hoy` 
+                  : `for today`}
+              </Text>
+              <Text style={styles.chefDate}>{formattedDate}</Text>
+              <Text style={styles.chefHint}>
+                {i18n.language === 'es' ? 'Elige tu plato' : 'Choose your dish'}
+              </Text>
+            </View>
+
             {/* Main recipes - using only user's ingredients */}
             {mainRecipes.length > 0 && (
               <>
