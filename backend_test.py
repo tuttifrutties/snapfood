@@ -550,6 +550,209 @@ def check_backend_logs():
     except Exception as e:
         print(f"❌ Error reading logs: {str(e)}")
 
+def test_food_search_endpoint():
+    """Test the POST /api/search-food endpoint with specific scenarios"""
+    print("\n🔍 TESTING FOOD SEARCH API ENDPOINT")
+    print("=" * 60)
+    
+    # Test scenarios as specified in the review request
+    test_cases = [
+        {
+            "name": "Apple in Spanish (manzana)",
+            "query": "manzana",
+            "language": "es",
+            "expected_category": "fruit"
+        },
+        {
+            "name": "Cocktail (daiquiri)", 
+            "query": "daiquiri",
+            "language": "es",
+            "expected_category": "drink"
+        },
+        {
+            "name": "Pizza",
+            "query": "pizza", 
+            "language": "es",
+            "expected_category": "prepared_dish"
+        },
+        {
+            "name": "Coffee with milk (café con leche)",
+            "query": "café con leche",
+            "language": "es", 
+            "expected_category": "drink"
+        }
+    ]
+    
+    results = []
+    
+    for i, test_case in enumerate(test_cases, 1):
+        print(f"\n📋 Test {i}: {test_case['name']}")
+        print(f"Query: '{test_case['query']}' (language: {test_case['language']})")
+        
+        # Prepare request payload
+        payload = {
+            "query": test_case["query"],
+            "language": test_case["language"]
+        }
+        
+        try:
+            # Make API request
+            start_time = time.time()
+            response = requests.post(
+                f"{BACKEND_URL}/search-food",
+                json=payload,
+                headers={"Content-Type": "application/json"},
+                timeout=30
+            )
+            response_time = time.time() - start_time
+            
+            print(f"⏱️  Response time: {response_time:.2f}s")
+            print(f"📊 Status code: {response.status_code}")
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Validate response structure
+                validation_result = validate_food_search_response(data, test_case)
+                results.append({
+                    "test_case": test_case["name"],
+                    "status": "PASS" if validation_result["valid"] else "FAIL",
+                    "response_time": response_time,
+                    "issues": validation_result["issues"],
+                    "data": data
+                })
+                
+                if validation_result["valid"]:
+                    print("✅ PASS - Response format valid")
+                    print(f"📦 Found {len(data.get('foods', []))} food items")
+                    
+                    # Show sample food item
+                    if data.get('foods'):
+                        sample_food = data['foods'][0]
+                        print(f"🍎 Sample: {sample_food.get('name')} - {sample_food.get('calories')} cal")
+                        print(f"   Category: {sample_food.get('category')}")
+                        print(f"   Is drink: {sample_food.get('is_drink')}")
+                        print(f"   Serving: {sample_food.get('serving_size')}")
+                else:
+                    print("❌ FAIL - Response validation failed")
+                    for issue in validation_result["issues"]:
+                        print(f"   • {issue}")
+                        
+            else:
+                print(f"❌ FAIL - HTTP {response.status_code}")
+                print(f"Response: {response.text}")
+                results.append({
+                    "test_case": test_case["name"],
+                    "status": "FAIL",
+                    "response_time": response_time,
+                    "issues": [f"HTTP {response.status_code}: {response.text}"],
+                    "data": None
+                })
+                
+        except requests.exceptions.Timeout:
+            print("❌ FAIL - Request timeout (>30s)")
+            results.append({
+                "test_case": test_case["name"],
+                "status": "FAIL", 
+                "response_time": 30.0,
+                "issues": ["Request timeout after 30 seconds"],
+                "data": None
+            })
+            
+        except Exception as e:
+            print(f"❌ FAIL - Exception: {str(e)}")
+            results.append({
+                "test_case": test_case["name"],
+                "status": "FAIL",
+                "response_time": 0,
+                "issues": [f"Exception: {str(e)}"],
+                "data": None
+            })
+    
+    # Print summary
+    print("\n" + "=" * 60)
+    print("📊 FOOD SEARCH API TEST SUMMARY")
+    print("=" * 60)
+    
+    passed = sum(1 for r in results if r["status"] == "PASS")
+    total = len(results)
+    
+    print(f"✅ Passed: {passed}/{total}")
+    print(f"❌ Failed: {total - passed}/{total}")
+    print(f"⏱️  Avg response time: {sum(r['response_time'] for r in results) / total:.2f}s")
+    
+    # Show detailed results
+    for result in results:
+        status_icon = "✅" if result["status"] == "PASS" else "❌"
+        print(f"{status_icon} {result['test_case']}: {result['status']} ({result['response_time']:.2f}s)")
+        if result["issues"]:
+            for issue in result["issues"]:
+                print(f"   • {issue}")
+    
+    return results
+
+def validate_food_search_response(data, test_case):
+    """Validate the food search response format"""
+    
+    issues = []
+    
+    # Check top-level structure
+    if not isinstance(data, dict):
+        issues.append("Response is not a JSON object")
+        return {"valid": False, "issues": issues}
+    
+    if "foods" not in data:
+        issues.append("Missing 'foods' field in response")
+    
+    if "query" not in data:
+        issues.append("Missing 'query' field in response")
+    
+    # Validate foods array
+    foods = data.get("foods", [])
+    if not isinstance(foods, list):
+        issues.append("'foods' field is not an array")
+    elif len(foods) == 0:
+        issues.append("'foods' array is empty")
+    else:
+        # Validate first food item structure
+        food = foods[0]
+        required_fields = [
+            "id", "name", "category", "description", "serving_size", 
+            "serving_unit", "is_drink", "calories", "protein", "carbs", 
+            "fats", "fiber", "sugar", "icon"
+        ]
+        
+        for field in required_fields:
+            if field not in food:
+                issues.append(f"Missing required field '{field}' in food item")
+        
+        # Validate data types
+        if "calories" in food and not isinstance(food["calories"], (int, float)):
+            issues.append("'calories' should be a number")
+            
+        if "protein" in food and not isinstance(food["protein"], (int, float)):
+            issues.append("'protein' should be a number")
+            
+        if "carbs" in food and not isinstance(food["carbs"], (int, float)):
+            issues.append("'carbs' should be a number")
+            
+        if "fats" in food and not isinstance(food["fats"], (int, float)):
+            issues.append("'fats' should be a number")
+            
+        if "is_drink" in food and not isinstance(food["is_drink"], bool):
+            issues.append("'is_drink' should be a boolean")
+        
+        # Check if drink classification makes sense for test case
+        if test_case["expected_category"] == "drink":
+            if "is_drink" in food and not food["is_drink"]:
+                issues.append(f"Expected drink but is_drink=false for '{test_case['query']}'")
+    
+    # Validate query echo
+    if data.get("query") != test_case["query"]:
+        issues.append(f"Query mismatch: expected '{test_case['query']}', got '{data.get('query')}'")
+    
+    return {"valid": len(issues) == 0, "issues": issues}
+
 def test_recipe_translation_feature():
     """Test the complete recipe translation feature as requested"""
     print("🌮 Recipe Translation Feature Test")
