@@ -494,6 +494,30 @@ export default function CookingScreen() {
             onPress={() => setMode('manual')}
           >
             <Ionicons name="list" size={48} color="#FF6B6B" />
+            <Text style={styles.methodTitle}>{t('cooking.selectIngredients')}</Text>
+            <Text style={styles.methodDescription}>{t('cooking.selectIngredientsDesc')}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.methodCard}
+            onPress={() => setMode('searchRecipe')}
+          >
+            <Ionicons name="search" size={48} color="#FF6B6B" />
+            <Text style={styles.methodTitle}>
+              {i18n.language === 'es' ? 'Buscar Receta' : 'Search Recipe'}
+            </Text>
+            <Text style={styles.methodDescription}>
+              {i18n.language === 'es' 
+                ? 'Busca por nombre de plato y ve qué ingredientes te faltan'
+                : 'Search by dish name and see which ingredients you need'}
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.methodCard}
+            onPress={() => setMode('manual')}
+          >
+            <Ionicons name="list" size={48} color="#FF6B6B" />
             <Text style={styles.methodTitle}>{t('cooking.manualSelect')}</Text>
             <Text style={styles.methodDescription}>{t('cooking.manualSelectDesc')}</Text>
           </TouchableOpacity>
