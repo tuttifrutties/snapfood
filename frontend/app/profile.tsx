@@ -293,21 +293,21 @@ export default function PersonalProfileScreen() {
   // Premium gate
   if (!isPremium) {
     return (
-      <View style={styles.container}>
-        <View style={styles.header}>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
+        <View style={[styles.header, { backgroundColor: theme.surface }]}>
           <TouchableOpacity onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color="#fff" />
+            <Ionicons name="arrow-back" size={24} color={theme.text} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>{t2.title}</Text>
+          <Text style={[styles.headerTitle, { color: theme.text }]}>{t2.title}</Text>
           <View style={{ width: 24 }} />
         </View>
         
         <View style={styles.premiumGate}>
           <Ionicons name="lock-closed" size={80} color="#FFD700" />
-          <Text style={styles.premiumTitle}>{t2.premiumRequired}</Text>
-          <Text style={styles.premiumText}>{t2.premiumMessage}</Text>
+          <Text style={[styles.premiumTitle, { color: theme.text }]}>{t2.premiumRequired}</Text>
+          <Text style={[styles.premiumText, { color: theme.textMuted }]}>{t2.premiumMessage}</Text>
           <TouchableOpacity 
-            style={styles.upgradeButton}
+            style={[styles.upgradeButton, { backgroundColor: theme.primary }]}
             onPress={() => router.push('/paywall')}
           >
             <Text style={styles.upgradeButtonText}>
@@ -320,52 +320,161 @@ export default function PersonalProfileScreen() {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <View style={[styles.header, { backgroundColor: theme.surface }]}>
         <TouchableOpacity onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#fff" />
+          <Ionicons name="arrow-back" size={24} color={theme.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>{t2.title}</Text>
+        <Text style={[styles.headerTitle, { color: theme.text }]}>{t2.title}</Text>
         <TouchableOpacity onPress={handleShare}>
-          <Ionicons name="share-social" size={24} color="#FF6B6B" />
+          <Ionicons name="share-social" size={24} color={theme.primary} />
         </TouchableOpacity>
       </View>
 
       <ScrollView contentContainerStyle={styles.content}>
-        {/* Weekly Summary Card - Shareable */}
-        <View style={styles.summaryCard}>
-          <Text style={styles.sectionTitle}>{t2.weekSummary}</Text>
+        {/* Summary Card with Horizontal Scroll for Weekly/Monthly */}
+        <View style={[styles.summaryCard, { backgroundColor: theme.surface }]}>
+          {/* Tabs for Weekly/Monthly */}
+          <View style={styles.summaryTabs}>
+            <TouchableOpacity
+              style={[
+                styles.summaryTab,
+                !showingMonthly && { borderBottomColor: theme.primary, borderBottomWidth: 2 }
+              ]}
+              onPress={() => setShowingMonthly(false)}
+            >
+              <Text style={[
+                styles.summaryTabText,
+                { color: !showingMonthly ? theme.primary : theme.textMuted }
+              ]}>
+                {t2.weekSummary}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.summaryTab,
+                showingMonthly && { borderBottomColor: theme.primary, borderBottomWidth: 2 }
+              ]}
+              onPress={() => setShowingMonthly(true)}
+            >
+              <Text style={[
+                styles.summaryTabText,
+                { color: showingMonthly ? theme.primary : theme.textMuted }
+              ]}>
+                {t2.monthSummary}
+              </Text>
+            </TouchableOpacity>
+          </View>
           
-          {weekSummary && weekSummary.daysTracked > 0 ? (
+          {/* Weekly Summary */}
+          {!showingMonthly && (
             <>
-              <View style={styles.statsRow}>
-                <View style={styles.statItem}>
-                  <Text style={styles.statValue}>{weekSummary.daysTracked}</Text>
-                  <Text style={styles.statLabel}>{t2.daysTracked}</Text>
-                </View>
-                <View style={styles.statItem}>
-                  <Text style={styles.statValue}>{weekSummary.averageCalories}</Text>
-                  <Text style={styles.statLabel}>{t2.avgCalories}</Text>
-                </View>
-                <View style={styles.statItem}>
-                  <Text style={styles.statValue}>{profile?.targetCalories || '-'}</Text>
-                  <Text style={styles.statLabel}>{t2.targetCalories}</Text>
-                </View>
-              </View>
+              {weekSummary && weekSummary.daysTracked > 0 ? (
+                <>
+                  <View style={styles.statsRow}>
+                    <View style={styles.statItem}>
+                      <Text style={[styles.statValue, { color: theme.text }]}>{weekSummary.daysTracked}</Text>
+                      <Text style={[styles.statLabel, { color: theme.textMuted }]}>{t2.daysTracked}</Text>
+                    </View>
+                    <View style={styles.statItem}>
+                      <Text style={[styles.statValue, { color: theme.text }]}>{weekSummary.averageCalories}</Text>
+                      <Text style={[styles.statLabel, { color: theme.textMuted }]}>{t2.avgCalories}</Text>
+                    </View>
+                    <View style={styles.statItem}>
+                      <Text style={[styles.statValue, { color: theme.text }]}>{profile?.targetCalories || '-'}</Text>
+                      <Text style={[styles.statLabel, { color: theme.textMuted }]}>{t2.targetCalories}</Text>
+                    </View>
+                  </View>
 
-              {/* Pie Chart */}
-              <PieChart 
-                deficit={weekSummary.daysInDeficit}
-                balance={weekSummary.daysInBalance}
-                surplus={weekSummary.daysInSurplus}
-                goal={profile?.goal || 'maintain'}
-              />
+                  <PieChart 
+                    deficit={weekSummary.daysInDeficit}
+                    balance={weekSummary.daysInBalance}
+                    surplus={weekSummary.daysInSurplus}
+                    goal={profile?.goal || 'maintain'}
+                  />
 
-              {/* Progress Message */}
-              <View style={styles.progressMessage}>
-                {((profile?.goal === 'lose' && weekSummary.daysInDeficit >= weekSummary.daysTracked / 2) ||
-                  (profile?.goal === 'gain' && weekSummary.daysInSurplus >= weekSummary.daysTracked / 2) ||
-                  (profile?.goal === 'maintain' && weekSummary.daysInBalance >= weekSummary.daysTracked / 2)) ? (
+                  <View style={[styles.progressMessage, { backgroundColor: theme.surfaceVariant }]}>
+                    {((profile?.goal === 'lose' && weekSummary.daysInDeficit >= weekSummary.daysTracked / 2) ||
+                      (profile?.goal === 'gain' && weekSummary.daysInSurplus >= weekSummary.daysTracked / 2) ||
+                      (profile?.goal === 'maintain' && weekSummary.daysInBalance >= weekSummary.daysTracked / 2)) ? (
+                      <>
+                        <Ionicons name="checkmark-circle" size={24} color="#4CAF50" />
+                        <Text style={[styles.progressText, { color: theme.text }]}>{t2.onTrack}</Text>
+                      </>
+                    ) : (
+                      <>
+                        <Ionicons name="fitness" size={24} color="#FFC107" />
+                        <Text style={[styles.progressText, { color: theme.text }]}>{t2.needsWork}</Text>
+                      </>
+                    )}
+                  </View>
+                </>
+              ) : (
+                <View style={styles.noDataContainer}>
+                  <Ionicons name="calendar-outline" size={50} color={theme.textMuted} />
+                  <Text style={[styles.noDataText, { color: theme.textMuted }]}>{t2.noData}</Text>
+                  <Text style={[styles.noDataSubtext, { color: theme.textMuted }]}>{t2.startTracking}</Text>
+                </View>
+              )}
+            </>
+          )}
+
+          {/* Monthly Summary */}
+          {showingMonthly && (
+            <>
+              {monthSummary && monthSummary.daysTracked > 0 ? (
+                <>
+                  <Text style={[styles.monthLabel, { color: theme.primary }]}>
+                    {monthSummary.monthName} {monthSummary.monthYear}
+                  </Text>
+                  <View style={styles.statsRow}>
+                    <View style={styles.statItem}>
+                      <Text style={[styles.statValue, { color: theme.text }]}>{monthSummary.daysTracked}</Text>
+                      <Text style={[styles.statLabel, { color: theme.textMuted }]}>{t2.daysTracked}</Text>
+                    </View>
+                    <View style={styles.statItem}>
+                      <Text style={[styles.statValue, { color: theme.text }]}>{monthSummary.averageCalories}</Text>
+                      <Text style={[styles.statLabel, { color: theme.textMuted }]}>{t2.avgCalories}</Text>
+                    </View>
+                    <View style={styles.statItem}>
+                      <Text style={[styles.statValue, { color: theme.text }]}>{monthSummary.totalCalories}</Text>
+                      <Text style={[styles.statLabel, { color: theme.textMuted }]}>Total cal</Text>
+                    </View>
+                  </View>
+
+                  <PieChart 
+                    deficit={monthSummary.daysInDeficit}
+                    balance={monthSummary.daysInBalance}
+                    surplus={monthSummary.daysInSurplus}
+                    goal={profile?.goal || 'maintain'}
+                  />
+
+                  <View style={[styles.progressMessage, { backgroundColor: theme.surfaceVariant }]}>
+                    {((profile?.goal === 'lose' && monthSummary.daysInDeficit >= monthSummary.daysTracked / 2) ||
+                      (profile?.goal === 'gain' && monthSummary.daysInSurplus >= monthSummary.daysTracked / 2) ||
+                      (profile?.goal === 'maintain' && monthSummary.daysInBalance >= monthSummary.daysTracked / 2)) ? (
+                      <>
+                        <Ionicons name="checkmark-circle" size={24} color="#4CAF50" />
+                        <Text style={[styles.progressText, { color: theme.text }]}>{t2.onTrack}</Text>
+                      </>
+                    ) : (
+                      <>
+                        <Ionicons name="fitness" size={24} color="#FFC107" />
+                        <Text style={[styles.progressText, { color: theme.text }]}>{t2.needsWork}</Text>
+                      </>
+                    )}
+                  </View>
+                </>
+              ) : (
+                <View style={styles.noDataContainer}>
+                  <Ionicons name="calendar-outline" size={50} color={theme.textMuted} />
+                  <Text style={[styles.noDataText, { color: theme.textMuted }]}>{t2.noMonthData}</Text>
+                  <Text style={[styles.noDataSubtext, { color: theme.textMuted }]}>{t2.startTracking}</Text>
+                </View>
+              )}
+            </>
+          )}
+        </View>
                   <>
                     <Ionicons name="checkmark-circle" size={24} color="#4CAF50" />
                     <Text style={styles.progressTextGood}>{t2.onTrack}</Text>
