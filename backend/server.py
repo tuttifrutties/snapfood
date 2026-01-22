@@ -1178,6 +1178,90 @@ async def search_recipes(request: RecipeSearchRequest):
         logger.error(f"Error searching recipes: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to search recipes: {str(e)}")
 
+# =============================================
+# FOOD/DRINK SEARCH ENDPOINT (AI-powered)
+# =============================================
+
+class FoodSearchRequest(BaseModel):
+    query: str
+    language: Optional[str] = "es"
+
+@api_router.post("/search-food")
+async def search_food(request: FoodSearchRequest):
+    """
+    Search for any food or drink and get nutritional information
+    Uses AI to find accurate nutrition data for anything
+    """
+    try:
+        logger.info(f"Searching food/drink: {request.query}")
+        
+        api_key = os.environ.get('EMERGENT_LLM_KEY')
+        if not api_key:
+            raise HTTPException(status_code=500, detail="API key not configured")
+        
+        lang = request.language or "es"
+        lang_instruction = "Respond ONLY in Spanish." if lang == "es" else "Respond ONLY in English."
+        
+        chat = LlmChat(
+            api_key=api_key,
+            session_id=f"food_search_{request.query[:20]}",
+            system_message=f"""{lang_instruction}
+            
+            You are a nutrition expert database. When given a food or drink search query,
+            return nutritional information for matching items.
+            
+            Return 5-8 matching foods/drinks as a JSON array. Each item must have:
+            - id: unique string ID (snake_case)
+            - name: Name of the food/drink
+            - category: Category (fruit, vegetable, protein, dairy, drink, dessert, snack, fast_food, prepared_dish, etc)
+            - description: Brief description (1 sentence)
+            - serving_size: Standard serving description (e.g., "1 medium apple", "1 glass (250ml)", "1 slice")
+            - serving_unit: The unit type ("unit", "glass", "ml", "g", "slice", "cup", "plate")
+            - is_drink: true if it's a beverage, false otherwise
+            - calories: Calories per serving
+            - protein: Protein in grams per serving
+            - carbs: Carbohydrates in grams per serving
+            - fats: Fats in grams per serving
+            - fiber: Fiber in grams (0 for drinks)
+            - sugar: Sugar in grams per serving
+            - icon: A single relevant emoji for the item
+            
+            For drinks:
+            - Use "glass" or "ml" as serving_unit
+            - Default serving is 1 glass (250ml)
+            - Include alcohol content info in description if applicable
+            
+            Be accurate with nutritional values. Use real data.
+            Return ONLY the JSON array, no explanations.
+            """
+        ).with_model("openai", "gpt-4o")
+        
+        user_message = UserMessage(
+            text=f"Find nutritional information for: '{request.query}'. Return as JSON array."
+        )
+        
+        response = await chat.send_message(user_message)
+        
+        import json
+        try:
+            response_text = response.strip()
+            if "```json" in response_text:
+                response_text = response_text.split("```json")[1].split("```")[0].strip()
+            elif "```" in response_text:
+                response_text = response_text.split("```")[1].split("```")[0].strip()
+            
+            foods_data = json.loads(response_text)
+            
+            return {"foods": foods_data, "query": request.query}
+            
+        except Exception as e:
+            logger.error(f"Failed to parse food search: {e}")
+            raise HTTPException(status_code=500, detail="Failed to parse food search results")
+            
+    except Exception as e:
+        logger.error(f"Error searching food: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to search food: {str(e)}")
+
 # Include the router in the main app
 app.include_router(api_router)
 
