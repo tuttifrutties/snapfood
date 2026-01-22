@@ -608,23 +608,49 @@ export default function CookingScreen() {
           )}
         </View>
 
-        {/* Selected ingredients preview */}
-        {selectedIngredients.length > 0 && (
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.selectedPreview}>
-            {selectedIngredients.map((ing) => (
-              <TouchableOpacity
-                key={ing}
-                style={styles.selectedTag}
-                onPress={() => toggleIngredient(ing)}
-              >
-                <Text style={styles.selectedTagText}>{ing}</Text>
-                <Ionicons name="close" size={14} color="#fff" />
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        )}
-
         <ScrollView style={styles.ingredientListContainer}>
+          {/* Selected Ingredients Accordion - Always first */}
+          {selectedIngredients.length > 0 && !searchQuery.trim() && (
+            <View style={styles.categoryContainer}>
+              <TouchableOpacity
+                style={[styles.categoryHeader, styles.selectedCategoryHeader]}
+                onPress={() => toggleCategory('_selected_')}
+              >
+                <View style={styles.categoryTitleRow}>
+                  <Ionicons name="checkmark-circle" size={20} color="#FF6B6B" />
+                  <Text style={[styles.categoryTitle, styles.selectedCategoryTitle]}>
+                    {i18n.language === 'es' ? 'Seleccionados' : 'Selected'}
+                  </Text>
+                  <View style={styles.categoryBadge}>
+                    <Text style={styles.categoryBadgeText}>{selectedIngredients.length}</Text>
+                  </View>
+                </View>
+                <Ionicons 
+                  name={expandedCategories.includes('_selected_') ? "chevron-up" : "chevron-down"} 
+                  size={20} 
+                  color="#FF6B6B" 
+                />
+              </TouchableOpacity>
+              
+              {expandedCategories.includes('_selected_') && (
+                <View style={styles.ingredientGrid}>
+                  {selectedIngredients.map((item) => (
+                    <TouchableOpacity
+                      key={item}
+                      style={[styles.ingredientItem, styles.ingredientItemSelected]}
+                      onPress={() => toggleIngredient(item)}
+                    >
+                      <Text style={[styles.ingredientText, styles.ingredientTextSelected]} numberOfLines={2}>
+                        {item}
+                      </Text>
+                      <Ionicons name="close-circle" size={18} color="#FF6B6B" />
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
+            </View>
+          )}
+
           {/* Search results */}
           {searchQuery.trim() && searchResults.length > 0 ? (
             <View style={styles.searchResultsContainer}>
