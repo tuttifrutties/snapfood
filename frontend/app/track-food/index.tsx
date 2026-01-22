@@ -260,8 +260,210 @@ export default function TrackFoodScreen() {
   };
 
   const cancel = () => {
-    router.back();
+    if (mode !== 'select') {
+      setMode('select');
+      setSelectedImage(null);
+      setAnalysisResult(null);
+      setSearchQuery('');
+      setSearchResults([]);
+      setSelectedFood(null);
+    } else {
+      router.back();
+    }
   };
+
+  // Mode: Search food
+  if (mode === 'search') {
+    if (selectedFood) {
+      // Show selected food details
+      return (
+        <ScrollView style={[styles.container, { backgroundColor: theme.background }]}>
+          <View style={[styles.header, { backgroundColor: theme.surface }]}>
+            <TouchableOpacity onPress={() => setSelectedFood(null)}>
+              <Ionicons name="arrow-back" size={24} color={theme.text} />
+            </TouchableOpacity>
+            <Text style={[styles.headerTitle, { color: theme.text }]}>
+              {i18n.language === 'es' ? 'Confirmar alimento' : 'Confirm Food'}
+            </Text>
+            <View style={{ width: 24 }} />
+          </View>
+
+          <View style={styles.foodDetailContainer}>
+            <Text style={styles.foodDetailIcon}>{selectedFood.icon}</Text>
+            <Text style={[styles.foodDetailName, { color: theme.text }]}>
+              {selectedFood.name[i18n.language as 'es' | 'en'] || selectedFood.name.es}
+            </Text>
+
+            {/* Portions selector */}
+            <View style={[styles.portionContainer, { backgroundColor: theme.surface }]}>
+              <Text style={[styles.portionLabel, { color: theme.text }]}>
+                {i18n.language === 'es' ? 'Porciones (1 = plato completo)' : 'Portions (1 = full plate)'}
+              </Text>
+              <View style={styles.portionButtons}>
+                {PORTION_OPTIONS.map((p) => (
+                  <TouchableOpacity
+                    key={p}
+                    style={[
+                      styles.portionButton,
+                      { backgroundColor: theme.surfaceVariant },
+                      foodPortions === p && { backgroundColor: theme.primary },
+                    ]}
+                    onPress={() => setFoodPortions(p)}
+                  >
+                    <Text
+                      style={[
+                        styles.portionButtonText,
+                        { color: theme.textMuted },
+                        foodPortions === p && styles.portionButtonTextActive,
+                      ]}
+                    >
+                      {p}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+
+            {/* Nutritional info */}
+            <View style={[styles.nutritionCard, { backgroundColor: theme.surface }]}>
+              <View style={styles.nutritionRow}>
+                <Text style={[styles.nutritionLabel, { color: theme.textMuted }]}>
+                  {i18n.language === 'es' ? 'Calorías' : 'Calories'}
+                </Text>
+                <Text style={[styles.nutritionValue, { color: theme.primary }]}>
+                  {Math.round(selectedFood.calories * foodPortions)} kcal
+                </Text>
+              </View>
+              <View style={styles.nutritionRow}>
+                <Text style={[styles.nutritionLabel, { color: theme.textMuted }]}>
+                  {i18n.language === 'es' ? 'Proteína' : 'Protein'}
+                </Text>
+                <Text style={[styles.nutritionValue, { color: theme.text }]}>
+                  {(selectedFood.protein * foodPortions).toFixed(1)}g
+                </Text>
+              </View>
+              <View style={styles.nutritionRow}>
+                <Text style={[styles.nutritionLabel, { color: theme.textMuted }]}>
+                  {i18n.language === 'es' ? 'Carbohidratos' : 'Carbs'}
+                </Text>
+                <Text style={[styles.nutritionValue, { color: theme.text }]}>
+                  {(selectedFood.carbs * foodPortions).toFixed(1)}g
+                </Text>
+              </View>
+              <View style={styles.nutritionRow}>
+                <Text style={[styles.nutritionLabel, { color: theme.textMuted }]}>
+                  {i18n.language === 'es' ? 'Grasas' : 'Fats'}
+                </Text>
+                <Text style={[styles.nutritionValue, { color: theme.text }]}>
+                  {(selectedFood.fats * foodPortions).toFixed(1)}g
+                </Text>
+              </View>
+            </View>
+
+            <TouchableOpacity 
+              style={[styles.saveButton, { backgroundColor: theme.primary }]} 
+              onPress={saveFoodFromSearch}
+            >
+              <Ionicons name="checkmark" size={24} color="#fff" />
+              <Text style={styles.saveButtonText}>
+                {i18n.language === 'es' ? 'Guardar en historial' : 'Save to history'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      );
+    }
+
+    // Show search screen
+    return (
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
+        <View style={[styles.header, { backgroundColor: theme.surface }]}>
+          <TouchableOpacity onPress={cancel}>
+            <Ionicons name="arrow-back" size={24} color={theme.text} />
+          </TouchableOpacity>
+          <Text style={[styles.headerTitle, { color: theme.text }]}>
+            {i18n.language === 'es' ? 'Buscar alimento' : 'Search Food'}
+          </Text>
+          <View style={{ width: 24 }} />
+        </View>
+
+        <View style={[styles.searchContainer, { backgroundColor: theme.surface }]}>
+          <Ionicons name="search" size={20} color={theme.textMuted} />
+          <TextInput
+            style={[styles.searchInput, { color: theme.text }]}
+            placeholder={i18n.language === 'es' ? 'Buscar: naranja, pollo, arroz...' : 'Search: orange, chicken, rice...'}
+            placeholderTextColor={theme.textMuted}
+            value={searchQuery}
+            onChangeText={handleSearch}
+            autoFocus
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={() => { setSearchQuery(''); setSearchResults([]); }}>
+              <Ionicons name="close-circle" size={20} color={theme.textMuted} />
+            </TouchableOpacity>
+          )}
+        </View>
+
+        {searchResults.length > 0 ? (
+          <FlatList
+            data={searchResults}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={[styles.foodItem, { backgroundColor: theme.surface }]}
+                onPress={() => selectFoodFromSearch(item)}
+              >
+                <Text style={styles.foodItemIcon}>{item.icon}</Text>
+                <View style={styles.foodItemInfo}>
+                  <Text style={[styles.foodItemName, { color: theme.text }]}>
+                    {item.name[i18n.language as 'es' | 'en'] || item.name.es}
+                  </Text>
+                  <Text style={[styles.foodItemCalories, { color: theme.textMuted }]}>
+                    {item.calories} kcal • P:{item.protein}g • C:{item.carbs}g • G:{item.fats}g
+                  </Text>
+                </View>
+                <Ionicons name="chevron-forward" size={20} color={theme.textMuted} />
+              </TouchableOpacity>
+            )}
+            contentContainerStyle={styles.searchResultsList}
+          />
+        ) : searchQuery.length >= 2 ? (
+          <View style={styles.emptySearchContainer}>
+            <Ionicons name="search" size={60} color={theme.textMuted} />
+            <Text style={[styles.emptySearchText, { color: theme.textMuted }]}>
+              {i18n.language === 'es' ? 'No se encontraron resultados' : 'No results found'}
+            </Text>
+          </View>
+        ) : (
+          <View style={styles.searchHintContainer}>
+            <Text style={[styles.searchHintText, { color: theme.textMuted }]}>
+              {i18n.language === 'es' 
+                ? 'Escribe al menos 2 letras para buscar' 
+                : 'Type at least 2 letters to search'}
+            </Text>
+            <View style={styles.categoriesGrid}>
+              {getAllCategories().map((cat) => (
+                <TouchableOpacity
+                  key={cat.id}
+                  style={[styles.categoryChip, { backgroundColor: theme.surface }]}
+                  onPress={() => {
+                    const foods = getFoodsByCategory(cat.id);
+                    setSearchResults(foods);
+                    setSearchQuery(cat.es);
+                  }}
+                >
+                  <Text style={styles.categoryChipIcon}>{cat.icon}</Text>
+                  <Text style={[styles.categoryChipText, { color: theme.text }]}>
+                    {i18n.language === 'es' ? cat.es : cat.en}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        )}
+      </View>
+    );
+  }
 
   if (selectedImage) {
     return (
