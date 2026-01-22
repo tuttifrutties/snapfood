@@ -1658,4 +1658,187 @@ const styles = StyleSheet.create({
     marginTop: 12,
     fontWeight: '600',
   },
+  // Recipe Search Styles
+  recipeSearchContainer: {
+    flexDirection: 'row',
+    padding: 16,
+    gap: 12,
+  },
+  recipeSearchInputContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#1a1a2e',
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    gap: 8,
+  },
+  recipeSearchInput: {
+    flex: 1,
+    color: '#fff',
+    fontSize: 16,
+    paddingVertical: 12,
+  },
+  searchButton: {
+    backgroundColor: '#FF6B6B',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 12,
+    justifyContent: 'center',
+  },
+  searchButtonDisabled: {
+    backgroundColor: '#555',
+  },
+  searchButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  ingredientMatchInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingBottom: 12,
+    gap: 8,
+  },
+  ingredientMatchText: {
+    color: '#4CAF50',
+    fontSize: 13,
+  },
+  searchResultsContainer: {
+    padding: 16,
+    paddingTop: 0,
+  },
+  searchedRecipeCard: {
+    backgroundColor: '#1a1a2e',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+  },
+  searchedRecipeHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  searchedRecipeInfo: {
+    flex: 1,
+  },
+  searchedRecipeName: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '600',
+  },
+  searchedRecipeMeta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 6,
+    gap: 6,
+  },
+  searchedRecipeMetaText: {
+    color: '#888',
+    fontSize: 13,
+  },
+  matchBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 12,
+    marginLeft: 10,
+  },
+  matchBadgeGood: {
+    backgroundColor: '#4CAF5030',
+  },
+  matchBadgeMedium: {
+    backgroundColor: '#FFC10730',
+  },
+  matchBadgeLow: {
+    backgroundColor: '#FF6B6B30',
+  },
+  matchBadgeText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  searchedRecipeDescription: {
+    color: '#aaa',
+    fontSize: 14,
+    marginTop: 10,
+    lineHeight: 20,
+  },
+  missingIngredientsContainer: {
+    flexDirection: 'row',
+    marginTop: 12,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#333',
+    gap: 6,
+  },
+  missingIngredientsLabel: {
+    color: '#FF6B6B',
+    fontSize: 13,
+    fontWeight: '600',
+  },
+  missingIngredientsList: {
+    color: '#888',
+    fontSize: 13,
+    flex: 1,
+  },
+  searchedRecipeFooter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    marginTop: 12,
+    gap: 4,
+  },
+  viewRecipeText: {
+    color: '#FF6B6B',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 60,
+  },
+  loadingText: {
+    color: '#888',
+    marginTop: 16,
+    fontSize: 16,
+  },
+  emptySearchState: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingTop: 60,
+  },
+  emptySearchText: {
+    color: '#888',
+    marginTop: 16,
+    fontSize: 16,
+  },
+  searchHintState: {
+    flex: 1,
+    alignItems: 'center',
+    paddingTop: 60,
+    paddingHorizontal: 30,
+  },
+  searchHintTitle: {
+    color: '#fff',
+    fontSize: 20,
+    fontWeight: '600',
+    marginTop: 20,
+  },
+  searchHintText: {
+    color: '#888',
+    fontSize: 14,
+    textAlign: 'center',
+    marginTop: 10,
+  },
+  searchHintIngredients: {
+    color: '#4CAF50',
+    fontSize: 13,
+    textAlign: 'center',
+    marginTop: 16,
+    paddingHorizontal: 20,
+  },
 });
