@@ -530,7 +530,7 @@ export default function CookingScreen() {
               styles.getSuggestionsButton,
               selectedIngredients.length === 0 && styles.getSuggestionsButtonDisabled
             ]}
-            onPress={getRecipeSuggestions}
+            onPress={handleGetSuggestionsPress}
             disabled={isLoadingRecipes || selectedIngredients.length === 0}
           >
             {isLoadingRecipes ? (
@@ -542,6 +542,107 @@ export default function CookingScreen() {
             )}
           </TouchableOpacity>
         </View>
+
+        {/* Confirmation Modal */}
+        <Modal
+          visible={showConfirmModal}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setShowConfirmModal(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={[styles.confirmModal, { backgroundColor: theme.isDark ? '#1a1a2e' : '#fff' }]}>
+              <Ionicons name="help-circle" size={60} color="#FF6B6B" />
+              <Text style={[styles.confirmTitle, { color: theme.isDark ? '#fff' : '#000' }]}>
+                {i18n.language === 'es' ? '¿Estás seguro?' : 'Are you sure?'}
+              </Text>
+              <Text style={[styles.confirmMessage, { color: theme.isDark ? '#aaa' : '#666' }]}>
+                {i18n.language === 'es' 
+                  ? '¿No te olvidaste ningún ingrediente?' 
+                  : "Didn't you forget any ingredient?"}
+              </Text>
+              <View style={styles.confirmButtons}>
+                <TouchableOpacity
+                  style={[styles.confirmButton, styles.confirmButtonSecondary]}
+                  onPress={() => setShowConfirmModal(false)}
+                >
+                  <Text style={styles.confirmButtonSecondaryText}>
+                    {i18n.language === 'es' ? 'Agregar más' : 'Add more'}
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.confirmButton, styles.confirmButtonPrimary]}
+                  onPress={getRecipeSuggestions}
+                >
+                  <Text style={styles.confirmButtonPrimaryText}>
+                    {i18n.language === 'es' ? 'Continuar' : 'Continue'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+
+        {/* Full Screen Loading */}
+        <Modal
+          visible={showLoadingScreen}
+          transparent={false}
+          animationType="fade"
+        >
+          <View style={[styles.loadingFullScreen, { backgroundColor: theme.isDark ? '#0a0a0a' : '#f5f5f5' }]}>
+            <View style={[styles.menuCard, { backgroundColor: theme.isDark ? '#1a1a2e' : '#fff' }]}>
+              {/* Restaurant Menu Header */}
+              <View style={styles.menuHeader}>
+                <View style={styles.menuLogoContainer}>
+                  <Ionicons name="restaurant" size={40} color="#FF6B6B" />
+                </View>
+                <Text style={[styles.menuRestaurantName, { color: theme.isDark ? '#fff' : '#000' }]}>
+                  Snapfood
+                </Text>
+                <View style={styles.menuDivider} />
+              </View>
+
+              {/* Menu Title */}
+              <Text style={[styles.menuTitle, { color: theme.isDark ? '#FF6B6B' : '#FF6B6B' }]}>
+                {i18n.language === 'es' ? 'Cargando menú del chef...' : 'Loading chef menu...'}
+              </Text>
+
+              {/* Ingredients List */}
+              <View style={styles.menuIngredientsContainer}>
+                <Text style={[styles.menuIngredientsTitle, { color: theme.isDark ? '#aaa' : '#666' }]}>
+                  {i18n.language === 'es' ? 'Ingredientes seleccionados' : 'Selected ingredients'}
+                </Text>
+                <View style={styles.menuIngredientsList}>
+                  {selectedIngredients.slice(0, 8).map((ing, index) => (
+                    <View key={ing} style={styles.menuIngredientLine}>
+                      <View style={styles.menuBullet} />
+                      <Text style={[styles.menuIngredientText, { color: theme.isDark ? '#ccc' : '#333' }]} numberOfLines={1}>
+                        {ing}
+                      </Text>
+                    </View>
+                  ))}
+                  {selectedIngredients.length > 8 && (
+                    <Text style={[styles.menuMoreText, { color: theme.isDark ? '#888' : '#999' }]}>
+                      +{selectedIngredients.length - 8} más...
+                    </Text>
+                  )}
+                </View>
+              </View>
+
+              {/* Loading Animation */}
+              <View style={styles.menuLoadingContainer}>
+                <ActivityIndicator size="large" color="#FF6B6B" />
+              </View>
+
+              {/* Decorative Bottom */}
+              <View style={styles.menuFooter}>
+                <View style={styles.menuFooterLine} />
+                <Ionicons name="leaf" size={20} color="#4CAF50" />
+                <View style={styles.menuFooterLine} />
+              </View>
+            </View>
+          </View>
+        </Modal>
       </View>
     );
   }
