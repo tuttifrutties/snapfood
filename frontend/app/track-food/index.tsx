@@ -638,7 +638,25 @@ export default function TrackFoodScreen() {
     );
   }
 
+  // Default return for photo mode without image yet
   return (
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <View style={[styles.header, { backgroundColor: theme.surface }]}>
+        <TouchableOpacity onPress={cancel}>
+          <Ionicons name="arrow-back" size={24} color={theme.text} />
+        </TouchableOpacity>
+        <Text style={[styles.headerTitle, { color: theme.text }]}>{t('trackFood.title')}</Text>
+        <View style={{ width: 24 }} />
+      </View>
+      <View style={styles.content}>
+        <ActivityIndicator size="large" color={theme.primary} />
+        <Text style={[styles.loadingText, { color: theme.text }]}>
+          {i18n.language === 'es' ? 'Preparando cámara...' : 'Preparing camera...'}
+        </Text>
+      </View>
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
