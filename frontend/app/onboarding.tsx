@@ -853,6 +853,12 @@ const styles = StyleSheet.create({
     color: '#aaa',
     marginBottom: 8,
   },
+  nameWarning: {
+    fontSize: 12,
+    color: '#FFC107',
+    marginTop: 6,
+    fontStyle: 'italic',
+  },
   input: {
     backgroundColor: '#1a1a1a',
     color: '#fff',
