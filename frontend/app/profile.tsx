@@ -4,7 +4,7 @@
  * Includes shareable weekly summary with chart
  */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   View,
   Text,
@@ -21,11 +21,13 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { usePremium } from '../src/contexts/PremiumContext';
+import { useTheme } from '../src/contexts/ThemeContext';
 import { useFocusEffect } from '@react-navigation/native';
 import {
   getUserNutritionProfile,
   saveUserNutritionProfile,
   getWeekSummary,
+  getMonthSummary,
   PHYSICAL_ACTIVITIES,
   getActivityLabel,
   PhysicalActivity,
