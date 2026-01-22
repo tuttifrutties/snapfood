@@ -165,44 +165,15 @@ export default function RecipeDetailScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Image Section */}
-        <View style={styles.imageContainer}>
-          {isLoadingImage ? (
-            <View style={styles.imagePlaceholder}>
-              <ActivityIndicator size="large" color="#FF6B6B" />
-              <Text style={styles.loadingImageText}>{t('recipe.loadingImage')}</Text>
-            </View>
-          ) : imageError || !imageUrl ? (
-            // Sad plate placeholder
-            <View style={styles.sadPlateContainer}>
-              <View style={styles.sadPlate}>
-                <Text style={styles.sadPlateEmoji}>🍽️</Text>
-                <View style={styles.sadFace}>
-                  <Text style={styles.sadEyes}>• •</Text>
-                  <Text style={styles.sadMouth}>︵</Text>
-                </View>
-              </View>
-              <View style={styles.flagBadge}>
-                <Text style={styles.flagEmoji}>{countryFlag}</Text>
-              </View>
-              <Text style={styles.sadPlateText}>
-                {t('recipe.noImageFound')}
-              </Text>
-            </View>
-          ) : (
-            <Image
-              source={{ uri: imageUrl }}
-              style={styles.recipeImage}
-              resizeMode="cover"
-              onError={() => setImageError(true)}
-            />
-          )}
-          
-          {/* Country badge on image */}
-          {!imageError && imageUrl && (recipe.countryOfOrigin || recipe.cuisine) && (
-            <View style={styles.countryBadgeOnImage}>
-              <Text style={styles.countryFlagText}>{countryFlag}</Text>
-              <Text style={styles.countryNameText}>
+        {/* Recipe Header - No Image */}
+        <View style={styles.recipeHeaderSection}>
+          <View style={styles.recipeIconContainer}>
+            <Ionicons name="restaurant" size={60} color="#FF6B6B" />
+          </View>
+          {countryFlag && (
+            <View style={styles.flagBadgeTop}>
+              <Text style={styles.flagEmojiTop}>{countryFlag}</Text>
+              <Text style={styles.cuisineNameTop}>
                 {recipe.countryOfOrigin || recipe.cuisine}
               </Text>
             </View>
