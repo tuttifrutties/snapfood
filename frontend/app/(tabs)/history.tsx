@@ -577,6 +577,62 @@ export default function HistoryScreen() {
           </>
         )}
       </ScrollView>
+
+      {/* Portion Edit Modal */}
+      <Modal
+        visible={showPortionModal}
+        transparent
+        animationType="fade"
+        onRequestClose={() => {
+          setShowPortionModal(false);
+          setEditingMeal(null);
+        }}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.portionModal, { backgroundColor: theme.surface }]}>
+            <Text style={[styles.portionModalTitle, { color: theme.text }]}>
+              {i18n.language === 'es' ? 'Editar porciones' : 'Edit portions'}
+            </Text>
+            {editingMeal && (
+              <Text style={[styles.portionModalSubtitle, { color: theme.textSecondary }]}>
+                {editingMeal.dishName}
+              </Text>
+            )}
+            <View style={styles.portionOptions}>
+              {PORTION_OPTIONS.map(portion => (
+                <TouchableOpacity
+                  key={portion}
+                  style={[
+                    styles.portionOption,
+                    { backgroundColor: theme.surfaceVariant },
+                    editingMeal?.portions === portion && { backgroundColor: theme.primary }
+                  ]}
+                  onPress={() => editingMeal && updateMealPortions(editingMeal, portion)}
+                >
+                  <Text style={[
+                    styles.portionOptionText,
+                    { color: theme.text },
+                    editingMeal?.portions === portion && { color: '#fff' }
+                  ]}>
+                    {portion}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+            <TouchableOpacity
+              style={[styles.portionCancelButton, { borderColor: theme.textMuted }]}
+              onPress={() => {
+                setShowPortionModal(false);
+                setEditingMeal(null);
+              }}
+            >
+              <Text style={[styles.portionCancelText, { color: theme.textSecondary }]}>
+                {t('common.cancel')}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
