@@ -1354,6 +1354,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
   },
+  selectedCategoryHeader: {
+    backgroundColor: '#FF6B6B15',
+    borderRadius: 12,
+  },
+  selectedCategoryTitle: {
+    color: '#FF6B6B',
+  },
   categoryTitle: {
     fontSize: 16,
     fontWeight: '600',
