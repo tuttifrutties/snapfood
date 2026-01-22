@@ -357,18 +357,24 @@ export default function TrackFoodScreen() {
           <View style={styles.foodDetailContainer}>
             <Text style={styles.foodDetailIcon}>{selectedFood.icon}</Text>
             <Text style={[styles.foodDetailName, { color: theme.text }]}>
-              {selectedFood.name[i18n.language as 'es' | 'en'] || selectedFood.name.es}
+              {selectedFood.name}
+            </Text>
+            
+            {/* Serving size info */}
+            <Text style={[styles.servingSizeText, { color: theme.textMuted }]}>
+              {selectedFood.serving_size}
+              {selectedFood.is_drink && ` 🍹`}
             </Text>
 
             {/* Portions selector */}
             <View style={[styles.portionContainer, { backgroundColor: theme.surface }]}>
               <Text style={[styles.portionLabel, { color: theme.text }]}>
-                {i18n.language === 'es' ? 'Porciones (1 = lo que ves en la foto)' : 'Portions (1 = what you see)'}
+                {i18n.language === 'es' ? 'Porciones' : 'Portions'}
               </Text>
               <Text style={[styles.portionHint, { color: theme.textMuted }]}>
                 {i18n.language === 'es' 
-                  ? '1 hamburguesa = 1 porción, 1 muffin = 1 porción' 
-                  : '1 burger = 1 portion, 1 muffin = 1 portion'}
+                  ? `1 porción = ${selectedFood.serving_size}` 
+                  : `1 portion = ${selectedFood.serving_size}`}
               </Text>
               <View style={styles.portionButtons}>
                 {PORTION_OPTIONS.map((p) => (
@@ -429,6 +435,26 @@ export default function TrackFoodScreen() {
                   {(selectedFood.fats * foodPortions).toFixed(1)}g
                 </Text>
               </View>
+              {selectedFood.sugar > 0 && (
+                <View style={styles.nutritionRow}>
+                  <Text style={[styles.nutritionLabel, { color: theme.textMuted }]}>
+                    {i18n.language === 'es' ? 'Azúcar' : 'Sugar'}
+                  </Text>
+                  <Text style={[styles.nutritionValue, { color: theme.text }]}>
+                    {(selectedFood.sugar * foodPortions).toFixed(1)}g
+                  </Text>
+                </View>
+              )}
+              {selectedFood.fiber > 0 && (
+                <View style={styles.nutritionRow}>
+                  <Text style={[styles.nutritionLabel, { color: theme.textMuted }]}>
+                    {i18n.language === 'es' ? 'Fibra' : 'Fiber'}
+                  </Text>
+                  <Text style={[styles.nutritionValue, { color: theme.text }]}>
+                    {(selectedFood.fiber * foodPortions).toFixed(1)}g
+                  </Text>
+                </View>
+              )}
             </View>
 
             <TouchableOpacity 
