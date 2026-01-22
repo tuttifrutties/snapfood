@@ -281,9 +281,189 @@ export default function CookingScreen() {
     });
   };
 
+  const searchRecipesAPI = async () => {
+    if (!recipeSearchQuery.trim()) return;
+    
+    setIsSearchingRecipes(true);
+    try {
+      const response = await fetch(`${API_URL}/api/search-recipes`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: recipeSearchQuery,
+          userIngredients: selectedIngredients,
+          language: i18n.language,
+        }),
+      });
+      
+      const data = await response.json();
+      setSearchedRecipes(data.recipes || []);
+    } catch (error) {
+      console.error('Failed to search recipes:', error);
+      Alert.alert(t('common.error'), 'Failed to search recipes');
+    } finally {
+      setIsSearchingRecipes(false);
+    }
+  };
+
   const cancel = () => {
     router.back();
   };
+
+  // Mode: Recipe Search
+  if (mode === 'searchRecipe') {
+    return (
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => { setMode('select'); setSearchedRecipes([]); setRecipeSearchQuery(''); }}>
+            <Ionicons name="arrow-back" size={24} color="#fff" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>
+            {i18n.language === 'es' ? 'Buscar Recetas' : 'Search Recipes'}
+          </Text>
+          <View style={{ width: 24 }} />
+        </View>
+
+        <View style={styles.recipeSearchContainer}>
+          <View style={styles.recipeSearchInputContainer}>
+            <Ionicons name="search" size={20} color="#888" />
+            <TextInput
+              style={styles.recipeSearchInput}
+              placeholder={i18n.language === 'es' ? 'Ej: pollo, pasta, ensalada...' : 'E.g: chicken, pasta, salad...'}
+              placeholderTextColor="#666"
+              value={recipeSearchQuery}
+              onChangeText={setRecipeSearchQuery}
+              onSubmitEditing={searchRecipesAPI}
+              returnKeyType="search"
+            />
+            {recipeSearchQuery.length > 0 && (
+              <TouchableOpacity onPress={() => { setRecipeSearchQuery(''); setSearchedRecipes([]); }}>
+                <Ionicons name="close-circle" size={20} color="#888" />
+              </TouchableOpacity>
+            )}
+          </View>
+          <TouchableOpacity
+            style={[styles.searchButton, !recipeSearchQuery.trim() && styles.searchButtonDisabled]}
+            onPress={searchRecipesAPI}
+            disabled={!recipeSearchQuery.trim() || isSearchingRecipes}
+          >
+            {isSearchingRecipes ? (
+              <ActivityIndicator color="#fff" size="small" />
+            ) : (
+              <Text style={styles.searchButtonText}>
+                {i18n.language === 'es' ? 'Buscar' : 'Search'}
+              </Text>
+            )}
+          </TouchableOpacity>
+        </View>
+
+        {/* Info about ingredient matching */}
+        {selectedIngredients.length > 0 && (
+          <View style={styles.ingredientMatchInfo}>
+            <Ionicons name="information-circle" size={18} color="#4CAF50" />
+            <Text style={styles.ingredientMatchText}>
+              {i18n.language === 'es' 
+                ? `Ordenado por coincidencia con tus ${selectedIngredients.length} ingredientes`
+                : `Sorted by match with your ${selectedIngredients.length} ingredients`}
+            </Text>
+          </View>
+        )}
+
+        {isSearchingRecipes ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#FF6B6B" />
+            <Text style={styles.loadingText}>
+              {i18n.language === 'es' ? 'Buscando recetas...' : 'Searching recipes...'}
+            </Text>
+          </View>
+        ) : searchedRecipes.length > 0 ? (
+          <ScrollView contentContainerStyle={styles.searchResultsContainer}>
+            {searchedRecipes.map((recipe, index) => (
+              <TouchableOpacity
+                key={recipe.id || index}
+                style={styles.searchedRecipeCard}
+                onPress={() => viewRecipe(recipe)}
+              >
+                <View style={styles.searchedRecipeHeader}>
+                  <View style={styles.searchedRecipeInfo}>
+                    <Text style={styles.searchedRecipeName}>{recipe.name}</Text>
+                    <View style={styles.searchedRecipeMeta}>
+                      <Ionicons name="time-outline" size={14} color="#888" />
+                      <Text style={styles.searchedRecipeMetaText}>{recipe.cookingTime} min</Text>
+                      <Text style={styles.searchedRecipeMetaText}>•</Text>
+                      <Text style={styles.searchedRecipeMetaText}>{recipe.calories} cal</Text>
+                    </View>
+                  </View>
+                  
+                  {/* Match percentage badge */}
+                  {selectedIngredients.length > 0 && (
+                    <View style={[
+                      styles.matchBadge,
+                      recipe.matchPercentage >= 70 ? styles.matchBadgeGood :
+                      recipe.matchPercentage >= 40 ? styles.matchBadgeMedium :
+                      styles.matchBadgeLow
+                    ]}>
+                      <Text style={styles.matchBadgeText}>{recipe.matchPercentage}%</Text>
+                    </View>
+                  )}
+                </View>
+
+                <Text style={styles.searchedRecipeDescription} numberOfLines={2}>
+                  {recipe.description}
+                </Text>
+
+                {/* Missing ingredients */}
+                {recipe.missingIngredients && recipe.missingIngredients.length > 0 && (
+                  <View style={styles.missingIngredientsContainer}>
+                    <Text style={styles.missingIngredientsLabel}>
+                      {i18n.language === 'es' ? 'Te falta:' : 'Missing:'}
+                    </Text>
+                    <Text style={styles.missingIngredientsList} numberOfLines={1}>
+                      {recipe.missingIngredients.slice(0, 3).join(', ')}
+                      {recipe.missingIngredients.length > 3 && '...'}
+                    </Text>
+                  </View>
+                )}
+
+                <View style={styles.searchedRecipeFooter}>
+                  <Text style={styles.viewRecipeText}>
+                    {i18n.language === 'es' ? 'Ver receta' : 'View recipe'}
+                  </Text>
+                  <Ionicons name="chevron-forward" size={18} color="#FF6B6B" />
+                </View>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        ) : recipeSearchQuery.length > 0 && !isSearchingRecipes ? (
+          <View style={styles.emptySearchState}>
+            <Ionicons name="restaurant-outline" size={60} color="#555" />
+            <Text style={styles.emptySearchText}>
+              {i18n.language === 'es' ? 'Presiona buscar para encontrar recetas' : 'Press search to find recipes'}
+            </Text>
+          </View>
+        ) : (
+          <View style={styles.searchHintState}>
+            <Ionicons name="search" size={60} color="#555" />
+            <Text style={styles.searchHintTitle}>
+              {i18n.language === 'es' ? '¿Qué quieres cocinar?' : 'What do you want to cook?'}
+            </Text>
+            <Text style={styles.searchHintText}>
+              {i18n.language === 'es' 
+                ? 'Busca cualquier plato: pollo, pasta, ensalada, tacos...'
+                : 'Search any dish: chicken, pasta, salad, tacos...'}
+            </Text>
+            {selectedIngredients.length > 0 && (
+              <Text style={styles.searchHintIngredients}>
+                {i18n.language === 'es' 
+                  ? `Las recetas se ordenarán por coincidencia con tus ${selectedIngredients.length} ingredientes seleccionados`
+                  : `Recipes will be sorted by match with your ${selectedIngredients.length} selected ingredients`}
+              </Text>
+            )}
+          </View>
+        )}
+      </View>
+    );
+  }
 
   // Mode: Select method
   if (mode === 'select') {
