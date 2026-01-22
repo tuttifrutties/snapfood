@@ -601,6 +601,26 @@ export default function OnboardingScreen() {
           </View>
         )}
 
+        {/* Name field with warning */}
+        <View style={styles.inputContainer}>
+          <Text style={styles.inputLabel}>
+            {i18n.language === 'es' ? 'Tu nombre' : 'Your name'}
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholder={i18n.language === 'es' ? 'Ej: Facundo' : 'E.g: John'}
+            placeholderTextColor="#555"
+            value={userName}
+            onChangeText={setUserName}
+            autoCapitalize="words"
+          />
+          <Text style={styles.nameWarning}>
+            {i18n.language === 'es' 
+              ? '⚠️ El nombre no se podrá cambiar después' 
+              : '⚠️ Name cannot be changed later'}
+          </Text>
+        </View>
+
         <View style={styles.inputContainer}>
           <Text style={styles.inputLabel}>{t('onboarding.age')}</Text>
           <TextInput
