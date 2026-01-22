@@ -697,7 +697,13 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+    marginBottom: 4,
+    textAlign: 'center',
+  },
+  portionHint: {
+    fontSize: 12,
     marginBottom: 12,
+    fontStyle: 'italic',
     textAlign: 'center',
   },
   portionButtons: {
