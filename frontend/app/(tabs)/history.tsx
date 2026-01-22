@@ -842,6 +842,87 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  // Cooked badge
+  cookedBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    marginBottom: 8,
+    alignSelf: 'flex-start',
+  },
+  cookedBadgeText: {
+    fontSize: 11,
+    fontWeight: '600',
+  },
+  // Portion badge
+  portionBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    marginTop: 6,
+    alignSelf: 'flex-start',
+  },
+  portionText: {
+    fontSize: 11,
+  },
+  // Modal styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
+  },
+  portionModal: {
+    width: '100%',
+    maxWidth: 320,
+    borderRadius: 16,
+    padding: 24,
+    alignItems: 'center',
+  },
+  portionModalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  portionModalSubtitle: {
+    fontSize: 14,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  portionOptions: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: 12,
+    marginBottom: 20,
+  },
+  portionOption: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  portionOptionText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  portionCancelButton: {
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+    borderWidth: 1,
+  },
+  portionCancelText: {
+    fontSize: 16,
+  },
   // Empty state
   emptyState: {
     alignItems: 'center',
