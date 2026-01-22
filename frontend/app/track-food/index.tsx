@@ -297,7 +297,12 @@ export default function TrackFoodScreen() {
             {/* Portions selector */}
             <View style={[styles.portionContainer, { backgroundColor: theme.surface }]}>
               <Text style={[styles.portionLabel, { color: theme.text }]}>
-                {i18n.language === 'es' ? 'Porciones (1 = plato completo)' : 'Portions (1 = full plate)'}
+                {i18n.language === 'es' ? 'Porciones (1 = lo que ves en la foto)' : 'Portions (1 = what you see)'}
+              </Text>
+              <Text style={[styles.portionHint, { color: theme.textMuted }]}>
+                {i18n.language === 'es' 
+                  ? '1 hamburguesa = 1 porción, 1 muffin = 1 porción' 
+                  : '1 burger = 1 portion, 1 muffin = 1 portion'}
               </Text>
               <View style={styles.portionButtons}>
                 {PORTION_OPTIONS.map((p) => (
