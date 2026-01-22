@@ -850,14 +850,153 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     flex: 1,
+    flexDirection: 'row',
     backgroundColor: '#FF6B6B',
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
   },
   saveButtonText: {
     color: '#fff',
     fontSize: 16,
+    fontWeight: '600',
+  },
+  // Method cards
+  methodCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 12,
+    gap: 16,
+    width: '100%',
+  },
+  methodCardText: {
+    flex: 1,
+  },
+  methodCardTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  methodCardDesc: {
+    fontSize: 13,
+    marginTop: 4,
+  },
+  // Search styles
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    margin: 16,
+    borderRadius: 12,
+    gap: 10,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 16,
+    paddingVertical: 4,
+  },
+  searchResultsList: {
+    paddingHorizontal: 16,
+    paddingBottom: 20,
+  },
+  foodItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 14,
+    borderRadius: 12,
+    marginBottom: 10,
+    gap: 12,
+  },
+  foodItemIcon: {
+    fontSize: 32,
+  },
+  foodItemInfo: {
+    flex: 1,
+  },
+  foodItemName: {
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  foodItemCalories: {
+    fontSize: 12,
+    marginTop: 4,
+  },
+  emptySearchContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 80,
+  },
+  emptySearchText: {
+    fontSize: 16,
+    marginTop: 16,
+  },
+  searchHintContainer: {
+    flex: 1,
+    padding: 20,
+  },
+  searchHintText: {
+    fontSize: 14,
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  categoriesGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: 10,
+  },
+  categoryChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 20,
+    gap: 6,
+  },
+  categoryChipIcon: {
+    fontSize: 18,
+  },
+  categoryChipText: {
+    fontSize: 13,
+    fontWeight: '500',
+  },
+  // Food detail styles
+  foodDetailContainer: {
+    padding: 20,
+    alignItems: 'center',
+  },
+  foodDetailIcon: {
+    fontSize: 80,
+    marginBottom: 16,
+  },
+  foodDetailName: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  nutritionCard: {
+    width: '100%',
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 20,
+  },
+  nutritionRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#33333350',
+  },
+  nutritionLabel: {
+    fontSize: 15,
+  },
+  nutritionValue: {
+    fontSize: 15,
     fontWeight: '600',
   },
 });
