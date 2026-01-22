@@ -1083,7 +1083,13 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     textAlign: 'center',
+    marginBottom: 8,
+  },
+  servingSizeText: {
+    fontSize: 14,
+    textAlign: 'center',
     marginBottom: 20,
+    fontStyle: 'italic',
   },
   nutritionCard: {
     width: '100%',
