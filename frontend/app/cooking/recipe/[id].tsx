@@ -1,8 +1,8 @@
 /**
  * Recipe Detail Screen
- * Shows full recipe with photo (searched from Unsplash)
- * If no photo found, shows a cute "sad plate" placeholder
+ * Shows full recipe without photo
  * Includes "I want to prepare this" button for memory feature
+ * Saves to history when confirmed
  */
 
 import React, { useState, useEffect } from 'react';
@@ -12,7 +12,6 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Image,
   ActivityIndicator,
   Dimensions,
   Alert,
@@ -20,22 +19,22 @@ import {
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import { getRecipeImage, getCountryFlag } from '../../../src/services/recipeImage';
+import { getCountryFlag } from '../../../src/services/recipeImage';
 import { confirmRecipeAndUpdateMemory } from '../../../src/services/ingredients';
+import { useUser } from '../../../src/contexts/UserContext';
+import { updateDailyCalories } from '../../../src/services/nutritionCoach';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width } = Dimensions.get('window');
-const IMAGE_HEIGHT = 280;
 
 export default function RecipeDetailScreen() {
   const router = useRouter();
   const { t, i18n } = useTranslation();
   const params = useLocalSearchParams();
+  const { userId } = useUser();
   
   const [recipe, setRecipe] = useState<any>(null);
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [isLoadingImage, setIsLoadingImage] = useState(true);
-  const [imageError, setImageError] = useState(false);
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
 
@@ -44,7 +43,6 @@ export default function RecipeDetailScreen() {
       try {
         const parsed = JSON.parse(params.recipeData as string);
         setRecipe(parsed);
-        loadRecipeImage(parsed);
       } catch (error) {
         console.error('Failed to parse recipe data:', error);
       }
@@ -60,26 +58,46 @@ export default function RecipeDetailScreen() {
     }
   }, [params.recipeData, params.selectedIngredients]);
 
-  const loadRecipeImage = async (recipeData: any) => {
-    setIsLoadingImage(true);
-    setImageError(false);
-    
+  const saveToHistory = async (recipeData: any) => {
     try {
-      const result = await getRecipeImage(
-        recipeData.name,
-        recipeData.cuisine || recipeData.countryOfOrigin
+      const historyKey = `food_history_${userId}`;
+      const existingHistory = await AsyncStorage.getItem(historyKey);
+      const history = existingHistory ? JSON.parse(existingHistory) : [];
+
+      const newEntry = {
+        id: `cooked_${Date.now()}`,
+        userId,
+        timestamp: new Date().toISOString(),
+        foodName: recipeData.name,
+        mealType: 'cooking',
+        portions: 1,
+        calories: recipeData.calories || 0,
+        protein: recipeData.protein || 0,
+        carbs: recipeData.carbs || 0,
+        fats: recipeData.fats || 0,
+        isCooked: true,
+        cuisine: recipeData.cuisine || recipeData.countryOfOrigin,
+      };
+
+      history.unshift(newEntry);
+
+      // Keep only 12 months of history
+      const twelveMonthsAgo = new Date();
+      twelveMonthsAgo.setMonth(twelveMonthsAgo.getMonth() - 12);
+      const filteredHistory = history.filter((item: any) => 
+        new Date(item.timestamp) > twelveMonthsAgo
       );
+
+      await AsyncStorage.setItem(historyKey, JSON.stringify(filteredHistory));
       
-      if (result.url) {
-        setImageUrl(result.url);
-      } else {
-        setImageError(true);
+      // Update daily calories for nutrition tracking
+      if (recipeData.calories) {
+        await updateDailyCalories(recipeData.calories);
       }
+
+      console.log('[Recipe] Saved to history:', newEntry.foodName);
     } catch (error) {
-      console.error('Failed to load recipe image:', error);
-      setImageError(true);
-    } finally {
-      setIsLoadingImage(false);
+      console.error('[Recipe] Failed to save to history:', error);
     }
   };
 
@@ -93,17 +111,20 @@ export default function RecipeDetailScreen() {
         recipe.ingredients || [],
         selectedIngredients
       );
+
+      // Save to history
+      await saveToHistory(recipe);
       
       setIsConfirmed(true);
       
       // Show confirmation message
       const message = i18n.language === 'es'
         ? unusedIngredients.length > 0
-          ? `¡Perfecto! Los ingredientes que no usaste (${unusedIngredients.join(', ')}) quedarán guardados para la próxima vez.`
-          : '¡Perfecto! ¡A cocinar!'
+          ? `¡Perfecto! Guardado en tu historial (1 porción). Los ingredientes que no usaste (${unusedIngredients.join(', ')}) quedarán guardados para la próxima vez.`
+          : '¡Perfecto! Guardado en tu historial (1 porción). ¡A cocinar!'
         : unusedIngredients.length > 0
-          ? `Great! Unused ingredients (${unusedIngredients.join(', ')}) will be saved for next time.`
-          : 'Great! Let\'s cook!';
+          ? `Great! Saved to history (1 serving). Unused ingredients (${unusedIngredients.join(', ')}) will be saved for next time.`
+          : 'Great! Saved to history (1 serving). Let\'s cook!';
       
       Alert.alert(
         i18n.language === 'es' ? '¡Manos a la obra!' : 'Let\'s Cook!',
