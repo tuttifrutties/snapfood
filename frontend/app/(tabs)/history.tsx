@@ -699,6 +699,153 @@ export default function HistoryScreen() {
           </View>
         </View>
       </Modal>
+
+      {/* Meal Detail Modal */}
+      <Modal
+        visible={showDetailModal}
+        transparent
+        animationType="slide"
+        onRequestClose={() => {
+          setShowDetailModal(false);
+          setDetailMeal(null);
+        }}
+      >
+        <View style={styles.detailModalOverlay}>
+          <View style={[styles.detailModal, { backgroundColor: theme.surface }]}>
+            {detailMeal && (
+              <>
+                <View style={styles.detailHeader}>
+                  <TouchableOpacity onPress={() => { setShowDetailModal(false); setDetailMeal(null); }}>
+                    <Ionicons name="close" size={28} color={theme.text} />
+                  </TouchableOpacity>
+                  <Text style={[styles.detailTitle, { color: theme.text }]}>
+                    {i18n.language === 'es' ? 'Detalle' : 'Details'}
+                  </Text>
+                  <TouchableOpacity onPress={() => deleteMeal(detailMeal.id, detailMeal.isCooked || detailMeal.isSearched)}>
+                    <Ionicons name="trash-outline" size={24} color={theme.primary} />
+                  </TouchableOpacity>
+                </View>
+
+                <ScrollView contentContainerStyle={styles.detailContent}>
+                  {detailMeal.icon && (
+                    <Text style={styles.detailIcon}>{detailMeal.icon}</Text>
+                  )}
+                  {!detailMeal.icon && detailMeal.isCooked && (
+                    <View style={styles.detailIconContainer}>
+                      <Ionicons name="restaurant" size={50} color={theme.primary} />
+                    </View>
+                  )}
+                  
+                  <Text style={[styles.detailName, { color: theme.text }]}>
+                    {detailMeal.dishName}
+                  </Text>
+                  
+                  <Text style={[styles.detailTime, { color: theme.textMuted }]}>
+                    {format(new Date(detailMeal.timestamp), "EEEE d 'de' MMMM, h:mm a", { locale: dateLocale })}
+                  </Text>
+
+                  {/* Badges */}
+                  <View style={styles.detailBadges}>
+                    {detailMeal.isCooked && (
+                      <View style={[styles.detailBadge, { backgroundColor: theme.primary + '20' }]}>
+                        <Ionicons name="restaurant" size={16} color={theme.primary} />
+                        <Text style={[styles.detailBadgeText, { color: theme.primary }]}>
+                          {i18n.language === 'es' ? 'Cocinado' : 'Cooked'}
+                        </Text>
+                      </View>
+                    )}
+                    {detailMeal.isSearched && (
+                      <View style={[styles.detailBadge, { backgroundColor: '#4CAF5020' }]}>
+                        <Ionicons name="search" size={16} color="#4CAF50" />
+                        <Text style={[styles.detailBadgeText, { color: '#4CAF50' }]}>
+                          {i18n.language === 'es' ? 'Buscado' : 'Searched'}
+                        </Text>
+                      </View>
+                    )}
+                    {detailMeal.portions && (
+                      <View style={[styles.detailBadge, { backgroundColor: theme.surfaceVariant }]}>
+                        <Ionicons name="pie-chart" size={16} color={theme.textSecondary} />
+                        <Text style={[styles.detailBadgeText, { color: theme.textSecondary }]}>
+                          {detailMeal.portions} {i18n.language === 'es' ? 'porción(es)' : 'serving(s)'}
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+
+                  {/* Nutrition info */}
+                  <View style={[styles.detailNutrition, { backgroundColor: theme.surfaceVariant }]}>
+                    <View style={styles.detailNutritionRow}>
+                      <Text style={[styles.detailNutritionLabel, { color: theme.textMuted }]}>
+                        {i18n.language === 'es' ? 'Calorías' : 'Calories'}
+                      </Text>
+                      <Text style={[styles.detailNutritionValue, { color: theme.primary }]}>
+                        {detailMeal.calories} kcal
+                      </Text>
+                    </View>
+                    <View style={styles.detailNutritionRow}>
+                      <Text style={[styles.detailNutritionLabel, { color: theme.textMuted }]}>
+                        {i18n.language === 'es' ? 'Proteína' : 'Protein'}
+                      </Text>
+                      <Text style={[styles.detailNutritionValue, { color: theme.text }]}>
+                        {detailMeal.protein}g
+                      </Text>
+                    </View>
+                    <View style={styles.detailNutritionRow}>
+                      <Text style={[styles.detailNutritionLabel, { color: theme.textMuted }]}>
+                        {i18n.language === 'es' ? 'Carbohidratos' : 'Carbs'}
+                      </Text>
+                      <Text style={[styles.detailNutritionValue, { color: theme.text }]}>
+                        {detailMeal.carbs}g
+                      </Text>
+                    </View>
+                    <View style={styles.detailNutritionRow}>
+                      <Text style={[styles.detailNutritionLabel, { color: theme.textMuted }]}>
+                        {i18n.language === 'es' ? 'Grasas' : 'Fats'}
+                      </Text>
+                      <Text style={[styles.detailNutritionValue, { color: theme.text }]}>
+                        {detailMeal.fats}g
+                      </Text>
+                    </View>
+                  </View>
+
+                  {/* Edit portions button */}
+                  {(detailMeal.isCooked || detailMeal.isSearched) && (
+                    <TouchableOpacity
+                      style={[styles.detailEditButton, { borderColor: theme.textMuted }]}
+                      onPress={() => {
+                        setShowDetailModal(false);
+                        setEditingMeal(detailMeal);
+                        setShowPortionModal(true);
+                      }}
+                    >
+                      <Ionicons name="pencil" size={20} color={theme.textSecondary} />
+                      <Text style={[styles.detailEditButtonText, { color: theme.textSecondary }]}>
+                        {i18n.language === 'es' ? 'Editar porciones' : 'Edit portions'}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+
+                  {/* Cook again button */}
+                  <TouchableOpacity
+                    style={[styles.cookAgainButton, { backgroundColor: theme.primary }]}
+                    onPress={cookAgain}
+                  >
+                    <Ionicons name="refresh" size={24} color="#fff" />
+                    <Text style={styles.cookAgainButtonText}>
+                      {i18n.language === 'es' ? 'Volver a comer / cocinar' : 'Eat / Cook again'}
+                    </Text>
+                  </TouchableOpacity>
+                  <Text style={[styles.cookAgainHint, { color: theme.textMuted }]}>
+                    {i18n.language === 'es' 
+                      ? 'Agrega una nueva entrada al historial (1 porción)'
+                      : 'Adds a new entry to history (1 serving)'}
+                  </Text>
+                </ScrollView>
+              </>
+            )}
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
