@@ -36,7 +36,7 @@ export default function CookingScreen() {
   const { theme } = useTheme();
   const router = useRouter();
   const { t, i18n } = useTranslation();
-  const [mode, setMode] = useState<'select' | 'photo' | 'manual' | 'results'>('select');
+  const [mode, setMode] = useState<'select' | 'photo' | 'manual' | 'results' | 'searchRecipe'>('select');
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
@@ -48,6 +48,11 @@ export default function CookingScreen() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
+  
+  // Recipe search state
+  const [recipeSearchQuery, setRecipeSearchQuery] = useState('');
+  const [searchedRecipes, setSearchedRecipes] = useState<any[]>([]);
+  const [isSearchingRecipes, setIsSearchingRecipes] = useState(false);
 
   // Get ingredients by category based on current language
   const ingredientCategories = getIngredientsByCategory(i18n.language as 'en' | 'es');
