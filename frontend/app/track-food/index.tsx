@@ -488,10 +488,10 @@ export default function TrackFoodScreen() {
           <Ionicons name="search" size={20} color={theme.textMuted} />
           <TextInput
             style={[styles.searchInput, { color: theme.text }]}
-            placeholder={i18n.language === 'es' ? 'Buscar: naranja, pollo, arroz...' : 'Search: orange, chicken, rice...'}
+            placeholder={i18n.language === 'es' ? 'Buscar: daiquiri, pizza, sushi...' : 'Search: daiquiri, pizza, sushi...'}
             placeholderTextColor={theme.textMuted}
             value={searchQuery}
-            onChangeText={handleSearch}
+            onChangeText={debouncedSearch}
             autoFocus
           />
           {searchQuery.length > 0 && (
@@ -501,7 +501,14 @@ export default function TrackFoodScreen() {
           )}
         </View>
 
-        {searchResults.length > 0 ? (
+        {isSearching ? (
+          <View style={styles.loadingSearchContainer}>
+            <ActivityIndicator size="large" color={theme.primary} />
+            <Text style={[styles.loadingText, { color: theme.textMuted }]}>
+              {i18n.language === 'es' ? 'Buscando...' : 'Searching...'}
+            </Text>
+          </View>
+        ) : searchResults.length > 0 ? (
           <FlatList
             data={searchResults}
             keyExtractor={(item) => item.id}
@@ -513,7 +520,10 @@ export default function TrackFoodScreen() {
                 <Text style={styles.foodItemIcon}>{item.icon}</Text>
                 <View style={styles.foodItemInfo}>
                   <Text style={[styles.foodItemName, { color: theme.text }]}>
-                    {item.name[i18n.language as 'es' | 'en'] || item.name.es}
+                    {item.name}
+                  </Text>
+                  <Text style={[styles.foodItemServing, { color: theme.textMuted }]}>
+                    {item.serving_size} {item.is_drink && '🍹'}
                   </Text>
                   <Text style={[styles.foodItemCalories, { color: theme.textMuted }]}>
                     {item.calories} kcal • P:{item.protein}g • C:{item.carbs}g • G:{item.fats}g
@@ -530,32 +540,25 @@ export default function TrackFoodScreen() {
             <Text style={[styles.emptySearchText, { color: theme.textMuted }]}>
               {i18n.language === 'es' ? 'No se encontraron resultados' : 'No results found'}
             </Text>
+            <Text style={[styles.emptySearchHint, { color: theme.textMuted }]}>
+              {i18n.language === 'es' 
+                ? 'Intenta con otro término de búsqueda' 
+                : 'Try a different search term'}
+            </Text>
           </View>
         ) : (
           <View style={styles.searchHintContainer}>
+            <Ionicons name="restaurant-outline" size={60} color={theme.textMuted} />
+            <Text style={[styles.searchHintTitle, { color: theme.text }]}>
+              {i18n.language === 'es' 
+                ? '¡Busca cualquier alimento o bebida!' 
+                : 'Search any food or drink!'}
+            </Text>
             <Text style={[styles.searchHintText, { color: theme.textMuted }]}>
               {i18n.language === 'es' 
-                ? 'Escribe al menos 2 letras para buscar' 
-                : 'Type at least 2 letters to search'}
+                ? 'Ejemplos: daiquiri, sushi, empanada, café con leche, pizza...' 
+                : 'Examples: daiquiri, sushi, coffee, pizza, burger...'}
             </Text>
-            <View style={styles.categoriesGrid}>
-              {getAllCategories().map((cat) => (
-                <TouchableOpacity
-                  key={cat.id}
-                  style={[styles.categoryChip, { backgroundColor: theme.surface }]}
-                  onPress={() => {
-                    const foods = getFoodsByCategory(cat.id);
-                    setSearchResults(foods);
-                    setSearchQuery(cat.es);
-                  }}
-                >
-                  <Text style={styles.categoryChipIcon}>{cat.icon}</Text>
-                  <Text style={[styles.categoryChipText, { color: theme.text }]}>
-                    {i18n.language === 'es' ? cat.es : cat.en}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
           </View>
         )}
       </View>
