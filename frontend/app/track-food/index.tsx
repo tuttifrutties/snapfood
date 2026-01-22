@@ -8,6 +8,8 @@ import {
   ScrollView,
   ActivityIndicator,
   Alert,
+  TextInput,
+  FlatList,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
@@ -15,6 +17,9 @@ import { useUser } from '@/src/contexts/UserContext';
 import { useTheme } from '@/src/contexts/ThemeContext';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { searchFoods, getAllCategories, getFoodsByCategory, FoodItem } from '../../src/data/foods';
+import { updateDailyCalories } from '../../src/services/nutritionCoach';
 
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
@@ -23,10 +28,17 @@ export default function TrackFoodScreen() {
   const { theme } = useTheme();
   const router = useRouter();
   const { t, i18n } = useTranslation();
+  const [mode, setMode] = useState<'select' | 'photo' | 'search'>('select');
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<any>(null);
   const [portions, setPortions] = useState(1);
+  
+  // Search state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState<FoodItem[]>([]);
+  const [selectedFood, setSelectedFood] = useState<FoodItem | null>(null);
+  const [foodPortions, setFoodPortions] = useState(1);
 
   const PORTION_OPTIONS = [0.5, 1, 1.5, 2, 2.5, 3];
 
