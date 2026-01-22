@@ -1040,6 +1040,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 16,
   },
+  emptySearchHint: {
+    fontSize: 14,
+    marginTop: 8,
+    textAlign: 'center',
+  },
+  loadingSearchContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 80,
+  },
   searchHintContainer: {
     flex: 1,
     padding: 20,
