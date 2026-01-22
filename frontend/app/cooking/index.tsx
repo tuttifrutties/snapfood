@@ -258,6 +258,7 @@ export default function CookingScreen() {
       }
     } catch (error) {
       console.error('Failed to get recipes:', error);
+      setShowLoadingScreen(false);
       Alert.alert(t('common.error'), 'Failed to get recipe suggestions. Please try again.');
     } finally {
       setIsLoadingRecipes(false);
