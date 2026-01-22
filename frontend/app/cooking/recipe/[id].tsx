@@ -349,95 +349,39 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   
-  // Image section
-  imageContainer: {
-    width: width,
-    height: IMAGE_HEIGHT,
+  // Recipe Header Section (No Image)
+  recipeHeaderSection: {
+    alignItems: 'center',
+    paddingVertical: 30,
     backgroundColor: '#1a1a1a',
+    borderBottomWidth: 2,
+    borderBottomColor: '#FF6B6B',
   },
-  imagePlaceholder: {
-    flex: 1,
+  recipeIconContainer: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: '#FF6B6B20',
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: 16,
   },
-  loadingImageText: {
-    color: '#888',
-    marginTop: 12,
-    fontSize: 14,
-  },
-  recipeImage: {
-    width: '100%',
-    height: '100%',
-  },
-  countryBadgeOnImage: {
-    position: 'absolute',
-    bottom: 16,
-    right: 16,
+  flagBadgeTop: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.7)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
     borderRadius: 20,
-    gap: 6,
+    gap: 8,
   },
-  countryFlagText: {
-    fontSize: 18,
+  flagEmojiTop: {
+    fontSize: 24,
   },
-  countryNameText: {
+  cuisineNameTop: {
     color: '#fff',
     fontSize: 14,
     fontWeight: '500',
-  },
-
-  // Sad plate placeholder
-  sadPlateContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#1a1a1a',
-    position: 'relative',
-  },
-  sadPlate: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  sadPlateEmoji: {
-    fontSize: 80,
-  },
-  sadFace: {
-    position: 'absolute',
-    top: '35%',
-    alignItems: 'center',
-  },
-  sadEyes: {
-    fontSize: 16,
-    color: '#555',
-    letterSpacing: 8,
-  },
-  sadMouth: {
-    fontSize: 24,
-    color: '#555',
-    marginTop: -4,
-  },
-  flagBadge: {
-    position: 'absolute',
-    top: 20,
-    right: 20,
-    backgroundColor: 'rgba(255,255,255,0.1)',
-    padding: 8,
-    borderRadius: 12,
-  },
-  flagEmoji: {
-    fontSize: 32,
-  },
-  sadPlateText: {
-    color: '#666',
-    fontSize: 14,
-    marginTop: 12,
-    textAlign: 'center',
-    paddingHorizontal: 40,
-    fontStyle: 'italic',
   },
 
   // Recipe info
