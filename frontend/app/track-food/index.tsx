@@ -18,8 +18,25 @@ import { useTheme } from '@/src/contexts/ThemeContext';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { searchFoods, getAllCategories, getFoodsByCategory, FoodItem } from '../../src/data/foods';
 import { updateDailyCalories } from '../../src/services/nutritionCoach';
+
+// API Food Item type (from external search)
+interface ApiFoodItem {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  serving_size: string;
+  serving_unit: string;
+  is_drink: boolean;
+  calories: number;
+  protein: number;
+  carbs: number;
+  fats: number;
+  fiber: number;
+  sugar: number;
+  icon: string;
+}
 
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
