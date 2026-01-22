@@ -2,6 +2,7 @@
  * History Screen - Collapsible Hierarchical View
  * Shows meals organized by: Today > Days of Month > Previous Months
  * Premium feature with folder-like structure
+ * Supports editing portions and deleting entries
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
@@ -14,6 +15,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
+  Modal,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useUser } from '../../src/contexts/UserContext';
@@ -24,6 +26,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { format, isToday, isThisMonth, startOfMonth, isSameDay } from 'date-fns';
 import { es, enUS, ptBR, it, fr, de } from 'date-fns/locale';
 import { useTranslation } from 'react-i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
@@ -36,6 +39,8 @@ interface Meal {
   fats: number;
   photoBase64?: string;
   timestamp: string;
+  portions?: number;
+  isCooked?: boolean;
 }
 
 interface DayGroup {
@@ -57,6 +62,8 @@ const getDateLocale = (lang: string) => {
   return locales[lang] || enUS;
 };
 
+const PORTION_OPTIONS = [0.5, 1, 1.5, 2, 2.5, 3];
+
 export default function HistoryScreen() {
   const { userId } = useUser();
   const { isPremium } = usePremium();
@@ -66,6 +73,8 @@ export default function HistoryScreen() {
   const [meals, setMeals] = useState<Meal[]>([]);
   const [dailyTotals, setDailyTotals] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [editingMeal, setEditingMeal] = useState<Meal | null>(null);
+  const [showPortionModal, setShowPortionModal] = useState(false);
   
   // Collapsible state
   const [expandedDays, setExpandedDays] = useState<Set<string>>(new Set(['today']));
@@ -87,6 +96,7 @@ export default function HistoryScreen() {
     if (!userId) return;
 
     try {
+      // Load from API
       const [mealsResponse, totalsResponse] = await Promise.all([
         fetch(`${API_URL}/api/meals/${userId}`),
         fetch(`${API_URL}/api/meals/${userId}/daily-totals`),
@@ -94,8 +104,34 @@ export default function HistoryScreen() {
 
       const mealsData = await mealsResponse.json();
       const totalsData = await totalsResponse.json();
+      
+      // Load locally cooked meals
+      const localHistoryKey = `food_history_${userId}`;
+      const localHistory = await AsyncStorage.getItem(localHistoryKey);
+      const localMeals = localHistory ? JSON.parse(localHistory) : [];
+      
+      // Transform local meals to match the format
+      const transformedLocalMeals = localMeals.map((m: any) => ({
+        id: m.id,
+        dishName: m.foodName,
+        calories: Math.round((m.calories || 0) * (m.portions || 1)),
+        protein: Math.round((m.protein || 0) * (m.portions || 1)),
+        carbs: Math.round((m.carbs || 0) * (m.portions || 1)),
+        fats: Math.round((m.fats || 0) * (m.portions || 1)),
+        timestamp: m.timestamp,
+        portions: m.portions || 1,
+        isCooked: m.isCooked || false,
+        baseCalories: m.calories,
+        baseProtein: m.protein,
+        baseCarbs: m.carbs,
+        baseFats: m.fats,
+      }));
 
-      setMeals(mealsData.meals || []);
+      // Combine API meals and local meals
+      const allMeals = [...(mealsData.meals || []), ...transformedLocalMeals]
+        .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+      setMeals(allMeals);
       setDailyTotals(totalsData);
     } catch (error) {
       console.error('Failed to load history:', error);
@@ -104,7 +140,32 @@ export default function HistoryScreen() {
     }
   };
 
-  const deleteMeal = async (mealId: string) => {
+  const updateMealPortions = async (meal: Meal, newPortions: number) => {
+    if (meal.isCooked) {
+      // Update local storage for cooked meals
+      try {
+        const localHistoryKey = `food_history_${userId}`;
+        const localHistory = await AsyncStorage.getItem(localHistoryKey);
+        const localMeals = localHistory ? JSON.parse(localHistory) : [];
+        
+        const updatedMeals = localMeals.map((m: any) => {
+          if (m.id === meal.id) {
+            return { ...m, portions: newPortions };
+          }
+          return m;
+        });
+        
+        await AsyncStorage.setItem(localHistoryKey, JSON.stringify(updatedMeals));
+        loadHistory(); // Reload
+      } catch (error) {
+        console.error('Failed to update portions:', error);
+      }
+    }
+    setShowPortionModal(false);
+    setEditingMeal(null);
+  };
+
+  const deleteMeal = async (mealId: string, isCooked: boolean = false) => {
     Alert.alert(
       t('history.deleteTitle'),
       t('history.deleteMessage'),
@@ -115,11 +176,18 @@ export default function HistoryScreen() {
           style: 'destructive',
           onPress: async () => {
             try {
-              await fetch(`${API_URL}/api/meals/${mealId}`, { method: 'DELETE' });
-              setMeals(meals.filter((meal) => meal.id !== mealId));
-              const totalsResponse = await fetch(`${API_URL}/api/meals/${userId}/daily-totals`);
-              const totalsData = await totalsResponse.json();
-              setDailyTotals(totalsData);
+              if (isCooked) {
+                // Delete from local storage
+                const localHistoryKey = `food_history_${userId}`;
+                const localHistory = await AsyncStorage.getItem(localHistoryKey);
+                const localMeals = localHistory ? JSON.parse(localHistory) : [];
+                const updatedMeals = localMeals.filter((m: any) => m.id !== mealId);
+                await AsyncStorage.setItem(localHistoryKey, JSON.stringify(updatedMeals));
+              } else {
+                // Delete from API
+                await fetch(`${API_URL}/api/meals/${mealId}`, { method: 'DELETE' });
+              }
+              loadHistory(); // Reload
             } catch (error) {
               console.error('Failed to delete meal:', error);
               Alert.alert(t('common.error'), t('history.deleteFailed'));
