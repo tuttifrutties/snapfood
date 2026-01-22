@@ -147,7 +147,7 @@ export default function TrackFoodScreen() {
         id: `food_${Date.now()}`,
         userId,
         timestamp: new Date().toISOString(),
-        foodName: selectedFood.name[i18n.language as 'es' | 'en'] || selectedFood.name.es,
+        foodName: selectedFood.name,
         mealType: 'food',
         portions: foodPortions,
         calories: adjustedCalories,
@@ -160,6 +160,9 @@ export default function TrackFoodScreen() {
         baseProtein: selectedFood.protein,
         baseCarbs: selectedFood.carbs,
         baseFats: selectedFood.fats,
+        servingSize: selectedFood.serving_size,
+        category: selectedFood.category,
+        isDrink: selectedFood.is_drink,
       };
 
       history.unshift(newEntry);
