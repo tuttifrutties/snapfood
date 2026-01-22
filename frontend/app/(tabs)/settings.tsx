@@ -249,104 +249,104 @@ export default function SettingsScreen() {
             />
           </View>
 
-          <View style={styles.settingRow}>
+          <View style={[styles.settingRow, { backgroundColor: theme.surface }]}>
             <View style={styles.settingInfo}>
-              <Text style={styles.settingLabel}>{t('settings.dinnerReminder')}</Text>
-              <Text style={styles.settingDescription}>
+              <Text style={[styles.settingLabel, { color: theme.text }]}>{t('settings.dinnerReminder')}</Text>
+              <Text style={[styles.settingDescription, { color: theme.textMuted }]}>
                 {t('settings.dinnerReminderDesc')}
               </Text>
             </View>
             <Switch
               value={dinnerReminder}
               onValueChange={toggleDinnerReminder}
-              trackColor={{ false: '#333', true: '#FF6B6B' }}
+              trackColor={{ false: theme.border, true: theme.primary }}
               thumbColor="#fff"
             />
           </View>
 
-          <View style={styles.settingRow}>
+          <View style={[styles.settingRow, { backgroundColor: theme.surface }]}>
             <View style={styles.settingInfo}>
-              <Text style={styles.settingLabel}>{t('settings.snackReminder')}</Text>
-              <Text style={styles.settingDescription}>
+              <Text style={[styles.settingLabel, { color: theme.text }]}>{t('settings.snackReminder')}</Text>
+              <Text style={[styles.settingDescription, { color: theme.textMuted }]}>
                 {t('settings.snackReminderDesc')}
               </Text>
             </View>
             <Switch
               value={snackReminder}
               onValueChange={toggleSnackReminder}
-              trackColor={{ false: '#333', true: '#FF6B6B' }}
+              trackColor={{ false: theme.border, true: theme.primary }}
               thumbColor="#fff"
             />
           </View>
 
-          <View style={styles.settingRow}>
+          <View style={[styles.settingRow, { backgroundColor: theme.surface }]}>
             <View style={styles.settingInfo}>
-              <Text style={styles.settingLabel}>{t('settings.fridayReminder')}</Text>
-              <Text style={styles.settingDescription}>
+              <Text style={[styles.settingLabel, { color: theme.text }]}>{t('settings.fridayReminder')}</Text>
+              <Text style={[styles.settingDescription, { color: theme.textMuted }]}>
                 {t('settings.fridayReminderDesc')}
               </Text>
             </View>
             <Switch
               value={fridayReminder}
               onValueChange={toggleFridayReminder}
-              trackColor={{ false: '#333', true: '#FF6B6B' }}
+              trackColor={{ false: theme.border, true: theme.primary }}
               thumbColor="#fff"
             />
           </View>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{t('settings.subscription')}</Text>
+          <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>{t('settings.subscription')}</Text>
           
           {!isPremium ? (
             <TouchableOpacity
-              style={styles.upgradeCard}
+              style={[styles.upgradeCard, { backgroundColor: theme.surface }]}
               onPress={() => router.push('/paywall')}
             >
               <View style={styles.upgradeContent}>
                 <Ionicons name="star" size={40} color="#FFD700" />
                 <View style={styles.upgradeText}>
-                  <Text style={styles.upgradeTitle}>{t('settings.upgradePremium')}</Text>
-                  <Text style={styles.upgradeDescription}>
+                  <Text style={[styles.upgradeTitle, { color: theme.text }]}>{t('settings.upgradePremium')}</Text>
+                  <Text style={[styles.upgradeDescription, { color: theme.textMuted }]}>
                     {t('settings.upgradePremiumDesc')}
                   </Text>
                 </View>
               </View>
-              <Ionicons name="chevron-forward" size={24} color="#aaa" />
+              <Ionicons name="chevron-forward" size={24} color={theme.textMuted} />
             </TouchableOpacity>
           ) : (
-            <View style={styles.premiumCard}>
-              <Text style={styles.premiumCardText}>{t('settings.premiumActive')}</Text>
-              <Text style={styles.premiumCardSubtext}>{t('settings.premiumActiveDesc')}</Text>
+            <View style={[styles.premiumCard, { backgroundColor: theme.surface }]}>
+              <Text style={[styles.premiumCardText, { color: theme.text }]}>{t('settings.premiumActive')}</Text>
+              <Text style={[styles.premiumCardSubtext, { color: theme.textMuted }]}>{t('settings.premiumActiveDesc')}</Text>
             </View>
           )}
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{t('settings.about')}</Text>
+          <Text style={[styles.sectionTitle, { color: theme.textSecondary }]}>{t('settings.about')}</Text>
           
           <TouchableOpacity 
-            style={styles.menuItem}
+            style={[styles.menuItem, { backgroundColor: theme.surface }]}
             onPress={() => router.push('/legal/privacy')}
           >
-            <Text style={styles.menuText}>{t('settings.privacyPolicy')}</Text>
-            <Ionicons name="chevron-forward" size={20} color="#aaa" />
+            <Text style={[styles.menuText, { color: theme.text }]}>{t('settings.privacyPolicy')}</Text>
+            <Ionicons name="chevron-forward" size={20} color={theme.textMuted} />
           </TouchableOpacity>
           
           <TouchableOpacity 
-            style={styles.menuItem}
+            style={[styles.menuItem, { backgroundColor: theme.surface }]}
             onPress={() => router.push('/legal/terms')}
           >
-            <Text style={styles.menuText}>{t('settings.termsOfService')}</Text>
-            <Ionicons name="chevron-forward" size={20} color="#aaa" />
+            <Text style={[styles.menuText, { color: theme.text }]}>{t('settings.termsOfService')}</Text>
+            <Ionicons name="chevron-forward" size={20} color={theme.textMuted} />
           </TouchableOpacity>
           
           <TouchableOpacity 
-            style={styles.menuItem}
+            style={[styles.menuItem, { backgroundColor: theme.surface }]}
             onPress={() => router.push('/legal/help')}
           >
-            <Text style={styles.menuText}>{t('settings.helpSupport')}</Text>
-            <Ionicons name="chevron-forward" size={20} color="#aaa" />
+            <Text style={[styles.menuText, { color: theme.text }]}>{t('settings.helpSupport')}</Text>
+            <Ionicons name="chevron-forward" size={20} color={theme.textMuted} />
           </TouchableOpacity>
         </View>
 
