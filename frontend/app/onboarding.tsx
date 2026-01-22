@@ -91,6 +91,7 @@ export default function OnboardingScreen() {
   const [countrySearch, setCountrySearch] = useState('');
   const [gender, setGender] = useState<'male' | 'female'>('male');
   const [goal, setGoal] = useState<'lose' | 'maintain' | 'gain'>('maintain');
+  const [userName, setUserName] = useState('');
   const [age, setAge] = useState('');
   const [height, setHeight] = useState('');
   const [weight, setWeight] = useState('');
