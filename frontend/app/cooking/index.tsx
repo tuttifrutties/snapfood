@@ -61,7 +61,13 @@ export default function CookingScreen() {
   useEffect(() => {
     checkTodayCookingCount();
     loadRememberedIngredients();
+    loadUserName();
   }, [userId]);
+
+  const loadUserName = async () => {
+    const name = await getUserName();
+    setUserName(name);
+  };
 
   const loadRememberedIngredients = async () => {
     try {
