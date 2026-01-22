@@ -207,6 +207,60 @@ export default function HistoryScreen() {
     );
   };
 
+  const openMealDetail = (meal: Meal) => {
+    setDetailMeal(meal);
+    setShowDetailModal(true);
+  };
+
+  const cookAgain = async () => {
+    if (!detailMeal || !userId) return;
+
+    try {
+      // Save as new entry in history
+      const historyKey = `food_history_${userId}`;
+      const existingHistory = await AsyncStorage.getItem(historyKey);
+      const history = existingHistory ? JSON.parse(existingHistory) : [];
+
+      const newEntry = {
+        id: `cooked_again_${Date.now()}`,
+        userId,
+        timestamp: new Date().toISOString(),
+        foodName: detailMeal.dishName,
+        mealType: detailMeal.isCooked ? 'cooking' : 'food',
+        portions: 1,
+        calories: detailMeal.baseCalories || detailMeal.calories,
+        protein: detailMeal.baseProtein || detailMeal.protein,
+        carbs: detailMeal.baseCarbs || detailMeal.carbs,
+        fats: detailMeal.baseFats || detailMeal.fats,
+        isCooked: detailMeal.isCooked || false,
+        isSearched: detailMeal.isSearched || false,
+        icon: detailMeal.icon,
+        baseCalories: detailMeal.baseCalories || detailMeal.calories,
+        baseProtein: detailMeal.baseProtein || detailMeal.protein,
+        baseCarbs: detailMeal.baseCarbs || detailMeal.carbs,
+        baseFats: detailMeal.baseFats || detailMeal.fats,
+      };
+
+      history.unshift(newEntry);
+      await AsyncStorage.setItem(historyKey, JSON.stringify(history));
+
+      setShowDetailModal(false);
+      setDetailMeal(null);
+      
+      Alert.alert(
+        i18n.language === 'es' ? '¡Agregado!' : 'Added!',
+        i18n.language === 'es' 
+          ? 'Se agregó una nueva entrada al historial (1 porción)'
+          : 'New entry added to history (1 serving)'
+      );
+      
+      loadHistory(); // Reload
+    } catch (error) {
+      console.error('Failed to cook again:', error);
+      Alert.alert(t('common.error'), 'Failed to add entry');
+    }
+  };
+
   // Group meals by day and month
   const groupMeals = (): { today: DayGroup | null; thisMonth: DayGroup[]; previousMonths: MonthGroup[] } => {
     if (!meals || meals.length === 0) {
