@@ -1054,11 +1054,20 @@ const styles = StyleSheet.create({
   searchHintContainer: {
     flex: 1,
     padding: 20,
+    alignItems: 'center',
+    paddingTop: 60,
+  },
+  searchHintTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginTop: 16,
+    marginBottom: 8,
+    textAlign: 'center',
   },
   searchHintText: {
     fontSize: 14,
     textAlign: 'center',
-    marginBottom: 24,
+    lineHeight: 22,
   },
   categoriesGrid: {
     flexDirection: 'row',
