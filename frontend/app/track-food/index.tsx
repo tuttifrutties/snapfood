@@ -1243,11 +1243,97 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#33333350',
   },
+  totalRow: {
+    borderTopWidth: 2,
+    borderTopColor: '#4CAF50',
+    marginTop: 8,
+    paddingTop: 12,
+  },
   nutritionLabel: {
     fontSize: 15,
   },
   nutritionValue: {
     fontSize: 15,
     fontWeight: '600',
+  },
+  // Fat selector styles
+  fatSelectorBox: {
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 2,
+    marginBottom: 16,
+    width: '100%',
+  },
+  fatSelectorHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 12,
+  },
+  fatSelectorTitle: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  fatTypeScrollView: {
+    marginBottom: 12,
+  },
+  fatTypeChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
+    marginRight: 8,
+    gap: 6,
+  },
+  fatTypeChipActive: {
+    backgroundColor: '#FFD70030',
+    borderWidth: 1,
+    borderColor: '#FFD700',
+  },
+  fatTypeChipIcon: {
+    fontSize: 16,
+  },
+  fatTypeChipText: {
+    fontSize: 12,
+  },
+  fatTypeChipTextActive: {
+    color: '#FFD700',
+    fontWeight: '600',
+  },
+  tablespoonContainer: {
+    marginTop: 8,
+  },
+  tablespoonLabel: {
+    fontSize: 13,
+    fontWeight: '500',
+    marginBottom: 8,
+  },
+  tablespoonRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  tablespoonChip: {
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 16,
+    minWidth: 44,
+    alignItems: 'center',
+  },
+  tablespoonChipActive: {
+    backgroundColor: '#FFD700',
+  },
+  tablespoonChipText: {
+    fontSize: 13,
+    fontWeight: '500',
+  },
+  tablespoonChipTextActive: {
+    color: '#000',
+  },
+  fatCaloriesInfo: {
+    fontSize: 12,
+    marginTop: 8,
+    fontStyle: 'italic',
   },
 });
