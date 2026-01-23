@@ -96,19 +96,29 @@ export default function RecipeDetailScreen() {
       const existingHistory = await AsyncStorage.getItem(historyKey);
       const history = existingHistory ? JSON.parse(existingHistory) : [];
 
+      const fatType = FAT_TYPES.find(f => f.id === selectedFatType);
+      const fatCalories = getFatCalories();
+      const totalCalories = getTotalCalories();
+
       const newEntry = {
         id: `cooked_${Date.now()}`,
         userId,
         timestamp: new Date().toISOString(),
         foodName: recipeData.name,
         mealType: 'cooking',
-        portions: 1,
-        calories: recipeData.calories || 0,
-        protein: recipeData.protein || 0,
-        carbs: recipeData.carbs || 0,
-        fats: recipeData.fats || 0,
+        portions: portions,
+        calories: totalCalories,
+        protein: Math.round((recipeData.protein || 0) * portions),
+        carbs: Math.round((recipeData.carbs || 0) * portions),
+        fats: Math.round((recipeData.fats || 0) * portions) + (fatTablespoons > 0 ? Math.round(fatTablespoons * 14) : 0), // ~14g fat per tbsp
         isCooked: true,
         cuisine: recipeData.cuisine || recipeData.countryOfOrigin,
+        // Fat tracking
+        fatType: selectedFatType,
+        fatTypeName: fatType ? (i18n.language === 'es' ? fatType.es : fatType.en) : null,
+        fatTablespoons: fatTablespoons,
+        fatCalories: fatCalories,
+        baseCalories: recipeData.calories || 0,
       };
 
       history.unshift(newEntry);
@@ -122,12 +132,12 @@ export default function RecipeDetailScreen() {
 
       await AsyncStorage.setItem(historyKey, JSON.stringify(filteredHistory));
       
-      // Update daily calories for nutrition tracking
-      if (recipeData.calories) {
-        await updateDailyCalories(recipeData.calories);
+      // Update daily calories for nutrition tracking (with total including fat)
+      if (totalCalories) {
+        await updateDailyCalories(totalCalories);
       }
 
-      console.log('[Recipe] Saved to history:', newEntry.foodName);
+      console.log('[Recipe] Saved to history:', newEntry.foodName, 'with', fatTablespoons, 'tbsp of', selectedFatType);
     } catch (error) {
       console.error('[Recipe] Failed to save to history:', error);
     }
