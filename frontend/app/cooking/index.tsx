@@ -1824,17 +1824,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '500',
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: 60,
-  },
-  loadingText: {
-    color: '#888',
-    marginTop: 16,
-    fontSize: 16,
-  },
   emptySearchState: {
     flex: 1,
     justifyContent: 'center',
