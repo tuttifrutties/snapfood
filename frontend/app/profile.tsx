@@ -1043,4 +1043,78 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+  // Activities Header
+  activitiesHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  editActivitiesButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    borderWidth: 1,
+  },
+  editActivitiesText: {
+    fontSize: 13,
+    fontWeight: '500',
+  },
+  noActivitiesText: {
+    textAlign: 'center',
+    paddingVertical: 20,
+    fontStyle: 'italic',
+  },
+  // Activity Modal
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    justifyContent: 'flex-end',
+  },
+  activityModal: {
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    padding: 20,
+    maxHeight: '80%',
+  },
+  activityModalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  activityModalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  activityList: {
+    maxHeight: 400,
+  },
+  activityPickerItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    marginBottom: 10,
+  },
+  activityPickerName: {
+    flex: 1,
+    fontSize: 15,
+  },
+  saveActivitiesButton: {
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 12,
+    marginTop: 16,
+  },
+  saveActivitiesText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });
