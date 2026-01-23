@@ -493,7 +493,7 @@ export default function CookingScreen() {
             style={styles.methodCard}
             onPress={() => setMode('manual')}
           >
-            <Ionicons name="list" size={48} color="#FF6B6B" />
+            <Ionicons name="list" size={48} color={theme.primary} />
             <Text style={styles.methodTitle}>
               {i18n.language === 'es' ? 'Selecciona tus ingredientes' : 'Select your ingredients'}
             </Text>
