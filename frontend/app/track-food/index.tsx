@@ -446,6 +446,78 @@ export default function TrackFoodScreen() {
               </View>
             </View>
 
+            {/* FAT SELECTOR */}
+            <View style={[styles.fatSelectorBox, { backgroundColor: theme.surface, borderColor: '#FFD700' }]}>
+              <View style={styles.fatSelectorHeader}>
+                <Ionicons name="flame" size={20} color="#FFD700" />
+                <Text style={[styles.fatSelectorTitle, { color: theme.text }]}>
+                  {i18n.language === 'es' ? '¿Usaste grasa para cocinar?' : 'Did you use cooking fat?'}
+                </Text>
+              </View>
+              
+              {/* Fat Type */}
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.fatTypeScrollView}>
+                {FAT_TYPES.map((fat) => (
+                  <TouchableOpacity
+                    key={fat.id}
+                    style={[
+                      styles.fatTypeChip,
+                      { backgroundColor: theme.surfaceVariant },
+                      selectedFatType === fat.id && styles.fatTypeChipActive,
+                    ]}
+                    onPress={() => {
+                      setSelectedFatType(fat.id);
+                      if (fat.id === 'none') setFatTablespoons(0);
+                    }}
+                  >
+                    <Text style={styles.fatTypeChipIcon}>{fat.icon}</Text>
+                    <Text style={[
+                      styles.fatTypeChipText,
+                      { color: theme.textMuted },
+                      selectedFatType === fat.id && styles.fatTypeChipTextActive,
+                    ]}>
+                      {i18n.language === 'es' ? fat.es : fat.en}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+
+              {/* Tablespoons - only if fat selected */}
+              {selectedFatType !== 'none' && (
+                <View style={styles.tablespoonContainer}>
+                  <Text style={[styles.tablespoonLabel, { color: theme.text }]}>
+                    {i18n.language === 'es' ? 'Cucharadas:' : 'Tablespoons:'}
+                  </Text>
+                  <View style={styles.tablespoonRow}>
+                    {TABLESPOON_OPTIONS.map((tbsp) => (
+                      <TouchableOpacity
+                        key={tbsp}
+                        style={[
+                          styles.tablespoonChip,
+                          { backgroundColor: theme.surfaceVariant },
+                          fatTablespoons === tbsp && styles.tablespoonChipActive,
+                        ]}
+                        onPress={() => setFatTablespoons(tbsp)}
+                      >
+                        <Text style={[
+                          styles.tablespoonChipText,
+                          { color: theme.textMuted },
+                          fatTablespoons === tbsp && styles.tablespoonChipTextActive,
+                        ]}>
+                          {tbsp}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                  {fatTablespoons > 0 && (
+                    <Text style={[styles.fatCaloriesInfo, { color: '#FFD700' }]}>
+                      +{getSearchFatCalories()} cal {i18n.language === 'es' ? 'de grasa' : 'from fat'}
+                    </Text>
+                  )}
+                </View>
+              )}
+            </View>
+
             {/* Nutritional info */}
             <View style={[styles.nutritionCard, { backgroundColor: theme.surface }]}>
               <View style={styles.nutritionRow}>
