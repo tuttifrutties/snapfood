@@ -494,8 +494,14 @@ export default function CookingScreen() {
             onPress={() => setMode('manual')}
           >
             <Ionicons name="list" size={48} color="#FF6B6B" />
-            <Text style={styles.methodTitle}>{t('cooking.selectIngredients')}</Text>
-            <Text style={styles.methodDescription}>{t('cooking.selectIngredientsDesc')}</Text>
+            <Text style={styles.methodTitle}>
+              {i18n.language === 'es' ? 'Selecciona tus ingredientes' : 'Select your ingredients'}
+            </Text>
+            <Text style={styles.methodDescription}>
+              {i18n.language === 'es' 
+                ? 'Elige ingredientes de una lista'
+                : 'Choose ingredients from a list'}
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -511,15 +517,6 @@ export default function CookingScreen() {
                 ? 'Busca por nombre de plato y ve qué ingredientes te faltan'
                 : 'Search by dish name and see which ingredients you need'}
             </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.methodCard}
-            onPress={() => setMode('manual')}
-          >
-            <Ionicons name="list" size={48} color="#FF6B6B" />
-            <Text style={styles.methodTitle}>{t('cooking.manualSelect')}</Text>
-            <Text style={styles.methodDescription}>{t('cooking.manualSelectDesc')}</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>
