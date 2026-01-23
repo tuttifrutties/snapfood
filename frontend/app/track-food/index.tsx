@@ -147,6 +147,22 @@ export default function TrackFoodScreen() {
   const selectFoodFromSearch = (food: ApiFoodItem) => {
     setSelectedFood(food);
     setFoodPortions(1);
+    setSelectedFatType('none');
+    setFatTablespoons(0);
+  };
+
+  // Calculate fat calories for search
+  const getSearchFatCalories = () => {
+    const fatType = FAT_TYPES.find(f => f.id === selectedFatType);
+    if (!fatType) return 0;
+    return Math.round(fatType.caloriesPerTbsp * fatTablespoons);
+  };
+
+  // Calculate fat calories for photo
+  const getPhotoFatCalories = () => {
+    const fatType = FAT_TYPES.find(f => f.id === photoFatType);
+    if (!fatType) return 0;
+    return Math.round(fatType.caloriesPerTbsp * photoFatTablespoons);
   };
 
   const saveFoodFromSearch = async () => {
