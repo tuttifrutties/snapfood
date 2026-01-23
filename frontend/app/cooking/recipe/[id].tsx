@@ -751,4 +751,171 @@ const styles = StyleSheet.create({
     marginTop: 8,
     textAlign: 'center',
   },
+  // Fat Selector Styles
+  fatSelectorContainer: {
+    backgroundColor: '#1a1a1a',
+    borderRadius: 16,
+    padding: 20,
+    marginVertical: 16,
+    borderWidth: 2,
+    borderColor: '#FFD700',
+  },
+  fatSelectorHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 8,
+  },
+  fatSelectorTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#FFD700',
+    flex: 1,
+  },
+  fatSelectorSubtitle: {
+    fontSize: 14,
+    color: '#aaa',
+    marginBottom: 16,
+  },
+  portionRow: {
+    marginBottom: 16,
+  },
+  portionLabel: {
+    fontSize: 14,
+    color: '#fff',
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  portionButtons: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  portionButton: {
+    backgroundColor: '#333',
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 10,
+    minWidth: 45,
+    alignItems: 'center',
+  },
+  portionButtonActive: {
+    backgroundColor: '#FF6B6B',
+  },
+  portionButtonText: {
+    color: '#aaa',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  portionButtonTextActive: {
+    color: '#fff',
+  },
+  fatTypeLabel: {
+    fontSize: 14,
+    color: '#fff',
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  fatTypeScroll: {
+    marginBottom: 16,
+  },
+  fatTypeButton: {
+    backgroundColor: '#333',
+    padding: 12,
+    borderRadius: 12,
+    marginRight: 10,
+    alignItems: 'center',
+    minWidth: 100,
+    borderWidth: 2,
+    borderColor: 'transparent',
+  },
+  fatTypeButtonActive: {
+    borderColor: '#FFD700',
+    backgroundColor: '#FFD70020',
+  },
+  fatTypeIcon: {
+    fontSize: 28,
+    marginBottom: 4,
+  },
+  fatTypeName: {
+    fontSize: 12,
+    color: '#aaa',
+    textAlign: 'center',
+  },
+  fatTypeNameActive: {
+    color: '#FFD700',
+    fontWeight: '600',
+  },
+  fatTypeCalories: {
+    fontSize: 10,
+    color: '#666',
+    marginTop: 2,
+  },
+  tablespoonRow: {
+    marginBottom: 16,
+  },
+  tablespoonLabel: {
+    fontSize: 14,
+    color: '#fff',
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  tablespoonButtons: {
+    flexDirection: 'row',
+    gap: 8,
+    flexWrap: 'wrap',
+  },
+  tablespoonButton: {
+    backgroundColor: '#333',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 10,
+    minWidth: 50,
+    alignItems: 'center',
+  },
+  tablespoonButtonActive: {
+    backgroundColor: '#FFD700',
+  },
+  tablespoonButtonText: {
+    color: '#aaa',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  tablespoonButtonTextActive: {
+    color: '#000',
+  },
+  caloriesSummary: {
+    backgroundColor: '#252525',
+    borderRadius: 12,
+    padding: 16,
+    marginTop: 8,
+  },
+  caloriesSummaryRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  caloriesSummaryLabel: {
+    fontSize: 14,
+    color: '#aaa',
+  },
+  caloriesSummaryValue: {
+    fontSize: 14,
+    color: '#fff',
+  },
+  caloriesSummaryTotal: {
+    borderTopWidth: 1,
+    borderTopColor: '#444',
+    paddingTop: 10,
+    marginBottom: 0,
+  },
+  caloriesSummaryTotalLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  caloriesSummaryTotalValue: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#4CAF50',
+  },
 });
