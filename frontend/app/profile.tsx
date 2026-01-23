@@ -113,6 +113,7 @@ export default function PersonalProfileScreen() {
   const { t, i18n } = useTranslation();
   const { isPremium } = usePremium();
   const { theme } = useTheme();
+  const { userName } = useUser();
   const summaryScrollRef = useRef<ScrollView>(null);
 
   const [profile, setProfile] = useState<UserNutritionProfile | null>(null);
@@ -127,11 +128,24 @@ export default function PersonalProfileScreen() {
   const [editHeight, setEditHeight] = useState('');
   const [editAge, setEditAge] = useState('');
   const [editGoal, setEditGoal] = useState<'lose' | 'maintain' | 'gain'>('maintain');
+  const [editActivities, setEditActivities] = useState<PhysicalActivity[]>([]);
+  const [showActivityPicker, setShowActivityPicker] = useState(false);
+
+  // Get personalized title
+  const getPersonalizedTitle = () => {
+    const displayName = userName || '';
+    if (displayName) {
+      return i18n.language === 'es' 
+        ? `Ficha de ${displayName}` 
+        : `${displayName}'s Profile`;
+    }
+    return i18n.language === 'es' ? 'Mi Ficha Personal' : 'My Personal Profile';
+  };
 
   // Texts
   const texts = {
     es: {
-      title: 'Mi Ficha Personal',
+      title: getPersonalizedTitle(),
       weekSummary: 'Resumen Semanal',
       monthSummary: 'Resumen Mensual',
       daysTracked: 'días registrados',
