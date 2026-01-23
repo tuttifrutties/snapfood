@@ -508,7 +508,7 @@ export default function CookingScreen() {
             style={styles.methodCard}
             onPress={() => setMode('searchRecipe')}
           >
-            <Ionicons name="search" size={48} color="#FF6B6B" />
+            <Ionicons name="search" size={48} color={theme.primary} />
             <Text style={styles.methodTitle}>
               {i18n.language === 'es' ? 'Buscar Receta' : 'Search Recipe'}
             </Text>
