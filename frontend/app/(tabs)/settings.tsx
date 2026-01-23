@@ -244,7 +244,7 @@ export default function SettingsScreen() {
             <Switch
               value={lunchReminder}
               onValueChange={toggleLunchReminder}
-              trackColor={{ false: '#333', true: '#FF6B6B' }}
+              trackColor={{ false: '#333', true: theme.primary }}
               thumbColor="#fff"
             />
           </View>
