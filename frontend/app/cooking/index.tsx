@@ -640,7 +640,7 @@ export default function CookingScreen() {
                       <Text style={[styles.ingredientText, styles.ingredientTextSelected]} numberOfLines={2}>
                         {item}
                       </Text>
-                      <Ionicons name="close-circle" size={18} color="#FF6B6B" />
+                      <Ionicons name="close-circle" size={18} color={theme.primary} />
                     </TouchableOpacity>
                   ))}
                 </View>
