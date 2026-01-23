@@ -371,7 +371,7 @@ export default function CookingScreen() {
 
         {isSearchingRecipes ? (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#FF6B6B" />
+            <ActivityIndicator size="large" color={theme.primary} />
             <Text style={styles.loadingText}>
               {i18n.language === 'es' ? 'Buscando recetas...' : 'Searching recipes...'}
             </Text>
