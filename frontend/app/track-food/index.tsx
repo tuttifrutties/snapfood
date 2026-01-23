@@ -38,6 +38,18 @@ interface ApiFoodItem {
   icon: string;
 }
 
+// Fat types with calories per tablespoon
+const FAT_TYPES = [
+  { id: 'none', es: 'Sin grasa', en: 'No fat', caloriesPerTbsp: 0, icon: '🚫' },
+  { id: 'olive_oil', es: 'Aceite de oliva', en: 'Olive oil', caloriesPerTbsp: 119, icon: '🫒' },
+  { id: 'sunflower_oil', es: 'Aceite de girasol', en: 'Sunflower oil', caloriesPerTbsp: 120, icon: '🌻' },
+  { id: 'butter', es: 'Manteca/Mantequilla', en: 'Butter', caloriesPerTbsp: 102, icon: '🧈' },
+  { id: 'lard', es: 'Grasa de cerdo', en: 'Lard', caloriesPerTbsp: 115, icon: '🥓' },
+  { id: 'coconut_oil', es: 'Aceite de coco', en: 'Coconut oil', caloriesPerTbsp: 121, icon: '🥥' },
+];
+
+const TABLESPOON_OPTIONS = [0, 0.5, 1, 1.5, 2, 2.5, 3];
+
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 export default function TrackFoodScreen() {
