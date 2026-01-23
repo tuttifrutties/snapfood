@@ -863,7 +863,7 @@ export default function CookingScreen() {
 
               {/* Loading Animation */}
               <View style={styles.menuLoadingContainer}>
-                <ActivityIndicator size="large" color="#FF6B6B" />
+                <ActivityIndicator size="large" color={theme.primary} />
               </View>
 
               {/* Decorative Bottom */}
