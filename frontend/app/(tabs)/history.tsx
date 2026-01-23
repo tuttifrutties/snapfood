@@ -171,17 +171,29 @@ export default function HistoryScreen() {
     }
   };
 
-  const updateMealPortions = async (meal: Meal, newPortions: number) => {
-    if (meal.isCooked) {
-      // Update local storage for cooked meals
+  const updateMealPortions = async (meal: Meal, newPortions: number, newFatType?: string, newFatTablespoons?: number) => {
+    if (meal.isCooked || meal.isSearched) {
+      // Update local storage for cooked/searched meals
       try {
         const localHistoryKey = `food_history_${userId}`;
         const localHistory = await AsyncStorage.getItem(localHistoryKey);
         const localMeals = localHistory ? JSON.parse(localHistory) : [];
         
+        const fatType = FAT_TYPES.find(f => f.id === (newFatType || meal.fatType || 'none'));
+        const fatCalories = fatType ? Math.round(fatType.caloriesPerTbsp * (newFatTablespoons ?? meal.fatTablespoons ?? 0)) : 0;
+        
         const updatedMeals = localMeals.map((m: any) => {
           if (m.id === meal.id) {
-            return { ...m, portions: newPortions };
+            const baseCalories = m.baseCalories || m.calories / (m.portions || 1);
+            const newCalories = Math.round(baseCalories * newPortions) + fatCalories;
+            return { 
+              ...m, 
+              portions: newPortions,
+              fatType: newFatType !== undefined ? newFatType : m.fatType,
+              fatTablespoons: newFatTablespoons !== undefined ? newFatTablespoons : m.fatTablespoons,
+              fatCalories: fatCalories,
+              calories: newCalories,
+            };
           }
           return m;
         });
@@ -194,6 +206,9 @@ export default function HistoryScreen() {
     }
     setShowPortionModal(false);
     setEditingMeal(null);
+    setEditPortions(1);
+    setEditFatType('none');
+    setEditFatTablespoons(0);
   };
 
   const deleteMeal = async (mealId: string, isCooked: boolean = false) => {
