@@ -546,7 +546,7 @@ export default function CookingScreen() {
           </View>
         ) : (
           <View style={styles.content}>
-            <Ionicons name="camera" size={120} color="#FF6B6B" />
+            <Ionicons name="camera" size={120} color={theme.primary} />
             <Text style={styles.instructionText}>
               Take a photo of your fridge or pantry ingredients
             </Text>
