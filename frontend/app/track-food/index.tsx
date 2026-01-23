@@ -169,15 +169,19 @@ export default function TrackFoodScreen() {
     if (!userId || !selectedFood) return;
 
     try {
-      const adjustedCalories = Math.round(selectedFood.calories * foodPortions);
+      const fatCalories = getSearchFatCalories();
+      const baseCalories = Math.round(selectedFood.calories * foodPortions);
+      const totalCalories = baseCalories + fatCalories;
       const adjustedProtein = Math.round(selectedFood.protein * foodPortions * 10) / 10;
       const adjustedCarbs = Math.round(selectedFood.carbs * foodPortions * 10) / 10;
-      const adjustedFats = Math.round(selectedFood.fats * foodPortions * 10) / 10;
+      const adjustedFats = Math.round(selectedFood.fats * foodPortions * 10) / 10 + (fatTablespoons > 0 ? Math.round(fatTablespoons * 14) : 0);
 
       // Save to local history
       const historyKey = `food_history_${userId}`;
       const existingHistory = await AsyncStorage.getItem(historyKey);
       const history = existingHistory ? JSON.parse(existingHistory) : [];
+
+      const fatType = FAT_TYPES.find(f => f.id === selectedFatType);
 
       const newEntry = {
         id: `food_${Date.now()}`,
@@ -186,7 +190,7 @@ export default function TrackFoodScreen() {
         foodName: selectedFood.name,
         mealType: 'food',
         portions: foodPortions,
-        calories: adjustedCalories,
+        calories: totalCalories,
         protein: adjustedProtein,
         carbs: adjustedCarbs,
         fats: adjustedFats,
@@ -199,13 +203,18 @@ export default function TrackFoodScreen() {
         servingSize: selectedFood.serving_size,
         category: selectedFood.category,
         isDrink: selectedFood.is_drink,
+        // Fat tracking
+        fatType: selectedFatType,
+        fatTypeName: fatType ? (i18n.language === 'es' ? fatType.es : fatType.en) : null,
+        fatTablespoons: fatTablespoons,
+        fatCalories: fatCalories,
       };
 
       history.unshift(newEntry);
       await AsyncStorage.setItem(historyKey, JSON.stringify(history));
 
-      // Update daily calories
-      await updateDailyCalories(adjustedCalories);
+      // Update daily calories (with fat included)
+      await updateDailyCalories(totalCalories);
 
       Alert.alert(
         t('common.success'), 
