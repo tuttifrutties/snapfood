@@ -537,7 +537,7 @@ export default function CookingScreen() {
 
         {isAnalyzing ? (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#FF6B6B" />
+            <ActivityIndicator size="large" color={theme.primary} />
             <Text style={styles.loadingText}>{t('cooking.analyzingIngredients')}</Text>
           </View>
         ) : selectedImage ? (
