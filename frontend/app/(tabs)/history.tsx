@@ -681,7 +681,7 @@ export default function HistoryScreen() {
         )}
       </ScrollView>
 
-      {/* Portion Edit Modal */}
+      {/* Portion & Fat Edit Modal */}
       <Modal
         visible={showPortionModal}
         transparent
@@ -689,18 +689,26 @@ export default function HistoryScreen() {
         onRequestClose={() => {
           setShowPortionModal(false);
           setEditingMeal(null);
+          setEditPortions(1);
+          setEditFatType('none');
+          setEditFatTablespoons(0);
         }}
       >
         <View style={styles.modalOverlay}>
           <View style={[styles.portionModal, { backgroundColor: theme.surface }]}>
             <Text style={[styles.portionModalTitle, { color: theme.text }]}>
-              {i18n.language === 'es' ? 'Editar porciones' : 'Edit portions'}
+              {i18n.language === 'es' ? 'Editar comida' : 'Edit meal'}
             </Text>
             {editingMeal && (
               <Text style={[styles.portionModalSubtitle, { color: theme.textSecondary }]}>
                 {editingMeal.dishName}
               </Text>
             )}
+            
+            {/* Portions Section */}
+            <Text style={[styles.editSectionLabel, { color: theme.text }]}>
+              {i18n.language === 'es' ? 'Porciones:' : 'Portions:'}
+            </Text>
             <View style={styles.portionOptions}>
               {PORTION_OPTIONS.map(portion => (
                 <TouchableOpacity
@@ -708,25 +716,99 @@ export default function HistoryScreen() {
                   style={[
                     styles.portionOption,
                     { backgroundColor: theme.surfaceVariant },
-                    editingMeal?.portions === portion && { backgroundColor: theme.primary }
+                    editPortions === portion && { backgroundColor: theme.primary }
                   ]}
-                  onPress={() => editingMeal && updateMealPortions(editingMeal, portion)}
+                  onPress={() => setEditPortions(portion)}
                 >
                   <Text style={[
                     styles.portionOptionText,
                     { color: theme.text },
-                    editingMeal?.portions === portion && { color: '#fff' }
+                    editPortions === portion && { color: '#fff' }
                   ]}>
                     {portion}
                   </Text>
                 </TouchableOpacity>
               ))}
             </View>
+
+            {/* Fat Type Section */}
+            <Text style={[styles.editSectionLabel, { color: theme.text, marginTop: 16 }]}>
+              {i18n.language === 'es' ? 'Tipo de grasa:' : 'Fat type:'}
+            </Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.fatTypeScroll}>
+              {FAT_TYPES.map((fat) => (
+                <TouchableOpacity
+                  key={fat.id}
+                  style={[
+                    styles.fatTypeOption,
+                    { backgroundColor: theme.surfaceVariant },
+                    editFatType === fat.id && { backgroundColor: '#FFD70030', borderColor: '#FFD700', borderWidth: 1 }
+                  ]}
+                  onPress={() => {
+                    setEditFatType(fat.id);
+                    if (fat.id === 'none') setEditFatTablespoons(0);
+                  }}
+                >
+                  <Text style={styles.fatTypeIcon}>{fat.icon}</Text>
+                  <Text style={[
+                    styles.fatTypeName,
+                    { color: theme.textMuted },
+                    editFatType === fat.id && { color: '#FFD700' }
+                  ]}>
+                    {i18n.language === 'es' ? fat.es : fat.en}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+
+            {/* Tablespoons Section - only if fat selected */}
+            {editFatType !== 'none' && (
+              <>
+                <Text style={[styles.editSectionLabel, { color: theme.text, marginTop: 12 }]}>
+                  {i18n.language === 'es' ? 'Cucharadas:' : 'Tablespoons:'}
+                </Text>
+                <View style={styles.portionOptions}>
+                  {TABLESPOON_OPTIONS.map(tbsp => (
+                    <TouchableOpacity
+                      key={tbsp}
+                      style={[
+                        styles.portionOption,
+                        { backgroundColor: theme.surfaceVariant },
+                        editFatTablespoons === tbsp && { backgroundColor: '#FFD700' }
+                      ]}
+                      onPress={() => setEditFatTablespoons(tbsp)}
+                    >
+                      <Text style={[
+                        styles.portionOptionText,
+                        { color: theme.text },
+                        editFatTablespoons === tbsp && { color: '#000' }
+                      ]}>
+                        {tbsp}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </>
+            )}
+
+            {/* Action Buttons */}
+            <TouchableOpacity
+              style={[styles.saveEditButton, { backgroundColor: theme.primary }]}
+              onPress={() => editingMeal && updateMealPortions(editingMeal, editPortions, editFatType, editFatTablespoons)}
+            >
+              <Text style={styles.saveEditButtonText}>
+                {i18n.language === 'es' ? 'Guardar cambios' : 'Save changes'}
+              </Text>
+            </TouchableOpacity>
+            
             <TouchableOpacity
               style={[styles.portionCancelButton, { borderColor: theme.textMuted }]}
               onPress={() => {
                 setShowPortionModal(false);
                 setEditingMeal(null);
+                setEditPortions(1);
+                setEditFatType('none');
+                setEditFatTablespoons(0);
               }}
             >
               <Text style={[styles.portionCancelText, { color: theme.textSecondary }]}>
