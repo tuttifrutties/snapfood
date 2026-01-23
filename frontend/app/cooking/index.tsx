@@ -429,7 +429,7 @@ export default function CookingScreen() {
                   <Text style={styles.viewRecipeText}>
                     {i18n.language === 'es' ? 'Ver receta' : 'View recipe'}
                   </Text>
-                  <Ionicons name="chevron-forward" size={18} color="#FF6B6B" />
+                  <Ionicons name="chevron-forward" size={18} color={theme.primary} />
                 </View>
               </TouchableOpacity>
             ))}
