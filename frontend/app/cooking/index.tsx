@@ -826,7 +826,7 @@ export default function CookingScreen() {
               {/* Restaurant Menu Header */}
               <View style={styles.menuHeader}>
                 <View style={styles.menuLogoContainer}>
-                  <Ionicons name="restaurant" size={40} color="#FF6B6B" />
+                  <Ionicons name="restaurant" size={40} color={theme.primary} />
                 </View>
                 <Text style={[styles.menuRestaurantName, { color: theme.isDark ? '#fff' : '#000' }]}>
                   Snapfood
