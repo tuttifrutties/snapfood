@@ -604,22 +604,114 @@ export default function PersonalProfileScreen() {
         </View>
 
         {/* Activities Card */}
-        {profile && profile.activities && profile.activities.length > 0 && (
+        {profile && (
           <View style={[styles.activitiesCard, { backgroundColor: theme.surface }]}>
-            <Text style={[styles.sectionTitle, { color: theme.text }]}>{t2.activities}</Text>
-            {profile.activities.map(activity => (
-              <View key={activity.id} style={styles.activityItem}>
-                <Ionicons name={activity.icon as any} size={20} color={theme.primary} />
-                <Text style={[styles.activityName, { color: theme.text }]}>
-                  {getActivityLabel(activity.id, i18n.language)}
+            <View style={styles.activitiesHeader}>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>{t2.activities}</Text>
+              <TouchableOpacity 
+                style={[styles.editActivitiesButton, { borderColor: theme.primary }]}
+                onPress={() => setShowActivityPicker(true)}
+              >
+                <Ionicons name="pencil" size={16} color={theme.primary} />
+                <Text style={[styles.editActivitiesText, { color: theme.primary }]}>
+                  {i18n.language === 'es' ? 'Editar' : 'Edit'}
                 </Text>
-                <Text style={[styles.activityDetails, { color: theme.textMuted }]}>
-                  {activity.durationMinutes}' × {activity.daysPerWeek.length}d
-                </Text>
-              </View>
-            ))}
+              </TouchableOpacity>
+            </View>
+            {profile.activities && profile.activities.length > 0 ? (
+              profile.activities.map(activity => (
+                <View key={activity.id} style={styles.activityItem}>
+                  <Ionicons name={activity.icon as any} size={20} color={theme.primary} />
+                  <Text style={[styles.activityName, { color: theme.text }]}>
+                    {getActivityLabel(activity.id, i18n.language)}
+                  </Text>
+                  <Text style={[styles.activityDetails, { color: theme.textMuted }]}>
+                    {activity.durationMinutes}' × {activity.daysPerWeek.length}d
+                  </Text>
+                </View>
+              ))
+            ) : (
+              <Text style={[styles.noActivitiesText, { color: theme.textMuted }]}>
+                {i18n.language === 'es' 
+                  ? 'No hay actividades. Toca "Editar" para agregar.'
+                  : 'No activities. Tap "Edit" to add.'}
+              </Text>
+            )}
           </View>
         )}
+
+        {/* Activity Picker Modal */}
+        <Modal
+          visible={showActivityPicker}
+          animationType="slide"
+          transparent={true}
+          onRequestClose={() => setShowActivityPicker(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={[styles.activityModal, { backgroundColor: theme.surface }]}>
+              <View style={styles.activityModalHeader}>
+                <Text style={[styles.activityModalTitle, { color: theme.text }]}>
+                  {i18n.language === 'es' ? 'Selecciona Actividades' : 'Select Activities'}
+                </Text>
+                <TouchableOpacity onPress={() => setShowActivityPicker(false)}>
+                  <Ionicons name="close" size={28} color={theme.text} />
+                </TouchableOpacity>
+              </View>
+              
+              <ScrollView style={styles.activityList}>
+                {PHYSICAL_ACTIVITIES.map(activity => {
+                  const isSelected = editActivities.some(a => a.id === activity.id);
+                  return (
+                    <TouchableOpacity
+                      key={activity.id}
+                      style={[
+                        styles.activityPickerItem,
+                        { borderColor: theme.border },
+                        isSelected && { backgroundColor: theme.primary + '20', borderColor: theme.primary }
+                      ]}
+                      onPress={() => {
+                        if (isSelected) {
+                          setEditActivities(editActivities.filter(a => a.id !== activity.id));
+                        } else {
+                          setEditActivities([...editActivities, {
+                            id: activity.id,
+                            icon: activity.icon,
+                            durationMinutes: 30,
+                            daysPerWeek: [1, 3, 5], // Default: Mon, Wed, Fri
+                          }]);
+                        }
+                      }}
+                    >
+                      <Ionicons name={activity.icon as any} size={24} color={isSelected ? theme.primary : theme.textMuted} />
+                      <Text style={[styles.activityPickerName, { color: theme.text }]}>
+                        {getActivityLabel(activity.id, i18n.language)}
+                      </Text>
+                      {isSelected && (
+                        <Ionicons name="checkmark-circle" size={24} color={theme.primary} />
+                      )}
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
+
+              <TouchableOpacity 
+                style={[styles.saveActivitiesButton, { backgroundColor: theme.primary }]}
+                onPress={async () => {
+                  if (profile) {
+                    const updatedProfile = { ...profile, activities: editActivities };
+                    await saveUserNutritionProfile(updatedProfile);
+                    setProfile(updatedProfile);
+                    setShowActivityPicker(false);
+                  }
+                }}
+              >
+                <Text style={styles.saveActivitiesText}>
+                  {i18n.language === 'es' ? 'Guardar' : 'Save'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
 
         {/* Share Button */}
         <TouchableOpacity style={[styles.shareButton, { backgroundColor: theme.primary }]} onPress={handleShare}>
