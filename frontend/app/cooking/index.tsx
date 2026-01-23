@@ -484,7 +484,7 @@ export default function CookingScreen() {
             style={styles.methodCard}
             onPress={() => setMode('photo')}
           >
-            <Ionicons name="camera" size={48} color="#FF6B6B" />
+            <Ionicons name="camera" size={48} color={theme.primary} />
             <Text style={styles.methodTitle}>{t('cooking.takePhotoIngredients')}</Text>
             <Text style={styles.methodDescription}>{t('cooking.takePhotoIngredientsDesc')}</Text>
           </TouchableOpacity>
