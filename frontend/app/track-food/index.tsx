@@ -522,10 +522,28 @@ export default function TrackFoodScreen() {
             <View style={[styles.nutritionCard, { backgroundColor: theme.surface }]}>
               <View style={styles.nutritionRow}>
                 <Text style={[styles.nutritionLabel, { color: theme.textMuted }]}>
-                  {i18n.language === 'es' ? 'Calorías' : 'Calories'}
+                  {i18n.language === 'es' ? 'Calorías base' : 'Base calories'}
                 </Text>
-                <Text style={[styles.nutritionValue, { color: theme.primary }]}>
+                <Text style={[styles.nutritionValue, { color: theme.text }]}>
                   {Math.round(selectedFood.calories * foodPortions)} kcal
+                </Text>
+              </View>
+              {fatTablespoons > 0 && (
+                <View style={styles.nutritionRow}>
+                  <Text style={[styles.nutritionLabel, { color: '#FFD700' }]}>
+                    + {i18n.language === 'es' ? 'Grasa' : 'Fat'} ({fatTablespoons} {i18n.language === 'es' ? 'cda' : 'tbsp'})
+                  </Text>
+                  <Text style={[styles.nutritionValue, { color: '#FFD700' }]}>
+                    +{getSearchFatCalories()} kcal
+                  </Text>
+                </View>
+              )}
+              <View style={[styles.nutritionRow, styles.totalRow]}>
+                <Text style={[styles.nutritionLabel, { color: theme.primary, fontWeight: 'bold' }]}>
+                  TOTAL
+                </Text>
+                <Text style={[styles.nutritionValue, { color: theme.primary, fontWeight: 'bold', fontSize: 18 }]}>
+                  {Math.round(selectedFood.calories * foodPortions) + getSearchFatCalories()} kcal
                 </Text>
               </View>
               <View style={styles.nutritionRow}>
