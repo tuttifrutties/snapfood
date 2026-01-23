@@ -178,7 +178,7 @@ export default function PersonalProfileScreen() {
       swipeBack: '← Desliza para ver semanal',
     },
     en: {
-      title: 'My Personal Profile',
+      title: getPersonalizedTitle(),
       weekSummary: 'Weekly Summary',
       monthSummary: 'Monthly Summary',
       daysTracked: 'days tracked',
