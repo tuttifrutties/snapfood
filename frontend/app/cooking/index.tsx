@@ -625,7 +625,7 @@ export default function CookingScreen() {
                 <Ionicons 
                   name={expandedCategories.includes('_selected_') ? "chevron-up" : "chevron-down"} 
                   size={20} 
-                  color="#FF6B6B" 
+                  color={theme.primary} 
                 />
               </TouchableOpacity>
               
