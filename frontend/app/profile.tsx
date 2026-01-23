@@ -231,6 +231,7 @@ export default function PersonalProfileScreen() {
         setEditHeight(profileData.height.toString());
         setEditAge(profileData.age.toString());
         setEditGoal(profileData.goal);
+        setEditActivities(profileData.activities || []);
       }
     } catch (error) {
       console.error('Failed to load profile:', error);
