@@ -927,19 +927,22 @@ export default function HistoryScreen() {
                     </View>
                   </View>
 
-                  {/* Edit portions button */}
+                  {/* Edit portions & fat button */}
                   {(detailMeal.isCooked || detailMeal.isSearched) && (
                     <TouchableOpacity
                       style={[styles.detailEditButton, { borderColor: theme.textMuted }]}
                       onPress={() => {
                         setShowDetailModal(false);
                         setEditingMeal(detailMeal);
+                        setEditPortions(detailMeal.portions || 1);
+                        setEditFatType(detailMeal.fatType || 'none');
+                        setEditFatTablespoons(detailMeal.fatTablespoons || 0);
                         setShowPortionModal(true);
                       }}
                     >
                       <Ionicons name="pencil" size={20} color={theme.textSecondary} />
                       <Text style={[styles.detailEditButtonText, { color: theme.textSecondary }]}>
-                        {i18n.language === 'es' ? 'Editar porciones' : 'Edit portions'}
+                        {i18n.language === 'es' ? 'Editar porciones y grasa' : 'Edit portions & fat'}
                       </Text>
                     </TouchableOpacity>
                   )}
