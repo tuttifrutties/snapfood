@@ -784,7 +784,7 @@ export default function CookingScreen() {
         >
           <View style={styles.modalOverlay}>
             <View style={[styles.confirmModal, { backgroundColor: theme.isDark ? '#1a1a2e' : '#fff' }]}>
-              <Ionicons name="help-circle" size={60} color="#FF6B6B" />
+              <Ionicons name="help-circle" size={60} color={theme.primary} />
               <Text style={[styles.confirmTitle, { color: theme.isDark ? '#fff' : '#000' }]}>
                 {i18n.language === 'es' ? '¿Estás seguro?' : 'Are you sure?'}
               </Text>
