@@ -77,6 +77,19 @@ export default function RecipeDetailScreen() {
     }
   }, [params.recipeData, params.selectedIngredients]);
 
+  // Calculate fat calories
+  const getFatCalories = () => {
+    const fatType = FAT_TYPES.find(f => f.id === selectedFatType);
+    if (!fatType) return 0;
+    return Math.round(fatType.caloriesPerTbsp * fatTablespoons);
+  };
+
+  // Get total calories including fat
+  const getTotalCalories = () => {
+    const baseCalories = (recipe?.calories || 0) * portions;
+    return baseCalories + getFatCalories();
+  };
+
   const saveToHistory = async (recipeData: any) => {
     try {
       const historyKey = `food_history_${userId}`;
