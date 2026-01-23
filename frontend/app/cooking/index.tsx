@@ -962,7 +962,7 @@ export default function CookingScreen() {
                     {/* Country/Cuisine badge */}
                     {(recipe.countryOfOrigin || recipe.cuisine) && (
                       <View style={styles.cuisineBadge}>
-                        <Ionicons name="globe-outline" size={14} color="#FF6B6B" />
+                        <Ionicons name="globe-outline" size={14} color={theme.primary} />
                         <Text style={styles.cuisineText}>
                           {recipe.cuisine || recipe.countryOfOrigin}
                           {recipe.countryOfOrigin && recipe.cuisine ? ` • ${recipe.countryOfOrigin}` : ''}
@@ -979,7 +979,7 @@ export default function CookingScreen() {
                     </View>
                     <TouchableOpacity style={styles.viewRecipeButton}>
                       <Text style={styles.viewRecipeButtonText}>{t('cooking.viewRecipe')}</Text>
-                      <Ionicons name="chevron-forward" size={20} color="#FF6B6B" />
+                      <Ionicons name="chevron-forward" size={20} color={theme.primary} />
                     </TouchableOpacity>
                   </TouchableOpacity>
                 ))}
@@ -1035,7 +1035,7 @@ export default function CookingScreen() {
                     {/* Country/Cuisine badge */}
                     {(recipe.countryOfOrigin || recipe.cuisine) && (
                       <View style={styles.cuisineBadge}>
-                        <Ionicons name="globe-outline" size={14} color="#FF6B6B" />
+                        <Ionicons name="globe-outline" size={14} color={theme.primary} />
                         <Text style={styles.cuisineText}>
                           {recipe.cuisine || recipe.countryOfOrigin}
                           {recipe.countryOfOrigin && recipe.cuisine ? ` • ${recipe.countryOfOrigin}` : ''}
@@ -1052,7 +1052,7 @@ export default function CookingScreen() {
                     </View>
                     <TouchableOpacity style={styles.viewRecipeButton}>
                       <Text style={styles.viewRecipeButtonText}>{t('cooking.viewRecipe')}</Text>
-                      <Ionicons name="chevron-forward" size={20} color="#FF6B6B" />
+                      <Ionicons name="chevron-forward" size={20} color={theme.primary} />
                     </TouchableOpacity>
                   </TouchableOpacity>
                 ))}
