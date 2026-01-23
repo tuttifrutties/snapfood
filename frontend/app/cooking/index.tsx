@@ -742,7 +742,7 @@ export default function CookingScreen() {
                               {item}
                             </Text>
                             {isSelected && (
-                              <Ionicons name="checkmark-circle" size={18} color="#FF6B6B" />
+                              <Ionicons name="checkmark-circle" size={18} color={theme.primary} />
                             )}
                           </TouchableOpacity>
                         );
