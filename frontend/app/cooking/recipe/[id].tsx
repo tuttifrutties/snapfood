@@ -283,24 +283,158 @@ export default function RecipeDetailScreen() {
 
           {/* Confirm Button - shows before instructions */}
           {!isConfirmed && (
-            <TouchableOpacity 
-              style={styles.confirmButton}
-              onPress={handleConfirmRecipe}
-              disabled={isConfirming}
-            >
-              {isConfirming ? (
-                <ActivityIndicator color="#fff" size="small" />
-              ) : (
-                <>
-                  <Ionicons name="checkmark-circle" size={24} color="#fff" />
-                  <Text style={styles.confirmButtonText}>
-                    {i18n.language === 'es' 
-                      ? '¡Quiero preparar esto!' 
-                      : 'I want to prepare this!'}
+            <>
+              {/* FAT SELECTOR - VERY IMPORTANT */}
+              <View style={styles.fatSelectorContainer}>
+                <View style={styles.fatSelectorHeader}>
+                  <Ionicons name="warning" size={24} color="#FFD700" />
+                  <Text style={styles.fatSelectorTitle}>
+                    {i18n.language === 'es' ? '⚠️ ¡IMPORTANTE! ¿Usaste grasa?' : '⚠️ IMPORTANT! Did you use fat?'}
                   </Text>
-                </>
-              )}
-            </TouchableOpacity>
+                </View>
+                <Text style={styles.fatSelectorSubtitle}>
+                  {i18n.language === 'es' 
+                    ? 'Las grasas suman muchas calorías. Selecciona el tipo y cantidad:'
+                    : 'Fats add many calories. Select type and amount:'}
+                </Text>
+
+                {/* Portions Selector */}
+                <View style={styles.portionRow}>
+                  <Text style={styles.portionLabel}>
+                    {i18n.language === 'es' ? 'Porciones:' : 'Portions:'}
+                  </Text>
+                  <View style={styles.portionButtons}>
+                    {[0.5, 1, 1.5, 2, 2.5, 3].map((p) => (
+                      <TouchableOpacity
+                        key={p}
+                        style={[
+                          styles.portionButton,
+                          portions === p && styles.portionButtonActive,
+                        ]}
+                        onPress={() => setPortions(p)}
+                      >
+                        <Text style={[
+                          styles.portionButtonText,
+                          portions === p && styles.portionButtonTextActive,
+                        ]}>
+                          {p}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                </View>
+
+                {/* Fat Type Selector */}
+                <Text style={styles.fatTypeLabel}>
+                  {i18n.language === 'es' ? 'Tipo de grasa:' : 'Fat type:'}
+                </Text>
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.fatTypeScroll}>
+                  {FAT_TYPES.map((fat) => (
+                    <TouchableOpacity
+                      key={fat.id}
+                      style={[
+                        styles.fatTypeButton,
+                        selectedFatType === fat.id && styles.fatTypeButtonActive,
+                      ]}
+                      onPress={() => {
+                        setSelectedFatType(fat.id);
+                        if (fat.id === 'none') setFatTablespoons(0);
+                      }}
+                    >
+                      <Text style={styles.fatTypeIcon}>{fat.icon}</Text>
+                      <Text style={[
+                        styles.fatTypeName,
+                        selectedFatType === fat.id && styles.fatTypeNameActive,
+                      ]}>
+                        {i18n.language === 'es' ? fat.es : fat.en}
+                      </Text>
+                      {fat.caloriesPerTbsp > 0 && (
+                        <Text style={styles.fatTypeCalories}>
+                          {fat.caloriesPerTbsp} cal/cda
+                        </Text>
+                      )}
+                    </TouchableOpacity>
+                  ))}
+                </ScrollView>
+
+                {/* Tablespoons Selector - only show if fat type selected */}
+                {selectedFatType !== 'none' && (
+                  <View style={styles.tablespoonRow}>
+                    <Text style={styles.tablespoonLabel}>
+                      {i18n.language === 'es' ? 'Cucharadas:' : 'Tablespoons:'}
+                    </Text>
+                    <View style={styles.tablespoonButtons}>
+                      {TABLESPOON_OPTIONS.map((tbsp) => (
+                        <TouchableOpacity
+                          key={tbsp}
+                          style={[
+                            styles.tablespoonButton,
+                            fatTablespoons === tbsp && styles.tablespoonButtonActive,
+                          ]}
+                          onPress={() => setFatTablespoons(tbsp)}
+                        >
+                          <Text style={[
+                            styles.tablespoonButtonText,
+                            fatTablespoons === tbsp && styles.tablespoonButtonTextActive,
+                          ]}>
+                            {tbsp}
+                          </Text>
+                        </TouchableOpacity>
+                      ))}
+                    </View>
+                  </View>
+                )}
+
+                {/* Total Calories Summary */}
+                <View style={styles.caloriesSummary}>
+                  <View style={styles.caloriesSummaryRow}>
+                    <Text style={styles.caloriesSummaryLabel}>
+                      {i18n.language === 'es' ? 'Receta base:' : 'Base recipe:'}
+                    </Text>
+                    <Text style={styles.caloriesSummaryValue}>
+                      {Math.round((recipe.calories || 0) * portions)} cal
+                    </Text>
+                  </View>
+                  {fatTablespoons > 0 && (
+                    <View style={styles.caloriesSummaryRow}>
+                      <Text style={styles.caloriesSummaryLabel}>
+                        + {i18n.language === 'es' ? 'Grasa:' : 'Fat:'} ({fatTablespoons} {i18n.language === 'es' ? 'cda' : 'tbsp'})
+                      </Text>
+                      <Text style={[styles.caloriesSummaryValue, { color: '#FFD700' }]}>
+                        +{getFatCalories()} cal
+                      </Text>
+                    </View>
+                  )}
+                  <View style={[styles.caloriesSummaryRow, styles.caloriesSummaryTotal]}>
+                    <Text style={styles.caloriesSummaryTotalLabel}>
+                      {i18n.language === 'es' ? 'TOTAL:' : 'TOTAL:'}
+                    </Text>
+                    <Text style={styles.caloriesSummaryTotalValue}>
+                      {getTotalCalories()} cal
+                    </Text>
+                  </View>
+                </View>
+              </View>
+
+              <TouchableOpacity 
+                style={styles.confirmButton}
+                onPress={handleConfirmRecipe}
+                disabled={isConfirming}
+              >
+                {isConfirming ? (
+                  <ActivityIndicator color="#fff" size="small" />
+                ) : (
+                  <>
+                    <Ionicons name="checkmark-circle" size={24} color="#fff" />
+                    <Text style={styles.confirmButtonText}>
+                      {i18n.language === 'es' 
+                        ? `¡Quiero preparar esto! (${getTotalCalories()} cal)` 
+                        : `I want to prepare this! (${getTotalCalories()} cal)`}
+                    </Text>
+                  </>
+                )}
+              </TouchableOpacity>
+            </>
           )}
 
           {/* Instructions - shown after confirmation */}
