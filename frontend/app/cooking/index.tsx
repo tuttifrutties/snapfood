@@ -614,7 +614,7 @@ export default function CookingScreen() {
                 onPress={() => toggleCategory('_selected_')}
               >
                 <View style={styles.categoryTitleRow}>
-                  <Ionicons name="checkmark-circle" size={20} color="#FF6B6B" />
+                  <Ionicons name="checkmark-circle" size={20} color={theme.primary} />
                   <Text style={[styles.categoryTitle, styles.selectedCategoryTitle]}>
                     {i18n.language === 'es' ? 'Seleccionados' : 'Selected'}
                   </Text>
