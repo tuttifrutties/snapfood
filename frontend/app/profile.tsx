@@ -605,15 +605,15 @@ export default function PersonalProfileScreen() {
 
         {/* Activities Card */}
         {profile && profile.activities && profile.activities.length > 0 && (
-          <View style={styles.activitiesCard}>
-            <Text style={styles.sectionTitle}>{t2.activities}</Text>
+          <View style={[styles.activitiesCard, { backgroundColor: theme.surface }]}>
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>{t2.activities}</Text>
             {profile.activities.map(activity => (
               <View key={activity.id} style={styles.activityItem}>
-                <Ionicons name={activity.icon as any} size={20} color="#FF6B6B" />
-                <Text style={styles.activityName}>
+                <Ionicons name={activity.icon as any} size={20} color={theme.primary} />
+                <Text style={[styles.activityName, { color: theme.text }]}>
                   {getActivityLabel(activity.id, i18n.language)}
                 </Text>
-                <Text style={styles.activityDetails}>
+                <Text style={[styles.activityDetails, { color: theme.textMuted }]}>
                   {activity.durationMinutes}' × {activity.daysPerWeek.length}d
                 </Text>
               </View>
@@ -622,7 +622,7 @@ export default function PersonalProfileScreen() {
         )}
 
         {/* Share Button */}
-        <TouchableOpacity style={styles.shareButton} onPress={handleShare}>
+        <TouchableOpacity style={[styles.shareButton, { backgroundColor: theme.primary }]} onPress={handleShare}>
           <Ionicons name="share-social" size={24} color="#fff" />
           <Text style={styles.shareButtonText}>{t2.share}</Text>
         </TouchableOpacity>
