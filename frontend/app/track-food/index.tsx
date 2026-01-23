@@ -69,6 +69,14 @@ export default function TrackFoodScreen() {
   const [selectedFood, setSelectedFood] = useState<ApiFoodItem | null>(null);
   const [foodPortions, setFoodPortions] = useState(1);
   const [isSearching, setIsSearching] = useState(false);
+  
+  // Fat selector state for search
+  const [selectedFatType, setSelectedFatType] = useState('none');
+  const [fatTablespoons, setFatTablespoons] = useState(0);
+  
+  // Fat selector state for photo
+  const [photoFatType, setPhotoFatType] = useState('none');
+  const [photoFatTablespoons, setPhotoFatTablespoons] = useState(0);
 
   const PORTION_OPTIONS = [0.5, 1, 1.5, 2, 2.5, 3];
 
