@@ -835,7 +835,7 @@ export default function CookingScreen() {
               </View>
 
               {/* Menu Title */}
-              <Text style={[styles.menuTitle, { color: theme.isDark ? '#FF6B6B' : '#FF6B6B' }]}>
+              <Text style={[styles.menuTitle, { color: theme.primary }]}>
                 {i18n.language === 'es' ? 'Cargando menú del chef...' : 'Loading chef menu...'}
               </Text>
 
