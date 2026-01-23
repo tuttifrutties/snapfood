@@ -50,6 +50,12 @@ export default function RecipeDetailScreen() {
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
+  
+  // Fat selector state
+  const [selectedFatType, setSelectedFatType] = useState('none');
+  const [fatTablespoons, setFatTablespoons] = useState(0);
+  const [portions, setPortions] = useState(1);
+  const [showFatSelector, setShowFatSelector] = useState(false);
 
   useEffect(() => {
     if (params.recipeData) {
