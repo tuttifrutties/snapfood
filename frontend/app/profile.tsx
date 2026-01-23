@@ -22,6 +22,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { usePremium } from '../src/contexts/PremiumContext';
 import { useTheme } from '../src/contexts/ThemeContext';
+import { useUser } from '../src/contexts/UserContext';
 import { useFocusEffect } from '@react-navigation/native';
 import {
   getUserNutritionProfile,
