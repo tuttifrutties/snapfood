@@ -557,7 +557,7 @@ export default function CookingScreen() {
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.secondaryButton} onPress={pickFromGallery}>
-              <Ionicons name="images" size={24} color="#FF6B6B" />
+              <Ionicons name="images" size={24} color={theme.primary} />
               <Text style={styles.secondaryButtonText}>{t('trackFood.chooseGallery')}</Text>
             </TouchableOpacity>
           </View>
