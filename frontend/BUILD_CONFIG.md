@@ -28,6 +28,8 @@ Estas versiones funcionan juntas:
 | react-native-worklets | 0.5.2 |
 | react-native-screens | 4.16.0 |
 | react-native-gesture-handler | 2.28.0 |
+| react-native-view-shot | latest |
+| expo-sharing | latest |
 | expo | ~54.x |
 | node (en eas.json) | 20.18.0 |
 
