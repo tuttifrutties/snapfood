@@ -95,9 +95,13 @@ def test_food_analysis(user_id):
         if response.status_code == 200:
             data = response.json()
             
-            # Check required fields
+            # Check required fields (basic)
             required_fields = ['dishName', 'ingredients', 'calories', 'protein', 'carbs', 'fats', 'portionSize', 'warnings']
             missing_fields = [field for field in required_fields if field not in data]
+            
+            # Check NEW smart portion fields
+            smart_portion_fields = ['foodType', 'typicalServings', 'servingDescription']
+            missing_smart_fields = [field for field in smart_portion_fields if field not in data]
             
             if not missing_fields:
                 print(f"✅ Food analysis successful")
@@ -109,7 +113,34 @@ def test_food_analysis(user_id):
                 print(f"   Fats: {data['fats']}g")
                 print(f"   Portion: {data['portionSize']}")
                 print(f"   Warnings: {data['warnings']}")
-                return data, True
+                
+                # Display NEW smart portion fields
+                print(f"\n🆕 SMART PORTION FIELDS:")
+                if not missing_smart_fields:
+                    print(f"   ✅ Food Type: {data['foodType']}")
+                    print(f"   ✅ Typical Servings: {data['typicalServings']}")
+                    print(f"   ✅ Serving Description: {data['servingDescription']}")
+                    
+                    # Check totalCalories for shareable items
+                    if data.get('foodType') == 'shareable' and 'totalCalories' in data:
+                        print(f"   ✅ Total Calories (whole item): {data['totalCalories']}")
+                    elif 'totalCalories' in data:
+                        print(f"   ℹ️ Total Calories: {data['totalCalories']}")
+                    
+                    # Validate foodType values
+                    valid_types = ['shareable', 'container', 'single']
+                    if data['foodType'] in valid_types:
+                        print(f"   ✅ Food type validation: PASSED")
+                    else:
+                        print(f"   ❌ Food type validation: FAILED (got '{data['foodType']}', expected one of {valid_types})")
+                        return data, False
+                        
+                    print(f"   🎯 ALL SMART PORTION FIELDS WORKING!")
+                    return data, True
+                else:
+                    print(f"   ❌ Missing smart portion fields: {missing_smart_fields}")
+                    print(f"   ⚠️ Smart portion logic may not be implemented correctly")
+                    return data, False
             else:
                 print(f"❌ Missing required fields: {missing_fields}")
                 print(f"   Response: {data}")
