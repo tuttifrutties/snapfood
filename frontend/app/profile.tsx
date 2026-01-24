@@ -535,43 +535,51 @@ export default function PersonalProfileScreen() {
               </View>
 
               <View style={styles.inputRow}>
-                <Text style={styles.inputLabel}>{t2.height}</Text>
+                <Text style={[styles.inputLabel, { color: theme.textMuted }]}>{t2.height}</Text>
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input, { backgroundColor: theme.surfaceVariant, color: theme.text }]}
                   value={editHeight}
                   onChangeText={setEditHeight}
                   keyboardType="decimal-pad"
                   placeholder="170"
-                  placeholderTextColor="#555"
+                  placeholderTextColor={theme.textMuted}
                 />
               </View>
 
               <View style={styles.inputRow}>
-                <Text style={styles.inputLabel}>{t2.age}</Text>
+                <Text style={[styles.inputLabel, { color: theme.textMuted }]}>{t2.age}</Text>
                 <TextInput
-                  style={styles.input}
+                  style={[styles.input, { backgroundColor: theme.surfaceVariant, color: theme.text }]}
                   value={editAge}
                   onChangeText={setEditAge}
                   keyboardType="number-pad"
                   placeholder="25"
-                  placeholderTextColor="#555"
+                  placeholderTextColor={theme.textMuted}
                 />
               </View>
 
-              <Text style={styles.inputLabel}>{t2.yourGoal}</Text>
+              <Text style={[styles.inputLabel, { color: theme.textMuted }]}>{t2.yourGoal}</Text>
               <View style={styles.goalButtons}>
                 {(['lose', 'maintain', 'gain'] as const).map(g => (
                   <TouchableOpacity
                     key={g}
-                    style={[styles.goalButton, editGoal === g && styles.goalButtonSelected]}
+                    style={[
+                      styles.goalButton, 
+                      { backgroundColor: theme.surfaceVariant },
+                      editGoal === g && { backgroundColor: theme.primary }
+                    ]}
                     onPress={() => setEditGoal(g)}
                   >
                     <Ionicons 
                       name={g === 'lose' ? 'trending-down' : g === 'gain' ? 'trending-up' : 'remove'} 
                       size={18} 
-                      color={editGoal === g ? '#fff' : '#aaa'} 
+                      color={editGoal === g ? '#fff' : theme.textMuted} 
                     />
-                    <Text style={[styles.goalButtonText, editGoal === g && styles.goalButtonTextSelected]}>
+                    <Text style={[
+                      styles.goalButtonText, 
+                      { color: theme.textMuted },
+                      editGoal === g && { color: '#fff' }
+                    ]}>
                       {g === 'lose' ? t2.lose : g === 'gain' ? t2.gain : t2.maintain}
                     </Text>
                   </TouchableOpacity>
@@ -579,10 +587,16 @@ export default function PersonalProfileScreen() {
               </View>
 
               <View style={styles.editButtons}>
-                <TouchableOpacity style={styles.cancelButton} onPress={() => setIsEditing(false)}>
-                  <Text style={styles.cancelButtonText}>{t2.cancel}</Text>
+                <TouchableOpacity 
+                  style={[styles.cancelButton, { backgroundColor: theme.surfaceVariant }]} 
+                  onPress={() => setIsEditing(false)}
+                >
+                  <Text style={[styles.cancelButtonText, { color: theme.textMuted }]}>{t2.cancel}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+                <TouchableOpacity 
+                  style={[styles.saveButton, { backgroundColor: theme.primary }]} 
+                  onPress={handleSave}
+                >
                   <Text style={styles.saveButtonText}>{t2.save}</Text>
                 </TouchableOpacity>
               </View>
