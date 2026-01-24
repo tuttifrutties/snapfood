@@ -300,32 +300,69 @@ export default function PersonalProfileScreen() {
   };
 
   const handleShare = async () => {
-    if (!profile || !weekSummary) return;
+    const summary = showingMonthly ? monthSummary : weekSummary;
+    if (!profile || !summary) return;
 
-    const goalText = editGoal === 'lose' ? t2.lose : editGoal === 'gain' ? t2.gain : t2.maintain;
+    // Show the share modal and capture image
+    setShowShareModal(true);
     
-    let progressText = '';
-    if (editGoal === 'lose' && weekSummary.daysInDeficit > weekSummary.daysTracked / 2) {
-      progressText = '🟢 ' + (i18n.language === 'es' ? '¡En camino a mi meta!' : 'On track to my goal!');
-    } else if (editGoal === 'gain' && weekSummary.daysInSurplus > weekSummary.daysTracked / 2) {
-      progressText = '🟢 ' + (i18n.language === 'es' ? '¡Construyendo músculo!' : 'Building muscle!');
-    } else if (editGoal === 'maintain' && weekSummary.daysInBalance > weekSummary.daysTracked / 2) {
-      progressText = '🟢 ' + (i18n.language === 'es' ? '¡Manteniendo el equilibrio!' : 'Keeping balance!');
-    } else {
-      progressText = '💪 ' + (i18n.language === 'es' ? '¡Sigo trabajando en ello!' : 'Still working on it!');
-    }
+    // Wait for modal to render
+    setTimeout(async () => {
+      await captureAndShare();
+    }, 500);
+  };
 
-    const message = i18n.language === 'es'
-      ? `📊 Mi progreso semanal en SnapFood\n\n🎯 Objetivo: ${goalText}\n📅 ${weekSummary.daysTracked} días registrados\n🔥 Promedio: ${weekSummary.averageCalories} cal/día\n\n${progressText}\n\n#SnapFood #Nutrición #Salud`
-      : `📊 My weekly progress on SnapFood\n\n🎯 Goal: ${goalText}\n📅 ${weekSummary.daysTracked} days tracked\n🔥 Average: ${weekSummary.averageCalories} cal/day\n\n${progressText}\n\n#SnapFood #Nutrition #Health`;
-
+  const captureAndShare = async () => {
     try {
-      await Share.share({
-        message,
-        title: 'SnapFood Progress',
-      });
+      setIsCapturing(true);
+      
+      if (shareImageRef.current) {
+        const uri = await shareImageRef.current.capture?.();
+        
+        if (uri) {
+          const isAvailable = await Sharing.isAvailableAsync();
+          if (isAvailable) {
+            await Sharing.shareAsync(uri, {
+              mimeType: 'image/png',
+              dialogTitle: 'SnapFood Progress',
+            });
+          } else {
+            // Fallback to text sharing
+            const summary = showingMonthly ? monthSummary : weekSummary;
+            const goalText = editGoal === 'lose' ? t2.lose : editGoal === 'gain' ? t2.gain : t2.maintain;
+            const message = i18n.language === 'es'
+              ? `📊 Mi progreso en SnapFood\n\n🎯 Objetivo: ${goalText}\n📅 ${summary.daysTracked} días registrados\n🔥 Promedio: ${summary.averageCalories} cal/día\n\n#SnapFood #Nutrición`
+              : `📊 My progress on SnapFood\n\n🎯 Goal: ${goalText}\n📅 ${summary.daysTracked} days tracked\n🔥 Average: ${summary.averageCalories} cal/day\n\n#SnapFood #Nutrition`;
+            await Share.share({ message });
+          }
+        }
+      }
     } catch (error) {
       console.error('Failed to share:', error);
+      Alert.alert(
+        i18n.language === 'es' ? 'Error' : 'Error',
+        i18n.language === 'es' ? 'No se pudo compartir la imagen' : 'Could not share the image'
+      );
+    } finally {
+      setIsCapturing(false);
+      setShowShareModal(false);
+    }
+  };
+
+  // Get colors based on goal for the pie chart
+  const getStatusColor = (status: 'deficit' | 'balance' | 'surplus'): string => {
+    const goal = profile?.goal || 'maintain';
+    if (goal === 'lose') {
+      if (status === 'deficit') return '#4CAF50';
+      if (status === 'balance') return '#FFC107';
+      return '#F44336';
+    } else if (goal === 'gain') {
+      if (status === 'surplus') return '#4CAF50';
+      if (status === 'balance') return '#FFC107';
+      return '#F44336';
+    } else {
+      if (status === 'balance') return '#4CAF50';
+      return '#FFC107';
     }
   };
 
