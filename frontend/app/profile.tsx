@@ -589,31 +589,31 @@ export default function PersonalProfileScreen() {
             </>
           ) : (
             <>
-              <View style={styles.dataRow}>
-                <Text style={styles.dataLabel}>{t2.weight}</Text>
-                <Text style={styles.dataValue}>{profile?.weight || '-'} kg</Text>
+              <View style={[styles.dataRow, { borderBottomColor: theme.divider }]}>
+                <Text style={[styles.dataLabel, { color: theme.textMuted }]}>{t2.weight}</Text>
+                <Text style={[styles.dataValue, { color: theme.text }]}>{profile?.weight || '-'} kg</Text>
               </View>
-              <View style={styles.dataRow}>
-                <Text style={styles.dataLabel}>{t2.height}</Text>
-                <Text style={styles.dataValue}>{profile?.height || '-'} cm</Text>
+              <View style={[styles.dataRow, { borderBottomColor: theme.divider }]}>
+                <Text style={[styles.dataLabel, { color: theme.textMuted }]}>{t2.height}</Text>
+                <Text style={[styles.dataValue, { color: theme.text }]}>{profile?.height || '-'} cm</Text>
               </View>
-              <View style={styles.dataRow}>
-                <Text style={styles.dataLabel}>{t2.age}</Text>
-                <Text style={styles.dataValue}>{profile?.age || '-'}</Text>
+              <View style={[styles.dataRow, { borderBottomColor: theme.divider }]}>
+                <Text style={[styles.dataLabel, { color: theme.textMuted }]}>{t2.age}</Text>
+                <Text style={[styles.dataValue, { color: theme.text }]}>{profile?.age || '-'}</Text>
               </View>
-              <View style={styles.dataRow}>
-                <Text style={styles.dataLabel}>{t2.yourGoal}</Text>
-                <Text style={styles.dataValueHighlight}>
+              <View style={[styles.dataRow, { borderBottomColor: theme.divider }]}>
+                <Text style={[styles.dataLabel, { color: theme.textMuted }]}>{t2.yourGoal}</Text>
+                <Text style={[styles.dataValueHighlight, { color: theme.primary }]}>
                   {profile?.goal === 'lose' ? t2.lose : profile?.goal === 'gain' ? t2.gain : t2.maintain}
                 </Text>
               </View>
-              <View style={styles.dataRow}>
-                <Text style={styles.dataLabel}>{t2.tdee}</Text>
-                <Text style={styles.dataValue}>{profile?.tdee || '-'} {t2.cal}</Text>
+              <View style={[styles.dataRow, { borderBottomColor: theme.divider }]}>
+                <Text style={[styles.dataLabel, { color: theme.textMuted }]}>{t2.tdee}</Text>
+                <Text style={[styles.dataValue, { color: theme.text }]}>{profile?.tdee || '-'} {t2.cal}</Text>
               </View>
-              <View style={styles.dataRow}>
-                <Text style={styles.dataLabel}>{t2.targetCalories}</Text>
-                <Text style={styles.dataValueHighlight}>{profile?.targetCalories || '-'} {t2.cal}</Text>
+              <View style={[styles.dataRow, { borderBottomColor: theme.divider }]}>
+                <Text style={[styles.dataLabel, { color: theme.textMuted }]}>{t2.targetCalories}</Text>
+                <Text style={[styles.dataValueHighlight, { color: theme.primary }]}>{profile?.targetCalories || '-'} {t2.cal}</Text>
               </View>
             </>
           )}
