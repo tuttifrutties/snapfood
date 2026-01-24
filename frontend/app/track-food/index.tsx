@@ -341,7 +341,11 @@ export default function TrackFoodScreen() {
         const base64 = reader.result as string;
         const base64Data = base64.split(',')[1];
 
-        // Save with adjusted values based on portions
+        const fatType = FAT_TYPES.find(f => f.id === photoFatType);
+        const fatCalories = getPhotoFatCalories();
+        const totalCalories = getAdjustedValue(analysisResult.calories) + fatCalories;
+
+        // Save with adjusted values based on portions and fat
         await fetch(`${API_URL}/api/meals`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -349,15 +353,23 @@ export default function TrackFoodScreen() {
             userId,
             photoBase64: base64Data,
             dishName: analysisResult.dishName,
-            calories: getAdjustedValue(analysisResult.calories),
+            calories: totalCalories,
             protein: parseFloat(getAdjustedDecimal(analysisResult.protein)),
             carbs: parseFloat(getAdjustedDecimal(analysisResult.carbs)),
-            fats: parseFloat(getAdjustedDecimal(analysisResult.fats)),
+            fats: parseFloat(getAdjustedDecimal(analysisResult.fats)) + (photoFatTablespoons > 0 ? Math.round(photoFatTablespoons * 14) : 0),
             ingredients: analysisResult.ingredients,
             warnings: analysisResult.warnings,
             portions: portions,
+            // Fat tracking
+            fatType: photoFatType,
+            fatTypeName: fatType ? (i18n.language === 'es' ? fatType.es : fatType.en) : null,
+            fatTablespoons: photoFatTablespoons,
+            fatCalories: fatCalories,
           }),
         });
+
+        // Update daily calories (with fat included)
+        await updateDailyCalories(totalCalories);
 
         Alert.alert(t('common.success'), t('trackFood.mealSaved'));
         router.back();
