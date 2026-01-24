@@ -279,7 +279,7 @@ export const getWeekSummary = async (): Promise<{
       // Don't check future dates
       if (checkDate > new Date()) continue;
 
-      const dateKey = checkDate.toISOString().split('T')[0];
+      const dateKey = getLocalDateString(checkDate);
       const key = `daily_calories_${dateKey}`;
       const data = await AsyncStorage.getItem(key);
 
