@@ -1664,3 +1664,166 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
+// Styles for the share image card
+const shareStyles = StyleSheet.create({
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  shareCard: {
+    width: 350,
+    backgroundColor: '#1a1a1a',
+    borderRadius: 24,
+    overflow: 'hidden',
+  },
+  cardContainer: {
+    padding: 24,
+  },
+  cardHeader: {
+    alignItems: 'center',
+    marginBottom: 20,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+  },
+  logoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 8,
+  },
+  logoText: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  periodText: {
+    fontSize: 14,
+    color: '#888',
+    textTransform: 'uppercase',
+    letterSpacing: 2,
+  },
+  userName: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#fff',
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+  chartSection: {
+    marginBottom: 20,
+  },
+  pieChartContainer: {
+    alignItems: 'center',
+  },
+  pieChart: {
+    flexDirection: 'row',
+    height: 32,
+    borderRadius: 16,
+    overflow: 'hidden',
+    marginBottom: 16,
+    width: '100%',
+  },
+  pieSegment: {
+    height: '100%',
+  },
+  legendContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+  },
+  legendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  legendDot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+  },
+  legendText: {
+    fontSize: 12,
+    color: '#aaa',
+  },
+  statsGrid: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginBottom: 20,
+    paddingVertical: 16,
+    backgroundColor: '#252525',
+    borderRadius: 16,
+  },
+  statBox: {
+    alignItems: 'center',
+  },
+  statValue: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  statLabel: {
+    fontSize: 11,
+    color: '#888',
+    marginTop: 4,
+    textTransform: 'uppercase',
+  },
+  goalBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 30,
+    marginBottom: 16,
+  },
+  goalText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#fff',
+  },
+  progressBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    borderRadius: 12,
+    marginBottom: 16,
+  },
+  progressText: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  footer: {
+    alignItems: 'center',
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#333',
+  },
+  footerText: {
+    fontSize: 12,
+    color: '#666',
+    letterSpacing: 1,
+  },
+  loadingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    color: '#fff',
+    fontSize: 16,
+    marginTop: 12,
+  },
+});
