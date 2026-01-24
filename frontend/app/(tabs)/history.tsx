@@ -869,7 +869,7 @@ export default function HistoryScreen() {
                   </Text>
                   
                   <Text style={[styles.detailTime, { color: theme.textMuted }]}>
-                    {format(new Date(detailMeal.timestamp), "EEEE d 'de' MMMM, h:mm a", { locale: dateLocale })}
+                    {format(parseTimestamp(detailMeal.timestamp), "EEEE d 'de' MMMM, h:mm a", { locale: dateLocale })}
                   </Text>
 
                   {/* Badges */}
