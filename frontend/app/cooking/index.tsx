@@ -1147,7 +1147,6 @@ const styles = StyleSheet.create({
   primaryButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FF6B6B',
     paddingHorizontal: 32,
     paddingVertical: 16,
     borderRadius: 12,
@@ -1164,14 +1163,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: '#FF6B6B',
     paddingHorizontal: 32,
     paddingVertical: 16,
     borderRadius: 12,
     gap: 8,
   },
   secondaryButtonText: {
-    color: '#FF6B6B',
     fontSize: 18,
     fontWeight: '600',
   },
