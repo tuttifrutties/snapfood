@@ -662,14 +662,14 @@ export default function CookingScreen() {
                       key={item}
                       style={[
                         styles.ingredientItem,
-                        isSelected && styles.ingredientItemSelected,
+                        isSelected && { borderColor: theme.primary, backgroundColor: theme.primary + '20' },
                       ]}
                       onPress={() => toggleIngredient(item)}
                     >
                       <Text
                         style={[
                           styles.ingredientText,
-                          isSelected && styles.ingredientTextSelected,
+                          isSelected && [styles.ingredientTextSelected, { color: theme.primary }],
                         ]}
                         numberOfLines={2}
                       >
@@ -707,7 +707,7 @@ export default function CookingScreen() {
                     <View style={styles.categoryTitleRow}>
                       <Text style={styles.categoryTitle}>{category.name}</Text>
                       {selectedInCategory > 0 && (
-                        <View style={styles.categoryBadge}>
+                        <View style={[styles.categoryBadge, { backgroundColor: theme.primary }]}>
                           <Text style={styles.categoryBadgeText}>{selectedInCategory}</Text>
                         </View>
                       )}
