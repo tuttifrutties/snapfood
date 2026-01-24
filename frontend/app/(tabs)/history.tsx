@@ -261,7 +261,7 @@ export default function HistoryScreen() {
       const newEntry = {
         id: `cooked_again_${Date.now()}`,
         userId,
-        timestamp: new Date().toISOString(),
+        timestamp: new Date().getTime(), // Store as Unix timestamp (ms) for consistent timezone handling
         foodName: detailMeal.dishName,
         mealType: detailMeal.isCooked ? 'cooking' : 'food',
         portions: 1,
