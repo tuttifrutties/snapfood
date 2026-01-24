@@ -433,7 +433,7 @@ export default function PersonalProfileScreen() {
                       (profile?.goal === 'maintain' && weekSummary.daysInBalance >= weekSummary.daysTracked / 2)) ? (
                       <>
                         <Ionicons name="checkmark-circle" size={24} color="#4CAF50" />
-                        <Text style={[styles.progressText, { color: theme.text }]}>{t2.onTrack}</Text>
+                        <Text style={[styles.progressTextGood, { color: theme.text }]}>{t2.onTrack}</Text>
                       </>
                     ) : (
                       <>
@@ -490,7 +490,7 @@ export default function PersonalProfileScreen() {
                       (profile?.goal === 'maintain' && monthSummary.daysInBalance >= monthSummary.daysTracked / 2)) ? (
                       <>
                         <Ionicons name="checkmark-circle" size={24} color="#4CAF50" />
-                        <Text style={[styles.progressText, { color: theme.text }]}>{t2.onTrack}</Text>
+                        <Text style={[styles.progressTextGood, { color: theme.text }]}>{t2.onTrack}</Text>
                       </>
                     ) : (
                       <>
