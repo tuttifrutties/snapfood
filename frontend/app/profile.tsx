@@ -1,7 +1,7 @@
 /**
  * Personal Profile Screen ("Mi Ficha Personal")
  * Premium feature - Shows user stats, weekly progress, and allows editing
- * Includes shareable weekly summary with chart
+ * Includes shareable weekly summary with chart as IMAGE
  */
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
@@ -16,6 +16,7 @@ import {
   Share,
   Dimensions,
   Modal,
+  Platform,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -24,6 +25,8 @@ import { usePremium } from '../src/contexts/PremiumContext';
 import { useTheme } from '../src/contexts/ThemeContext';
 import { useUser } from '../src/contexts/UserContext';
 import { useFocusEffect } from '@react-navigation/native';
+import ViewShot from 'react-native-view-shot';
+import * as Sharing from 'expo-sharing';
 import {
   getUserNutritionProfile,
   saveUserNutritionProfile,
