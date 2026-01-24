@@ -78,6 +78,11 @@ class AnalyzeFoodResponse(BaseModel):
     fats: float
     portionSize: str
     warnings: List[str]
+    # Smart portion fields
+    foodType: Optional[str] = "single"  # "shareable" (pizza, cake), "container" (can, bottle), "single" (plate, sandwich)
+    typicalServings: Optional[int] = 1  # e.g., 8 for pizza, 1 for a can of beer, 1 for a plate
+    totalCalories: Optional[int] = None  # Total calories if shareable (e.g., whole pizza)
+    servingDescription: Optional[str] = None  # e.g., "1 slice", "1 can (375ml)", "1 plate"
 
 class SaveMealRequest(BaseModel):
     userId: str
