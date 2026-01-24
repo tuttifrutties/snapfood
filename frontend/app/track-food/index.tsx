@@ -764,22 +764,69 @@ export default function TrackFoodScreen() {
                     style={[
                       styles.portionButton,
                       { backgroundColor: theme.surfaceVariant },
-                      portions === option && { backgroundColor: theme.primary },
+                      portions === option && !showCustomPortions && { backgroundColor: theme.primary },
                     ]}
-                    onPress={() => setPortions(option)}
+                    onPress={() => {
+                      setPortions(option);
+                      setShowCustomPortions(false);
+                      setCustomPortions('');
+                    }}
                   >
                     <Text
                       style={[
                         styles.portionButtonText,
                         { color: theme.textMuted },
-                        portions === option && { color: '#fff' },
+                        portions === option && !showCustomPortions && { color: '#fff' },
                       ]}
                     >
                       {option}
                     </Text>
                   </TouchableOpacity>
                 ))}
+                {/* Custom portions button */}
+                <TouchableOpacity
+                  style={[
+                    styles.portionButton,
+                    { backgroundColor: theme.surfaceVariant },
+                    showCustomPortions && { backgroundColor: theme.primary },
+                  ]}
+                  onPress={() => setShowCustomPortions(true)}
+                >
+                  <Text
+                    style={[
+                      styles.portionButtonText,
+                      { color: theme.textMuted },
+                      showCustomPortions && { color: '#fff' },
+                    ]}
+                  >
+                    ...
+                  </Text>
+                </TouchableOpacity>
               </View>
+              
+              {/* Custom portions input */}
+              {showCustomPortions && (
+                <View style={styles.customPortionsContainer}>
+                  <TextInput
+                    style={[styles.customPortionsInput, { backgroundColor: theme.surfaceVariant, color: theme.text }]}
+                    placeholder={i18n.language === 'es' ? 'Ej: 6' : 'E.g.: 6'}
+                    placeholderTextColor={theme.textMuted}
+                    keyboardType="numeric"
+                    value={customPortions}
+                    onChangeText={(text) => {
+                      setCustomPortions(text);
+                      const num = parseFloat(text);
+                      if (!isNaN(num) && num > 0) {
+                        setPortions(num);
+                      }
+                    }}
+                    autoFocus
+                  />
+                  <Text style={[styles.customPortionsHint, { color: theme.textMuted }]}>
+                    {i18n.language === 'es' ? 'porciones' : 'portions'}
+                  </Text>
+                </View>
+              )}
             </View>
 
             {/* FAT SELECTOR FOR PHOTO ANALYSIS */}
