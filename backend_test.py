@@ -960,6 +960,10 @@ def run_full_test_suite():
     analysis_data, success = test_food_analysis(user_id)
     results['food_analysis'] = success
     
+    # Test 2.5: Smart Portion Logic (NEW FEATURE)
+    smart_success = test_smart_portion_scenarios(user_id)
+    results['smart_portion_logic'] = smart_success
+    
     if not success:
         print("\n❌ Food analysis failed - this is the core feature!")
         analysis_data = {
