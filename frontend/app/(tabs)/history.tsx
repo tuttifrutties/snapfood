@@ -169,7 +169,7 @@ export default function HistoryScreen() {
 
       // Combine API meals and local meals
       const allMeals = [...(mealsData.meals || []), ...transformedLocalMeals]
-        .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+        .sort((a, b) => parseTimestamp(b.timestamp).getTime() - parseTimestamp(a.timestamp).getTime());
 
       setMeals(allMeals);
       setDailyTotals(totalsData);
