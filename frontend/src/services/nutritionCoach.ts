@@ -184,11 +184,22 @@ export const getUserName = async (): Promise<string | null> => {
 };
 
 /**
+ * Get local date string in YYYY-MM-DD format
+ * This ensures the date is in the user's local timezone
+ */
+const getLocalDateString = (date: Date = new Date()): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
+/**
  * Update daily calories (called when meal is saved)
  */
 export const updateDailyCalories = async (calories: number): Promise<void> => {
   try {
-    const today = new Date().toISOString().split('T')[0];
+    const today = getLocalDateString();
     const key = `daily_calories_${today}`;
     
     const existing = await AsyncStorage.getItem(key);
@@ -206,7 +217,7 @@ export const updateDailyCalories = async (calories: number): Promise<void> => {
  */
 export const getTodayCalories = async (): Promise<number> => {
   try {
-    const today = new Date().toISOString().split('T')[0];
+    const today = getLocalDateString();
     const key = `daily_calories_${today}`;
     const data = await AsyncStorage.getItem(key);
     return data ? parseInt(data) : 0;
