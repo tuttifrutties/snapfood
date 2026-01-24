@@ -135,11 +135,16 @@ export default function PersonalProfileScreen() {
   const [configuringActivity, setConfiguringActivity] = useState<string | null>(null);
   const [activityMinutes, setActivityMinutes] = useState(30);
   const [activityDays, setActivityDays] = useState<number[]>([1, 3, 5]);
+  const [showExtendedMinutes, setShowExtendedMinutes] = useState(false);
 
   // Day labels
   const dayLabels = i18n.language === 'es' 
     ? ['L', 'M', 'X', 'J', 'V', 'S', 'D']
     : ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
+
+  // Minute options
+  const basicMinutes = [15, 30, 45, 60, 90, 120];
+  const extendedMinutes = [150, 180, 210, 240, 270, 300, 330, 360, 390, 420, 450, 480, 510, 540, 570, 600];
 
   // Get personalized title
   const getPersonalizedTitle = () => {
