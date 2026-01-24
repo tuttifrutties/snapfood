@@ -739,36 +739,101 @@ export default function PersonalProfileScreen() {
                             {i18n.language === 'es' ? 'Minutos por sesión:' : 'Minutes per session:'}
                           </Text>
                           <View style={styles.minutesRow}>
-                            {[15, 30, 45, 60, 90, 120].map(mins => (
-                              <TouchableOpacity
-                                key={mins}
-                                style={[
-                                  styles.minuteChip,
-                                  { backgroundColor: theme.surface },
-                                  (isSelected ? existingActivity?.durationMinutes : activityMinutes) === mins && 
-                                    { backgroundColor: theme.primary }
-                                ]}
-                                onPress={() => {
-                                  if (isSelected && existingActivity) {
-                                    setEditActivities(editActivities.map(a => 
-                                      a.id === activity.id ? { ...a, durationMinutes: mins } : a
-                                    ));
-                                  } else {
-                                    setActivityMinutes(mins);
-                                  }
-                                }}
-                              >
-                                <Text style={[
-                                  styles.minuteChipText,
-                                  { color: theme.textMuted },
-                                  (isSelected ? existingActivity?.durationMinutes : activityMinutes) === mins && 
-                                    { color: '#fff' }
-                                ]}>
-                                  {mins}'
-                                </Text>
-                              </TouchableOpacity>
-                            ))}
+                            {basicMinutes.map(mins => {
+                              const currentMins = isSelected ? existingActivity?.durationMinutes : activityMinutes;
+                              return (
+                                <TouchableOpacity
+                                  key={mins}
+                                  style={[
+                                    styles.minuteChip,
+                                    { backgroundColor: theme.surface },
+                                    currentMins === mins && { backgroundColor: theme.primary }
+                                  ]}
+                                  onPress={() => {
+                                    if (isSelected && existingActivity) {
+                                      setEditActivities(editActivities.map(a => 
+                                        a.id === activity.id ? { ...a, durationMinutes: mins } : a
+                                      ));
+                                    } else {
+                                      setActivityMinutes(mins);
+                                    }
+                                  }}
+                                >
+                                  <Text style={[
+                                    styles.minuteChipText,
+                                    { color: theme.textMuted },
+                                    currentMins === mins && { color: '#fff' }
+                                  ]}>
+                                    {mins}'
+                                  </Text>
+                                </TouchableOpacity>
+                              );
+                            })}
+                            {/* More options button */}
+                            <TouchableOpacity
+                              style={[
+                                styles.minuteChip,
+                                { backgroundColor: theme.surface },
+                                extendedMinutes.includes(isSelected ? existingActivity?.durationMinutes || 0 : activityMinutes) && { backgroundColor: theme.primary }
+                              ]}
+                              onPress={() => setShowExtendedMinutes(!showExtendedMinutes)}
+                            >
+                              <Text style={[
+                                styles.minuteChipText,
+                                { color: theme.textMuted },
+                                extendedMinutes.includes(isSelected ? existingActivity?.durationMinutes || 0 : activityMinutes) && { color: '#fff' }
+                              ]}>
+                                ...
+                              </Text>
+                            </TouchableOpacity>
                           </View>
+                          
+                          {/* Extended minutes (150-600) */}
+                          {showExtendedMinutes && (
+                            <View style={[styles.extendedMinutesContainer, { backgroundColor: theme.surface }]}>
+                              <Text style={[styles.extendedMinutesTitle, { color: theme.textMuted }]}>
+                                {i18n.language === 'es' ? 'Más opciones (hasta 10 horas):' : 'More options (up to 10 hours):'}
+                              </Text>
+                              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                                <View style={styles.extendedMinutesRow}>
+                                  {extendedMinutes.map(mins => {
+                                    const currentMins = isSelected ? existingActivity?.durationMinutes : activityMinutes;
+                                    const hours = Math.floor(mins / 60);
+                                    const remainingMins = mins % 60;
+                                    const label = remainingMins > 0 ? `${hours}h${remainingMins}'` : `${hours}h`;
+                                    return (
+                                      <TouchableOpacity
+                                        key={mins}
+                                        style={[
+                                          styles.extendedMinuteChip,
+                                          { backgroundColor: theme.surfaceVariant },
+                                          currentMins === mins && { backgroundColor: theme.primary }
+                                        ]}
+                                        onPress={() => {
+                                          if (isSelected && existingActivity) {
+                                            setEditActivities(editActivities.map(a => 
+                                              a.id === activity.id ? { ...a, durationMinutes: mins } : a
+                                            ));
+                                          } else {
+                                            setActivityMinutes(mins);
+                                          }
+                                          setShowExtendedMinutes(false);
+                                        }}
+                                      >
+                                        <Text style={[
+                                          styles.extendedMinuteChipText,
+                                          { color: theme.textMuted },
+                                          currentMins === mins && { color: '#fff' }
+                                        ]}>
+                                          {label}
+                                        </Text>
+                                      </TouchableOpacity>
+                                    );
+                                  })}
+                                </View>
+                              </ScrollView>
+                            </View>
+                          )}
                           
                           {/* Days */}
                           <Text style={[styles.configLabel, { color: theme.text, marginTop: 12 }]}>
