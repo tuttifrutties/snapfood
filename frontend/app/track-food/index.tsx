@@ -352,9 +352,16 @@ export default function TrackFoodScreen() {
 
         const fatType = FAT_TYPES.find(f => f.id === photoFatType);
         const fatCalories = getPhotoFatCalories();
-        const totalCalories = getAdjustedValue(analysisResult.calories) + fatCalories;
+        
+        // Calculate added ingredients calories
+        const addedCalories = addedIngredients.reduce((sum, ing) => sum + ing.calories, 0);
+        const addedProtein = addedIngredients.reduce((sum, ing) => sum + ing.protein, 0);
+        const addedCarbs = addedIngredients.reduce((sum, ing) => sum + ing.carbs, 0);
+        const addedFats = addedIngredients.reduce((sum, ing) => sum + ing.fats, 0);
+        
+        const totalCalories = getAdjustedValue(analysisResult.calories) + fatCalories + addedCalories;
 
-        // Save with adjusted values based on portions and fat
+        // Save with adjusted values based on portions, fat and added ingredients
         await fetch(`${API_URL}/api/meals`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -363,10 +370,10 @@ export default function TrackFoodScreen() {
             photoBase64: base64Data,
             dishName: analysisResult.dishName,
             calories: totalCalories,
-            protein: parseFloat(getAdjustedDecimal(analysisResult.protein)),
-            carbs: parseFloat(getAdjustedDecimal(analysisResult.carbs)),
-            fats: parseFloat(getAdjustedDecimal(analysisResult.fats)) + (photoFatTablespoons > 0 ? Math.round(photoFatTablespoons * 14) : 0),
-            ingredients: analysisResult.ingredients,
+            protein: parseFloat(getAdjustedDecimal(analysisResult.protein)) + addedProtein,
+            carbs: parseFloat(getAdjustedDecimal(analysisResult.carbs)) + addedCarbs,
+            fats: parseFloat(getAdjustedDecimal(analysisResult.fats)) + addedFats + (photoFatTablespoons > 0 ? Math.round(photoFatTablespoons * 14) : 0),
+            ingredients: [...analysisResult.ingredients, ...addedIngredients.map(i => i.name)],
             warnings: analysisResult.warnings,
             portions: portions,
             // Fat tracking
@@ -374,10 +381,12 @@ export default function TrackFoodScreen() {
             fatTypeName: fatType ? (i18n.language === 'es' ? fatType.es : fatType.en) : null,
             fatTablespoons: photoFatTablespoons,
             fatCalories: fatCalories,
+            // Added ingredients
+            addedIngredients: addedIngredients,
           }),
         });
 
-        // Update daily calories (with fat included)
+        // Update daily calories (with fat and added ingredients included)
         await updateDailyCalories(totalCalories);
 
         Alert.alert(t('common.success'), t('trackFood.mealSaved'));
