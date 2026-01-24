@@ -13,10 +13,37 @@ from datetime import datetime
 BACKEND_URL = "https://nutritrack-upgrade-1.preview.emergentagent.com/api"
 
 def create_simple_test_image():
-    """Create a minimal test image as base64"""
-    # Simple 1x1 pixel PNG
-    png_data = b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x02\x00\x00\x00\x90wS\xde\x00\x00\x00\tpHYs\x00\x00\x0b\x13\x00\x00\x0b\x13\x01\x00\x9a\x9c\x18\x00\x00\x00\x0cIDATx\x9cc```\x00\x00\x00\x04\x00\x01\xdd\x8d\xb4\x1c\x00\x00\x00\x00IEND\xaeB`\x82'
-    return base64.b64encode(png_data).decode('utf-8')
+    """Create a proper test image as base64 using PIL"""
+    try:
+        from PIL import Image, ImageDraw
+        import io
+        
+        # Create a simple colored image representing food
+        img = Image.new('RGB', (200, 200), color='orange')
+        
+        # Add some simple shapes to make it look like food
+        draw = ImageDraw.Draw(img)
+        
+        # Draw a circle (pizza base)
+        draw.ellipse([50, 50, 150, 150], fill='wheat', outline='brown', width=3)
+        
+        # Add some toppings (red circles for pepperoni)
+        draw.ellipse([70, 70, 85, 85], fill='red')
+        draw.ellipse([110, 80, 125, 95], fill='red')
+        draw.ellipse([90, 120, 105, 135], fill='red')
+        
+        # Convert to base64
+        buffer = io.BytesIO()
+        img.save(buffer, format='JPEG')
+        img_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
+        
+        return img_base64
+        
+    except ImportError:
+        # Fallback: create a simple valid JPEG base64
+        # This is a minimal valid JPEG header + data
+        jpeg_data = b'\xff\xd8\xff\xe0\x00\x10JFIF\x00\x01\x01\x01\x00H\x00H\x00\x00\xff\xdb\x00C\x00\x08\x06\x06\x07\x06\x05\x08\x07\x07\x07\t\t\x08\n\x0c\x14\r\x0c\x0b\x0b\x0c\x19\x12\x13\x0f\x14\x1d\x1a\x1f\x1e\x1d\x1a\x1c\x1c $.\' ",#\x1c\x1c(7),01444\x1f\'9=82<.342\xff\xc0\x00\x11\x08\x00\x01\x00\x01\x01\x01\x11\x00\x02\x11\x01\x03\x11\x01\xff\xc4\x00\x14\x00\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x08\xff\xc4\x00\x14\x10\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\xff\xda\x00\x0c\x03\x01\x00\x02\x11\x03\x11\x00\x3f\x00\xaa\xff\xd9'
+        return base64.b64encode(jpeg_data).decode('utf-8')
 
 def test_smart_portion_endpoint():
     """Test the /api/analyze-food endpoint for smart portion fields"""
