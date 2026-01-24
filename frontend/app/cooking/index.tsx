@@ -728,14 +728,14 @@ export default function CookingScreen() {
                             key={item}
                             style={[
                               styles.ingredientItem,
-                              isSelected && styles.ingredientItemSelected,
+                              isSelected && { borderColor: theme.primary, backgroundColor: theme.primary + '20' },
                             ]}
                             onPress={() => toggleIngredient(item)}
                           >
                             <Text
                               style={[
                                 styles.ingredientText,
-                                isSelected && styles.ingredientTextSelected,
+                                isSelected && [styles.ingredientTextSelected, { color: theme.primary }],
                               ]}
                               numberOfLines={2}
                             >
@@ -760,6 +760,7 @@ export default function CookingScreen() {
           <TouchableOpacity
             style={[
               styles.getSuggestionsButton,
+              { backgroundColor: theme.primary },
               selectedIngredients.length === 0 && styles.getSuggestionsButtonDisabled
             ]}
             onPress={handleGetSuggestionsPress}
