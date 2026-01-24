@@ -1357,6 +1357,30 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '500',
   },
+  extendedMinutesContainer: {
+    marginTop: 10,
+    padding: 12,
+    borderRadius: 10,
+  },
+  extendedMinutesTitle: {
+    fontSize: 12,
+    marginBottom: 8,
+  },
+  extendedMinutesRow: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  extendedMinuteChip: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 16,
+    minWidth: 50,
+    alignItems: 'center',
+  },
+  extendedMinuteChipText: {
+    fontSize: 12,
+    fontWeight: '500',
+  },
   daysRow: {
     flexDirection: 'row',
     gap: 6,
