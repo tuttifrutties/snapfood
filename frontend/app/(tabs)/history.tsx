@@ -438,7 +438,7 @@ export default function HistoryScreen() {
       <View style={styles.mealInfo}>
         <Text style={[styles.mealName, { color: theme.text }]}>{meal.dishName}</Text>
         <Text style={[styles.mealTime, { color: theme.textMuted }]}>
-          {format(new Date(meal.timestamp), 'h:mm a', { locale: dateLocale })}
+          {format(parseTimestamp(meal.timestamp), 'h:mm a', { locale: dateLocale })}
         </Text>
         {meal.portions && (
           <View style={[styles.portionBadge, { backgroundColor: theme.surfaceVariant }]}>
