@@ -318,7 +318,7 @@ export default function HistoryScreen() {
     const previousMonthsMap: Map<string, Map<string, Meal[]>> = new Map();
 
     meals.forEach(meal => {
-      const mealDate = new Date(meal.timestamp);
+      const mealDate = parseTimestamp(meal.timestamp);
       const dateKey = format(mealDate, 'yyyy-MM-dd');
       const monthKey = format(mealDate, 'yyyy-MM');
 
