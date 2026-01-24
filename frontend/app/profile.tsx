@@ -438,7 +438,7 @@ export default function PersonalProfileScreen() {
                     ) : (
                       <>
                         <Ionicons name="fitness" size={24} color="#FFC107" />
-                        <Text style={[styles.progressText, { color: theme.text }]}>{t2.needsWork}</Text>
+                        <Text style={[styles.progressTextNeutral, { color: theme.text }]}>{t2.needsWork}</Text>
                       </>
                     )}
                   </View>
@@ -495,7 +495,7 @@ export default function PersonalProfileScreen() {
                     ) : (
                       <>
                         <Ionicons name="fitness" size={24} color="#FFC107" />
-                        <Text style={[styles.progressText, { color: theme.text }]}>{t2.needsWork}</Text>
+                        <Text style={[styles.progressTextNeutral, { color: theme.text }]}>{t2.needsWork}</Text>
                       </>
                     )}
                   </View>
