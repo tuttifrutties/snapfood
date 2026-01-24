@@ -878,7 +878,127 @@ export default function TrackFoodScreen() {
               {analysisResult.ingredients.map((ingredient: string, index: number) => (
                 <Text key={index} style={[styles.ingredientText, { color: theme.textSecondary }]}>• {ingredient}</Text>
               ))}
+              
+              {/* Added ingredients */}
+              {addedIngredients.map((ing, index) => (
+                <View key={`added-${index}`} style={styles.addedIngredientRow}>
+                  <Text style={[styles.ingredientText, { color: theme.primary }]}>+ {ing.name}</Text>
+                  <TouchableOpacity onPress={() => {
+                    setAddedIngredients(addedIngredients.filter((_, i) => i !== index));
+                  }}>
+                    <Ionicons name="close-circle" size={18} color={theme.error || '#FF6B6B'} />
+                  </TouchableOpacity>
+                </View>
+              ))}
+              
+              {/* Add missing ingredient button */}
+              <TouchableOpacity 
+                style={[styles.addIngredientButton, { borderColor: theme.primary }]}
+                onPress={() => setShowAddIngredient(true)}
+              >
+                <Ionicons name="add-circle-outline" size={20} color={theme.primary} />
+                <Text style={[styles.addIngredientText, { color: theme.primary }]}>
+                  {i18n.language === 'es' ? '¿Falta algún ingrediente?' : 'Missing an ingredient?'}
+                </Text>
+              </TouchableOpacity>
             </View>
+
+            {/* Add Ingredient Modal */}
+            <Modal
+              visible={showAddIngredient}
+              animationType="slide"
+              transparent={true}
+              onRequestClose={() => setShowAddIngredient(false)}
+            >
+              <View style={styles.ingredientModalOverlay}>
+                <View style={[styles.ingredientModal, { backgroundColor: theme.surface }]}>
+                  <View style={styles.ingredientModalHeader}>
+                    <Text style={[styles.ingredientModalTitle, { color: theme.text }]}>
+                      {i18n.language === 'es' ? 'Añadir ingrediente' : 'Add ingredient'}
+                    </Text>
+                    <TouchableOpacity onPress={() => {
+                      setShowAddIngredient(false);
+                      setIngredientSearch('');
+                      setIngredientSearchResults([]);
+                    }}>
+                      <Ionicons name="close" size={28} color={theme.text} />
+                    </TouchableOpacity>
+                  </View>
+                  
+                  <View style={[styles.ingredientSearchBox, { backgroundColor: theme.surfaceVariant }]}>
+                    <Ionicons name="search" size={20} color={theme.textMuted} />
+                    <TextInput
+                      style={[styles.ingredientSearchInput, { color: theme.text }]}
+                      placeholder={i18n.language === 'es' ? 'Buscar: huevo, queso, jamón...' : 'Search: egg, cheese, ham...'}
+                      placeholderTextColor={theme.textMuted}
+                      value={ingredientSearch}
+                      onChangeText={async (text) => {
+                        setIngredientSearch(text);
+                        if (text.length >= 2) {
+                          setIsSearchingIngredient(true);
+                          try {
+                            const response = await fetch(`${API_URL}/api/search-food`, {
+                              method: 'POST',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ query: text, language: i18n.language }),
+                            });
+                            const data = await response.json();
+                            setIngredientSearchResults(data.foods || []);
+                          } catch (e) {
+                            console.error(e);
+                          } finally {
+                            setIsSearchingIngredient(false);
+                          }
+                        } else {
+                          setIngredientSearchResults([]);
+                        }
+                      }}
+                      autoFocus
+                    />
+                  </View>
+                  
+                  {isSearchingIngredient ? (
+                    <ActivityIndicator size="small" color={theme.primary} style={{ marginTop: 20 }} />
+                  ) : (
+                    <ScrollView style={styles.ingredientResultsList}>
+                      {ingredientSearchResults.map((item) => (
+                        <TouchableOpacity
+                          key={item.id}
+                          style={[styles.ingredientResultItem, { backgroundColor: theme.surfaceVariant }]}
+                          onPress={() => {
+                            // Add proportional to portions
+                            const proportionalCalories = Math.round(item.calories / 8 * portions);
+                            const proportionalProtein = Math.round(item.protein / 8 * portions * 10) / 10;
+                            const proportionalCarbs = Math.round(item.carbs / 8 * portions * 10) / 10;
+                            const proportionalFats = Math.round(item.fats / 8 * portions * 10) / 10;
+                            
+                            setAddedIngredients([...addedIngredients, {
+                              name: item.name,
+                              calories: proportionalCalories,
+                              protein: proportionalProtein,
+                              carbs: proportionalCarbs,
+                              fats: proportionalFats,
+                            }]);
+                            setShowAddIngredient(false);
+                            setIngredientSearch('');
+                            setIngredientSearchResults([]);
+                          }}
+                        >
+                          <Text style={styles.ingredientResultIcon}>{item.icon}</Text>
+                          <View style={{ flex: 1 }}>
+                            <Text style={[styles.ingredientResultName, { color: theme.text }]}>{item.name}</Text>
+                            <Text style={[styles.ingredientResultCals, { color: theme.textMuted }]}>
+                              ~{Math.round(item.calories / 8)} cal {i18n.language === 'es' ? 'por porción' : 'per portion'}
+                            </Text>
+                          </View>
+                          <Ionicons name="add-circle" size={24} color={theme.primary} />
+                        </TouchableOpacity>
+                      ))}
+                    </ScrollView>
+                  )}
+                </View>
+              </View>
+            </Modal>
 
             <View style={styles.buttonRow}>
               <TouchableOpacity style={[styles.cancelButton, { backgroundColor: theme.surfaceVariant }]} onPress={cancel}>
