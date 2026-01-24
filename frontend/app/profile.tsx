@@ -120,6 +120,7 @@ export default function PersonalProfileScreen() {
   const { theme } = useTheme();
   const { userName } = useUser();
   const summaryScrollRef = useRef<ScrollView>(null);
+  const shareImageRef = useRef<ViewShot>(null);
 
   const [profile, setProfile] = useState<UserNutritionProfile | null>(null);
   const [weekSummary, setWeekSummary] = useState<any>(null);
@@ -127,6 +128,8 @@ export default function PersonalProfileScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [showingMonthly, setShowingMonthly] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [isCapturing, setIsCapturing] = useState(false);
   
   // Editable fields
   const [editWeight, setEditWeight] = useState('');
