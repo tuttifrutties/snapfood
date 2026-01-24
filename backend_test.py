@@ -940,6 +940,7 @@ def run_full_test_suite():
     results = {
         'user_creation': False,
         'food_analysis': False,
+        'smart_portion_logic': False,
         'save_meal': False,
         'today_count': False,
         'daily_totals': False,
