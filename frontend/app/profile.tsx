@@ -1250,6 +1250,72 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 15,
   },
+  activityConfigText: {
+    fontSize: 12,
+    marginTop: 2,
+  },
+  editActivityButton: {
+    padding: 8,
+    marginRight: 8,
+  },
+  activityConfigPanel: {
+    padding: 16,
+    marginHorizontal: 0,
+    marginBottom: 10,
+    borderBottomLeftRadius: 12,
+    borderBottomRightRadius: 12,
+    marginTop: -10,
+  },
+  configLabel: {
+    fontSize: 13,
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  minutesRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  minuteChip: {
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+    minWidth: 50,
+    alignItems: 'center',
+  },
+  minuteChipText: {
+    fontSize: 13,
+    fontWeight: '500',
+  },
+  daysRow: {
+    flexDirection: 'row',
+    gap: 6,
+  },
+  dayChip: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  dayChipText: {
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  addActivityButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginTop: 12,
+  },
+  addActivityButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+  },
   saveActivitiesButton: {
     alignItems: 'center',
     padding: 16,
