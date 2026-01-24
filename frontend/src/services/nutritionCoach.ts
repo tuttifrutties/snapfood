@@ -358,7 +358,7 @@ export const getMonthSummary = async (monthOffset: number = -1): Promise<{
     const daysInMonth = monthEnd.getDate();
     for (let i = 1; i <= daysInMonth; i++) {
       const checkDate = new Date(targetDate.getFullYear(), targetDate.getMonth(), i);
-      const dateKey = checkDate.toISOString().split('T')[0];
+      const dateKey = getLocalDateString(checkDate);
       const key = `daily_calories_${dateKey}`;
       const data = await AsyncStorage.getItem(key);
 
