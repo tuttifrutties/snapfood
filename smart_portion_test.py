@@ -55,7 +55,7 @@ def test_smart_portion_endpoint():
     payload = {
         "userId": "test-user-123",
         "imageBase64": test_image,
-        "language": "es"
+        "language": "en"
     }
     
     print(f"📡 Making request to: {BACKEND_URL}/analyze-food")
