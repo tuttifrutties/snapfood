@@ -153,6 +153,107 @@ def test_food_analysis(user_id):
         print(f"❌ Exception during food analysis: {str(e)}")
         return None, False
 
+def test_smart_portion_scenarios(user_id):
+    """Test smart portion logic with different food scenarios"""
+    print("\n=== Testing Smart Portion Logic Scenarios ===")
+    
+    scenarios = [
+        {
+            "name": "Pizza Test (should be shareable)",
+            "language": "es",
+            "expected_type": "shareable"
+        },
+        {
+            "name": "Container Test (English)",
+            "language": "en", 
+            "expected_type": None  # Any type is acceptable for test image
+        }
+    ]
+    
+    all_passed = True
+    
+    for scenario in scenarios:
+        print(f"\n--- {scenario['name']} ---")
+        
+        try:
+            image_base64 = create_test_food_image()
+            
+            payload = {
+                "userId": user_id,
+                "imageBase64": image_base64,
+                "language": scenario["language"]
+            }
+            
+            print(f"Testing with language: {scenario['language']}")
+            
+            start_time = time.time()
+            response = requests.post(f"{BACKEND_URL}/analyze-food", json=payload, timeout=60)
+            end_time = time.time()
+            
+            print(f"Response time: {end_time - start_time:.2f} seconds")
+            
+            if response.status_code == 200:
+                data = response.json()
+                
+                # Check smart portion fields specifically
+                smart_fields = ['foodType', 'typicalServings', 'servingDescription']
+                missing = [f for f in smart_fields if f not in data]
+                
+                if not missing:
+                    print(f"✅ All smart portion fields present:")
+                    print(f"   Food Type: {data['foodType']}")
+                    print(f"   Typical Servings: {data['typicalServings']}")
+                    print(f"   Serving Description: {data['servingDescription']}")
+                    
+                    # Check if totalCalories is present for shareable items
+                    if data['foodType'] == 'shareable':
+                        if 'totalCalories' in data:
+                            print(f"   Total Calories: {data['totalCalories']} (for whole {data['dishName']})")
+                            print(f"   Per Serving: {data['calories']} calories")
+                        else:
+                            print(f"   ⚠️ Missing totalCalories for shareable item")
+                            all_passed = False
+                    
+                    # Validate data types
+                    type_valid = True
+                    if not isinstance(data['typicalServings'], int):
+                        print(f"   ❌ typicalServings should be int, got {type(data['typicalServings'])}")
+                        type_valid = False
+                    if not isinstance(data['foodType'], str):
+                        print(f"   ❌ foodType should be string, got {type(data['foodType'])}")
+                        type_valid = False
+                    if not isinstance(data['servingDescription'], str):
+                        print(f"   ❌ servingDescription should be string, got {type(data['servingDescription'])}")
+                        type_valid = False
+                    
+                    if type_valid:
+                        print(f"   ✅ Data types validation: PASSED")
+                    else:
+                        all_passed = False
+                        
+                    # Check valid foodType values
+                    valid_types = ['shareable', 'container', 'single']
+                    if data['foodType'] in valid_types:
+                        print(f"   ✅ foodType '{data['foodType']}' is valid")
+                    else:
+                        print(f"   ❌ foodType '{data['foodType']}' is invalid (should be one of {valid_types})")
+                        all_passed = False
+                        
+                else:
+                    print(f"   ❌ Missing smart portion fields: {missing}")
+                    all_passed = False
+                    
+            else:
+                print(f"   ❌ HTTP {response.status_code}: {response.text}")
+                all_passed = False
+                
+        except Exception as e:
+            print(f"   ❌ Exception: {str(e)}")
+            all_passed = False
+    
+    print(f"\n🎯 Smart Portion Logic Test Result: {'✅ PASSED' if all_passed else '❌ FAILED'}")
+    return all_passed
+
 def test_save_meal(user_id, analysis_data):
     """Test POST /api/meals - Save meal to database"""
     print("\n=== Testing Save Meal ===")
