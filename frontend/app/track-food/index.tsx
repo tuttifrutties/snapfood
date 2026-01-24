@@ -1301,6 +1301,83 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 4,
   },
+  addedIngredientRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 4,
+  },
+  addIngredientButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderStyle: 'dashed',
+    borderRadius: 8,
+    marginTop: 12,
+  },
+  addIngredientText: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  ingredientModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    justifyContent: 'flex-end',
+  },
+  ingredientModal: {
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    padding: 20,
+    maxHeight: '80%',
+  },
+  ingredientModalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  ingredientModalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  ingredientSearchBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 12,
+    marginBottom: 16,
+  },
+  ingredientSearchInput: {
+    flex: 1,
+    fontSize: 16,
+  },
+  ingredientResultsList: {
+    maxHeight: 300,
+  },
+  ingredientResultItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    padding: 14,
+    borderRadius: 12,
+    marginBottom: 8,
+  },
+  ingredientResultIcon: {
+    fontSize: 28,
+  },
+  ingredientResultName: {
+    fontSize: 15,
+    fontWeight: '500',
+  },
+  ingredientResultCals: {
+    fontSize: 12,
+    marginTop: 2,
+  },
   buttonRow: {
     flexDirection: 'row',
     gap: 12,
