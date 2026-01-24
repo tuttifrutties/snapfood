@@ -142,6 +142,30 @@ backend:
           ✅ TESTED: Food analysis API working correctly. Fixed model parameter issue (changed from GPT-5.2 to GPT-4o using with_model() method).
           API successfully calls OpenAI GPT-4o Vision, processes images, and returns structured nutrition data.
           Response time: ~2 seconds. AI correctly identifies when images are unclear and returns appropriate warnings.
+      - working: true
+        agent: "testing"
+        comment: |
+          ✅ SMART PORTION LOGIC TESTED: New smart portion fields working perfectly in /api/analyze-food endpoint.
+          
+          VERIFIED NEW FIELDS (as requested in review):
+          ✅ foodType: "shareable" | "container" | "single" - Working correctly
+          ✅ typicalServings: number (e.g., 8 for pizza) - Working correctly  
+          ✅ totalCalories: number (for shareable items) - Working correctly
+          ✅ servingDescription: string (e.g., "1 slice") - Working correctly
+          
+          TESTED SCENARIOS:
+          🇪🇸 Spanish (language="es"): Pizza identified as "shareable", typicalServings=8, totalCalories=2280
+          🇺🇸 English (language="en"): Pizza identified as "shareable", typicalServings=8, totalCalories=2400
+          
+          VALIDATION RESULTS:
+          ✅ All required fields present and correct data types
+          ✅ foodType validation: Only accepts valid values (shareable/container/single)
+          ✅ Pizza correctly identified as "shareable" food type
+          ✅ totalCalories properly calculated for whole pizza
+          ✅ servingDescription provides clear portion info
+          ✅ Response structure matches AnalyzeFoodResponse model
+          
+          The smart portion calculation logic is working as designed and ready for production use.
 
   - task: "Save meal to database"
     implemented: true
