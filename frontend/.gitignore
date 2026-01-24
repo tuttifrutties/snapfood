@@ -9,8 +9,7 @@ dist/
 web-build/
 expo-env.d.ts
 
-# Native - EAS generates these fresh each build
-android/
+# Native - iOS only (Android se sube al repo)
 ios/
 .kotlin/
 *.orig.*
