@@ -103,7 +103,7 @@ export default function RecipeDetailScreen() {
       const newEntry = {
         id: `cooked_${Date.now()}`,
         userId,
-        timestamp: new Date().toISOString(),
+        timestamp: Date.now(), // Unix timestamp for consistent timezone handling
         foodName: recipeData.name,
         mealType: 'cooking',
         portions: portions,
