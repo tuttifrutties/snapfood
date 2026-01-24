@@ -196,7 +196,7 @@ export default function TrackFoodScreen() {
       const newEntry = {
         id: `food_${Date.now()}`,
         userId,
-        timestamp: new Date().toISOString(),
+        timestamp: Date.now(), // Unix timestamp for consistent timezone handling
         foodName: selectedFood.name,
         mealType: 'food',
         portions: foodPortions,
