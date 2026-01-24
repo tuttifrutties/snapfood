@@ -95,15 +95,15 @@ const PieChart = ({
       <View style={styles.chartLegend}>
         <View style={styles.legendItem}>
           <View style={[styles.legendDot, { backgroundColor: getStatusColor('deficit') }]} />
-          <Text style={styles.legendText}>Déficit ({deficit}d)</Text>
+          <Text style={[styles.legendText, { color: textColor }]}>Déficit ({deficit}d)</Text>
         </View>
         <View style={styles.legendItem}>
           <View style={[styles.legendDot, { backgroundColor: getStatusColor('balance') }]} />
-          <Text style={styles.legendText}>Equilibrio ({balance}d)</Text>
+          <Text style={[styles.legendText, { color: textColor }]}>Equilibrio ({balance}d)</Text>
         </View>
         <View style={styles.legendItem}>
           <View style={[styles.legendDot, { backgroundColor: getStatusColor('surplus') }]} />
-          <Text style={styles.legendText}>Superávit ({surplus}d)</Text>
+          <Text style={[styles.legendText, { color: textColor }]}>Superávit ({surplus}d)</Text>
         </View>
       </View>
     </View>
