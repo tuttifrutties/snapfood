@@ -55,6 +55,15 @@ interface Meal {
   fatCalories?: number;
 }
 
+// Helper to parse timestamp (handles both ISO string and Unix timestamp)
+const parseTimestamp = (timestamp: string | number): Date => {
+  if (typeof timestamp === 'number') {
+    return new Date(timestamp);
+  }
+  // ISO string - parse directly
+  return new Date(timestamp);
+};
+
 // Fat types with calories per tablespoon
 const FAT_TYPES = [
   { id: 'none', es: 'Sin grasa', en: 'No fat', caloriesPerTbsp: 0, icon: '🚫' },
