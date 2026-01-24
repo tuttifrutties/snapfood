@@ -130,6 +130,16 @@ export default function PersonalProfileScreen() {
   const [editGoal, setEditGoal] = useState<'lose' | 'maintain' | 'gain'>('maintain');
   const [editActivities, setEditActivities] = useState<PhysicalActivity[]>([]);
   const [showActivityPicker, setShowActivityPicker] = useState(false);
+  
+  // Activity configuration state
+  const [configuringActivity, setConfiguringActivity] = useState<string | null>(null);
+  const [activityMinutes, setActivityMinutes] = useState(30);
+  const [activityDays, setActivityDays] = useState<number[]>([1, 3, 5]);
+
+  // Day labels
+  const dayLabels = i18n.language === 'es' 
+    ? ['L', 'M', 'X', 'J', 'V', 'S', 'D']
+    : ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 
   // Get personalized title
   const getPersonalizedTitle = () => {
