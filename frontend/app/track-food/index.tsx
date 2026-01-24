@@ -755,9 +755,61 @@ export default function TrackFoodScreen() {
           <View style={[styles.resultContainer, { backgroundColor: theme.surface }]}>
             <Text style={[styles.dishName, { color: theme.text }]}>{analysisResult.dishName}</Text>
 
+            {/* Smart Portion Info Badge */}
+            {analysisResult.foodType && (
+              <View style={[styles.smartPortionBadge, { 
+                backgroundColor: analysisResult.foodType === 'shareable' ? '#4CAF5020' : 
+                                 analysisResult.foodType === 'container' ? '#2196F320' : '#FF980020'
+              }]}>
+                <Ionicons 
+                  name={analysisResult.foodType === 'shareable' ? 'pizza-outline' : 
+                        analysisResult.foodType === 'container' ? 'beer-outline' : 'restaurant-outline'} 
+                  size={18} 
+                  color={analysisResult.foodType === 'shareable' ? '#4CAF50' : 
+                         analysisResult.foodType === 'container' ? '#2196F3' : '#FF9800'} 
+                />
+                <Text style={[styles.smartPortionText, { 
+                  color: analysisResult.foodType === 'shareable' ? '#4CAF50' : 
+                         analysisResult.foodType === 'container' ? '#2196F3' : '#FF9800'
+                }]}>
+                  {analysisResult.foodType === 'shareable' 
+                    ? (i18n.language === 'es' 
+                        ? `🍕 Dividido típicamente en ${analysisResult.typicalServings || 8} porciones` 
+                        : `🍕 Typically divided into ${analysisResult.typicalServings || 8} portions`)
+                    : analysisResult.foodType === 'container'
+                    ? (i18n.language === 'es' 
+                        ? `🥫 1 unidad = 1 porción completa` 
+                        : `🥫 1 unit = 1 full portion`)
+                    : (i18n.language === 'es' 
+                        ? `🍽️ 1 plato = 1 porción completa` 
+                        : `🍽️ 1 plate = 1 full portion`)
+                  }
+                </Text>
+              </View>
+            )}
+
+            {/* Serving description */}
+            {analysisResult.servingDescription && (
+              <Text style={[styles.servingDescText, { color: theme.textMuted }]}>
+                {i18n.language === 'es' ? 'Por porción: ' : 'Per portion: '}{analysisResult.servingDescription}
+              </Text>
+            )}
+
             {/* Portion Selector */}
             <View style={styles.portionContainer}>
-              <Text style={[styles.portionLabel, { color: theme.textSecondary }]}>{t('trackFood.portionSize')}</Text>
+              <Text style={[styles.portionLabel, { color: theme.textSecondary }]}>
+                {i18n.language === 'es' ? '¿Cuántas porciones comiste?' : 'How many portions did you eat?'}
+              </Text>
+              
+              {/* For shareable items, show helpful context */}
+              {analysisResult.foodType === 'shareable' && analysisResult.totalCalories && (
+                <Text style={[styles.portionHint, { color: theme.textMuted }]}>
+                  {i18n.language === 'es' 
+                    ? `Total del plato: ~${analysisResult.totalCalories} cal (${analysisResult.typicalServings || 8} porciones)` 
+                    : `Total dish: ~${analysisResult.totalCalories} cal (${analysisResult.typicalServings || 8} portions)`}
+                </Text>
+              )}
+              
               <View style={styles.portionButtons}>
                 {PORTION_OPTIONS.map((option) => (
                   <TouchableOpacity
