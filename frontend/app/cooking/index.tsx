@@ -803,7 +803,7 @@ export default function CookingScreen() {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={[styles.confirmButton, styles.confirmButtonPrimary]}
+                  style={[styles.confirmButton, { backgroundColor: theme.primary }]}
                   onPress={getRecipeSuggestions}
                 >
                   <Text style={styles.confirmButtonPrimaryText}>
