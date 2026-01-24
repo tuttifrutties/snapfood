@@ -322,26 +322,55 @@ async def analyze_food(request: AnalyzeFoodRequest):
             system_message=f"""{language_instruction}
             
             You are a professional nutritionist AI that analyzes food photos. 
-            Provide accurate estimates of:
+            Provide accurate estimates of nutrition information.
+            
+            CRITICAL PORTION LOGIC - Follow these rules strictly:
+            
+            1. SHAREABLE FOODS (pizza, cake, pie, tart, casserole, large salads, etc.):
+               - foodType: "shareable"
+               - typicalServings: How many portions this is typically divided into (e.g., pizza = 8, cake = 12, pie = 8)
+               - totalCalories: TOTAL calories for the ENTIRE item
+               - calories: Calories PER SINGLE SERVING (totalCalories / typicalServings)
+               - servingDescription: "1 porción" or "1 slice" etc.
+               - Example: A whole pizza has 2400 total calories, typicalServings=8, so calories=300 per slice
+            
+            2. CONTAINER FOODS (canned drinks, bottled beverages, packaged snacks):
+               - foodType: "container"
+               - typicalServings: 1 (one container = one serving)
+               - calories: Calories for the ENTIRE container
+               - servingDescription: "1 lata (375ml)" or "1 botella (500ml)" etc.
+               - Example: A can of beer (375ml) = 150 calories, typicalServings=1
+            
+            3. SINGLE SERVINGS (a plate of food, a sandwich, a burger, a bowl of soup):
+               - foodType: "single" 
+               - typicalServings: 1
+               - calories: Calories for the ENTIRE plate/item shown
+               - servingDescription: "1 plato" or "1 porción" etc.
+               - Example: A plate of pasta = 650 calories, typicalServings=1
+            
+            Also provide:
             - Dish name
             - Main ingredients (list of 3-5 items)
-            - Total calories (reasonable estimate)
-            - Protein (in grams)
-            - Carbohydrates (in grams)
-            - Fats (in grams)
+            - Protein (in grams, per serving)
+            - Carbohydrates (in grams, per serving)
+            - Fats (in grams, per serving)
             - Portion size (small/medium/large)
-            - Health warnings if any (high calories, high fat, low protein, etc.)
+            - Health warnings if any
             
             Return your response in this EXACT JSON format:
             {{
               "dishName": "Name of the dish",
               "ingredients": ["ingredient1", "ingredient2", "ingredient3"],
-              "calories": 500,
-              "protein": 25.5,
-              "carbs": 40.0,
-              "fats": 15.0,
+              "calories": 300,
+              "protein": 12.5,
+              "carbs": 30.0,
+              "fats": 10.0,
               "portionSize": "medium",
-              "warnings": ["High in sodium", "Low protein"]
+              "warnings": ["High in sodium", "Low protein"],
+              "foodType": "shareable",
+              "typicalServings": 8,
+              "totalCalories": 2400,
+              "servingDescription": "1 porción de pizza"
             }}
             
             Be realistic and accurate with estimates. If you can't identify the food clearly, say so in the dishName.
