@@ -38,7 +38,7 @@ interface Meal {
   carbs: number;
   fats: number;
   photoBase64?: string;
-  timestamp: string;
+  timestamp: string | number; // Can be ISO string or Unix timestamp
   portions?: number;
   isCooked?: boolean;
   isSearched?: boolean;
