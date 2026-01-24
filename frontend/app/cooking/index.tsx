@@ -551,14 +551,14 @@ export default function CookingScreen() {
               Take a photo of your fridge or pantry ingredients
             </Text>
 
-            <TouchableOpacity style={styles.primaryButton} onPress={pickImage}>
+            <TouchableOpacity style={[styles.primaryButton, { backgroundColor: theme.primary }]} onPress={pickImage}>
               <Ionicons name="camera" size={24} color="#fff" />
               <Text style={styles.primaryButtonText}>{t('trackFood.takePhoto')}</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.secondaryButton} onPress={pickFromGallery}>
+            <TouchableOpacity style={[styles.secondaryButton, { borderColor: theme.primary }]} onPress={pickFromGallery}>
               <Ionicons name="images" size={24} color={theme.primary} />
-              <Text style={styles.secondaryButtonText}>{t('trackFood.chooseGallery')}</Text>
+              <Text style={[styles.secondaryButtonText, { color: theme.primary }]}>{t('trackFood.chooseGallery')}</Text>
             </TouchableOpacity>
           </View>
         )}
