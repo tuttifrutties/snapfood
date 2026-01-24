@@ -594,13 +594,13 @@ export default function CookingScreen() {
           )}
         </View>
 
-        <View style={styles.selectedBadge}>
-          <Text style={styles.selectedText}>
+        <View style={[styles.selectedBadge, { backgroundColor: theme.primary + '20' }]}>
+          <Text style={[styles.selectedText, { color: theme.primary }]}>
             {t('cooking.selectedCount', { count: selectedIngredients.length })}
           </Text>
           {selectedIngredients.length > 0 && (
             <TouchableOpacity onPress={() => setSelectedIngredients([])}>
-              <Text style={styles.clearText}>{t('common.clear')}</Text>
+              <Text style={[styles.clearText, { color: theme.primary }]}>{t('common.clear')}</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -615,10 +615,10 @@ export default function CookingScreen() {
               >
                 <View style={styles.categoryTitleRow}>
                   <Ionicons name="checkmark-circle" size={20} color={theme.primary} />
-                  <Text style={[styles.categoryTitle, styles.selectedCategoryTitle]}>
+                  <Text style={[styles.categoryTitle, styles.selectedCategoryTitle, { color: theme.primary }]}>
                     {i18n.language === 'es' ? 'Seleccionados' : 'Selected'}
                   </Text>
-                  <View style={styles.categoryBadge}>
+                  <View style={[styles.categoryBadge, { backgroundColor: theme.primary }]}>
                     <Text style={styles.categoryBadgeText}>{selectedIngredients.length}</Text>
                   </View>
                 </View>
@@ -634,10 +634,10 @@ export default function CookingScreen() {
                   {selectedIngredients.map((item) => (
                     <TouchableOpacity
                       key={item}
-                      style={[styles.ingredientItem, styles.ingredientItemSelected]}
+                      style={[styles.ingredientItem, { borderColor: theme.primary, backgroundColor: theme.primary + '20' }]}
                       onPress={() => toggleIngredient(item)}
                     >
-                      <Text style={[styles.ingredientText, styles.ingredientTextSelected]} numberOfLines={2}>
+                      <Text style={[styles.ingredientText, styles.ingredientTextSelected, { color: theme.primary }]} numberOfLines={2}>
                         {item}
                       </Text>
                       <Ionicons name="close-circle" size={18} color={theme.primary} />
