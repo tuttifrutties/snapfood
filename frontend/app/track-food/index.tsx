@@ -1368,7 +1368,25 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: '#fff',
-    marginBottom: 20,
+    marginBottom: 12,
+  },
+  smartPortionBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  smartPortionText: {
+    fontSize: 13,
+    fontWeight: '500',
+  },
+  servingDescText: {
+    fontSize: 13,
+    marginBottom: 16,
+    fontStyle: 'italic',
   },
   macrosContainer: {
     flexDirection: 'row',
