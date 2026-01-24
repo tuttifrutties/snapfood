@@ -42,12 +42,14 @@ const PieChart = ({
   deficit, 
   balance, 
   surplus, 
-  goal 
+  goal,
+  textColor 
 }: { 
   deficit: number; 
   balance: number; 
   surplus: number;
   goal: 'lose' | 'maintain' | 'gain';
+  textColor: string;
 }) => {
   const total = deficit + balance + surplus;
   if (total === 0) return null;
