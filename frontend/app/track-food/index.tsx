@@ -62,6 +62,8 @@ export default function TrackFoodScreen() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<any>(null);
   const [portions, setPortions] = useState(1);
+  const [customPortions, setCustomPortions] = useState('');
+  const [showCustomPortions, setShowCustomPortions] = useState(false);
   
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
@@ -77,6 +79,13 @@ export default function TrackFoodScreen() {
   // Fat selector state for photo
   const [photoFatType, setPhotoFatType] = useState('none');
   const [photoFatTablespoons, setPhotoFatTablespoons] = useState(0);
+  
+  // Missing ingredient state
+  const [showAddIngredient, setShowAddIngredient] = useState(false);
+  const [ingredientSearch, setIngredientSearch] = useState('');
+  const [ingredientSearchResults, setIngredientSearchResults] = useState<ApiFoodItem[]>([]);
+  const [isSearchingIngredient, setIsSearchingIngredient] = useState(false);
+  const [addedIngredients, setAddedIngredients] = useState<{name: string, calories: number, protein: number, carbs: number, fats: number}[]>([]);
 
   const PORTION_OPTIONS = [0.5, 1, 1.5, 2, 2.5, 3];
 
