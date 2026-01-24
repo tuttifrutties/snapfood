@@ -752,9 +752,79 @@ export default function TrackFoodScreen() {
               </View>
             </View>
 
+            {/* FAT SELECTOR FOR PHOTO ANALYSIS */}
+            <View style={[styles.fatSelectorBox, { backgroundColor: theme.surfaceVariant, borderColor: '#FFD700' }]}>
+              <View style={styles.fatSelectorHeader}>
+                <Ionicons name="flame" size={20} color="#FFD700" />
+                <Text style={[styles.fatSelectorTitle, { color: theme.text }]}>
+                  {i18n.language === 'es' ? '¿Usaste grasa para cocinar?' : 'Did you use cooking fat?'}
+                </Text>
+              </View>
+              
+              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.fatTypeScrollView}>
+                {FAT_TYPES.map((fat) => (
+                  <TouchableOpacity
+                    key={fat.id}
+                    style={[
+                      styles.fatTypeChip,
+                      { backgroundColor: theme.surface },
+                      photoFatType === fat.id && styles.fatTypeChipActive,
+                    ]}
+                    onPress={() => {
+                      setPhotoFatType(fat.id);
+                      if (fat.id === 'none') setPhotoFatTablespoons(0);
+                    }}
+                  >
+                    <Text style={styles.fatTypeChipIcon}>{fat.icon}</Text>
+                    <Text style={[
+                      styles.fatTypeChipText,
+                      { color: theme.textMuted },
+                      photoFatType === fat.id && styles.fatTypeChipTextActive,
+                    ]}>
+                      {i18n.language === 'es' ? fat.es : fat.en}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+
+              {photoFatType !== 'none' && (
+                <View style={styles.tablespoonContainer}>
+                  <Text style={[styles.tablespoonLabel, { color: theme.text }]}>
+                    {i18n.language === 'es' ? 'Cucharadas:' : 'Tablespoons:'}
+                  </Text>
+                  <View style={styles.tablespoonRow}>
+                    {TABLESPOON_OPTIONS.map((tbsp) => (
+                      <TouchableOpacity
+                        key={tbsp}
+                        style={[
+                          styles.tablespoonChip,
+                          { backgroundColor: theme.surface },
+                          photoFatTablespoons === tbsp && styles.tablespoonChipActive,
+                        ]}
+                        onPress={() => setPhotoFatTablespoons(tbsp)}
+                      >
+                        <Text style={[
+                          styles.tablespoonChipText,
+                          { color: theme.textMuted },
+                          photoFatTablespoons === tbsp && styles.tablespoonChipTextActive,
+                        ]}>
+                          {tbsp}
+                        </Text>
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                  {photoFatTablespoons > 0 && (
+                    <Text style={[styles.fatCaloriesInfo, { color: '#FFD700' }]}>
+                      +{getPhotoFatCalories()} cal {i18n.language === 'es' ? 'de grasa' : 'from fat'}
+                    </Text>
+                  )}
+                </View>
+              )}
+            </View>
+
             <View style={styles.macrosContainer}>
               <View style={[styles.macroBox, { backgroundColor: theme.surfaceVariant }]}>
-                <Text style={[styles.macroValue, { color: theme.primary }]}>{getAdjustedValue(analysisResult.calories)}</Text>
+                <Text style={[styles.macroValue, { color: theme.primary }]}>{getAdjustedValue(analysisResult.calories) + getPhotoFatCalories()}</Text>
                 <Text style={[styles.macroLabel, { color: theme.textMuted }]}>{t('trackFood.calories')}</Text>
               </View>
               <View style={[styles.macroBox, { backgroundColor: theme.surfaceVariant }]}>
