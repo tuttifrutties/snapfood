@@ -656,7 +656,10 @@ export default function PersonalProfileScreen() {
           visible={showActivityPicker}
           animationType="slide"
           transparent={true}
-          onRequestClose={() => setShowActivityPicker(false)}
+          onRequestClose={() => {
+            setShowActivityPicker(false);
+            setConfiguringActivity(null);
+          }}
         >
           <View style={styles.modalOverlay}>
             <View style={[styles.activityModal, { backgroundColor: theme.surface }]}>
@@ -664,43 +667,172 @@ export default function PersonalProfileScreen() {
                 <Text style={[styles.activityModalTitle, { color: theme.text }]}>
                   {i18n.language === 'es' ? 'Selecciona Actividades' : 'Select Activities'}
                 </Text>
-                <TouchableOpacity onPress={() => setShowActivityPicker(false)}>
+                <TouchableOpacity onPress={() => {
+                  setShowActivityPicker(false);
+                  setConfiguringActivity(null);
+                }}>
                   <Ionicons name="close" size={28} color={theme.text} />
                 </TouchableOpacity>
               </View>
               
               <ScrollView style={styles.activityList}>
                 {PHYSICAL_ACTIVITIES.map(activity => {
-                  const isSelected = editActivities.some(a => a.id === activity.id);
+                  const existingActivity = editActivities.find(a => a.id === activity.id);
+                  const isSelected = !!existingActivity;
+                  const isConfiguring = configuringActivity === activity.id;
+                  
                   return (
-                    <TouchableOpacity
-                      key={activity.id}
-                      style={[
-                        styles.activityPickerItem,
-                        { borderColor: theme.border },
-                        isSelected && { backgroundColor: theme.primary + '20', borderColor: theme.primary }
-                      ]}
-                      onPress={() => {
-                        if (isSelected) {
-                          setEditActivities(editActivities.filter(a => a.id !== activity.id));
-                        } else {
-                          setEditActivities([...editActivities, {
-                            id: activity.id,
-                            icon: activity.icon,
-                            durationMinutes: 30,
-                            daysPerWeek: [1, 3, 5], // Default: Mon, Wed, Fri
-                          }]);
-                        }
-                      }}
-                    >
-                      <Ionicons name={activity.icon as any} size={24} color={isSelected ? theme.primary : theme.textMuted} />
-                      <Text style={[styles.activityPickerName, { color: theme.text }]}>
-                        {getActivityLabel(activity.id, i18n.language)}
-                      </Text>
-                      {isSelected && (
-                        <Ionicons name="checkmark-circle" size={24} color={theme.primary} />
+                    <View key={activity.id}>
+                      <TouchableOpacity
+                        style={[
+                          styles.activityPickerItem,
+                          { borderColor: theme.border },
+                          isSelected && { backgroundColor: theme.primary + '20', borderColor: theme.primary }
+                        ]}
+                        onPress={() => {
+                          if (isSelected) {
+                            // Deselect
+                            setEditActivities(editActivities.filter(a => a.id !== activity.id));
+                            if (isConfiguring) setConfiguringActivity(null);
+                          } else {
+                            // Select and open config
+                            setActivityMinutes(30);
+                            setActivityDays([1, 3, 5]);
+                            setConfiguringActivity(activity.id);
+                          }
+                        }}
+                      >
+                        <Ionicons name={activity.icon as any} size={24} color={isSelected ? theme.primary : theme.textMuted} />
+                        <View style={{ flex: 1 }}>
+                          <Text style={[styles.activityPickerName, { color: theme.text }]}>
+                            {getActivityLabel(activity.id, i18n.language)}
+                          </Text>
+                          {isSelected && existingActivity && (
+                            <Text style={[styles.activityConfigText, { color: theme.textMuted }]}>
+                              {existingActivity.durationMinutes}' × {existingActivity.daysPerWeek.length}d
+                            </Text>
+                          )}
+                        </View>
+                        {isSelected ? (
+                          <TouchableOpacity 
+                            onPress={() => setConfiguringActivity(isConfiguring ? null : activity.id)}
+                            style={styles.editActivityButton}
+                          >
+                            <Ionicons name={isConfiguring ? "chevron-up" : "settings-outline"} size={20} color={theme.primary} />
+                          </TouchableOpacity>
+                        ) : null}
+                        {isSelected && (
+                          <Ionicons name="checkmark-circle" size={24} color={theme.primary} />
+                        )}
+                      </TouchableOpacity>
+                      
+                      {/* Configuration Panel */}
+                      {(isConfiguring || (isSelected && configuringActivity === activity.id)) && (
+                        <View style={[styles.activityConfigPanel, { backgroundColor: theme.surfaceVariant }]}>
+                          {/* Minutes */}
+                          <Text style={[styles.configLabel, { color: theme.text }]}>
+                            {i18n.language === 'es' ? 'Minutos por sesión:' : 'Minutes per session:'}
+                          </Text>
+                          <View style={styles.minutesRow}>
+                            {[15, 30, 45, 60, 90, 120].map(mins => (
+                              <TouchableOpacity
+                                key={mins}
+                                style={[
+                                  styles.minuteChip,
+                                  { backgroundColor: theme.surface },
+                                  (isSelected ? existingActivity?.durationMinutes : activityMinutes) === mins && 
+                                    { backgroundColor: theme.primary }
+                                ]}
+                                onPress={() => {
+                                  if (isSelected && existingActivity) {
+                                    setEditActivities(editActivities.map(a => 
+                                      a.id === activity.id ? { ...a, durationMinutes: mins } : a
+                                    ));
+                                  } else {
+                                    setActivityMinutes(mins);
+                                  }
+                                }}
+                              >
+                                <Text style={[
+                                  styles.minuteChipText,
+                                  { color: theme.textMuted },
+                                  (isSelected ? existingActivity?.durationMinutes : activityMinutes) === mins && 
+                                    { color: '#fff' }
+                                ]}>
+                                  {mins}'
+                                </Text>
+                              </TouchableOpacity>
+                            ))}
+                          </View>
+                          
+                          {/* Days */}
+                          <Text style={[styles.configLabel, { color: theme.text, marginTop: 12 }]}>
+                            {i18n.language === 'es' ? 'Días de la semana:' : 'Days of the week:'}
+                          </Text>
+                          <View style={styles.daysRow}>
+                            {dayLabels.map((label, idx) => {
+                              const dayNum = idx + 1;
+                              const currentDays = isSelected ? existingActivity?.daysPerWeek || [] : activityDays;
+                              const isActive = currentDays.includes(dayNum);
+                              return (
+                                <TouchableOpacity
+                                  key={idx}
+                                  style={[
+                                    styles.dayChip,
+                                    { backgroundColor: theme.surface },
+                                    isActive && { backgroundColor: theme.primary }
+                                  ]}
+                                  onPress={() => {
+                                    let newDays: number[];
+                                    if (isActive) {
+                                      newDays = currentDays.filter(d => d !== dayNum);
+                                    } else {
+                                      newDays = [...currentDays, dayNum].sort();
+                                    }
+                                    if (isSelected && existingActivity) {
+                                      setEditActivities(editActivities.map(a => 
+                                        a.id === activity.id ? { ...a, daysPerWeek: newDays } : a
+                                      ));
+                                    } else {
+                                      setActivityDays(newDays);
+                                    }
+                                  }}
+                                >
+                                  <Text style={[
+                                    styles.dayChipText,
+                                    { color: theme.textMuted },
+                                    isActive && { color: '#fff' }
+                                  ]}>
+                                    {label}
+                                  </Text>
+                                </TouchableOpacity>
+                              );
+                            })}
+                          </View>
+                          
+                          {/* Add button (only for new activities) */}
+                          {!isSelected && (
+                            <TouchableOpacity
+                              style={[styles.addActivityButton, { backgroundColor: theme.primary }]}
+                              onPress={() => {
+                                setEditActivities([...editActivities, {
+                                  id: activity.id,
+                                  icon: activity.icon,
+                                  durationMinutes: activityMinutes,
+                                  daysPerWeek: activityDays,
+                                }]);
+                                setConfiguringActivity(null);
+                              }}
+                            >
+                              <Ionicons name="add" size={20} color="#fff" />
+                              <Text style={styles.addActivityButtonText}>
+                                {i18n.language === 'es' ? 'Añadir' : 'Add'}
+                              </Text>
+                            </TouchableOpacity>
+                          )}
+                        </View>
                       )}
-                    </TouchableOpacity>
+                    </View>
                   );
                 })}
               </ScrollView>
@@ -713,6 +845,7 @@ export default function PersonalProfileScreen() {
                     await saveUserNutritionProfile(updatedProfile);
                     setProfile(updatedProfile);
                     setShowActivityPicker(false);
+                    setConfiguringActivity(null);
                   }
                 }}
               >
