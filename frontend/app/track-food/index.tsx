@@ -1234,6 +1234,23 @@ const styles = StyleSheet.create({
   portionButtonTextActive: {
     color: '#fff',
   },
+  customPortionsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginTop: 12,
+  },
+  customPortionsInput: {
+    flex: 1,
+    padding: 12,
+    borderRadius: 10,
+    fontSize: 18,
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  customPortionsHint: {
+    fontSize: 14,
+  },
   instructionText: {
     color: '#aaa',
     fontSize: 16,
