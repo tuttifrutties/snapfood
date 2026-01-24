@@ -424,6 +424,7 @@ export default function PersonalProfileScreen() {
                     balance={weekSummary.daysInBalance}
                     surplus={weekSummary.daysInSurplus}
                     goal={profile?.goal || 'maintain'}
+                    textColor={theme.text}
                   />
 
                   <View style={[styles.progressMessage, { backgroundColor: theme.surfaceVariant }]}>
