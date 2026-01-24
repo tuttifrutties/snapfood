@@ -1306,7 +1306,7 @@ const styles = StyleSheet.create({
   },
   recipeMacroText: {
     fontSize: 12,
-    color: '#FF6B6B',
+    // Color applied inline with theme.primary
   },
   viewRecipeButton: {
     flexDirection: 'row',
@@ -1317,7 +1317,7 @@ const styles = StyleSheet.create({
     borderTopColor: '#333',
   },
   viewRecipeButtonText: {
-    color: '#FF6B6B',
+    // Color applied inline with theme.primary
     fontSize: 16,
     fontWeight: '600',
   },
@@ -1345,11 +1345,11 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   selectedCategoryHeader: {
-    backgroundColor: '#FF6B6B15',
+    // Background applied inline with theme.primary
     borderRadius: 12,
   },
   selectedCategoryTitle: {
-    color: '#FF6B6B',
+    // Color applied inline with theme.primary
   },
   categoryTitle: {
     fontSize: 16,
@@ -1357,7 +1357,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   categoryBadge: {
-    backgroundColor: '#FF6B6B',
+    // Background applied inline with theme.primary
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 10,
@@ -1374,7 +1374,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   clearText: {
-    color: '#FF6B6B',
+    // Color applied inline with theme.primary
     fontSize: 14,
     fontWeight: '600',
   },
@@ -1386,7 +1386,7 @@ const styles = StyleSheet.create({
   selectedTag: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FF6B6B',
+    // Background applied inline with theme.primary
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 20,
