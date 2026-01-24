@@ -1193,14 +1193,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#FF6B6B20',
     paddingHorizontal: 16,
     paddingVertical: 8,
     marginHorizontal: 16,
     borderRadius: 8,
   },
   selectedText: {
-    color: '#FF6B6B',
     fontSize: 14,
     fontWeight: '600',
   },
@@ -1221,8 +1219,7 @@ const styles = StyleSheet.create({
     width: '47%',
   },
   ingredientItemSelected: {
-    borderColor: '#FF6B6B',
-    backgroundColor: '#FF6B6B20',
+    // Colors applied inline with theme.primary
   },
   ingredientText: {
     color: '#ccc',
@@ -1230,7 +1227,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   ingredientTextSelected: {
-    color: '#FF6B6B',
     fontWeight: '600',
   },
   bottomButton: {
@@ -1240,7 +1236,6 @@ const styles = StyleSheet.create({
     borderTopColor: '#333',
   },
   getSuggestionsButton: {
-    backgroundColor: '#FF6B6B',
     padding: 16,
     borderRadius: 12,
     alignItems: 'center',
