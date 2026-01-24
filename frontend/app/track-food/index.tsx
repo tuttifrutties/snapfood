@@ -854,19 +854,27 @@ export default function TrackFoodScreen() {
 
             <View style={styles.macrosContainer}>
               <View style={[styles.macroBox, { backgroundColor: theme.surfaceVariant }]}>
-                <Text style={[styles.macroValue, { color: theme.primary }]}>{getAdjustedValue(analysisResult.calories) + getPhotoFatCalories()}</Text>
+                <Text style={[styles.macroValue, { color: theme.primary }]}>
+                  {getAdjustedValue(analysisResult.calories) + getPhotoFatCalories() + addedIngredients.reduce((sum, ing) => sum + ing.calories, 0)}
+                </Text>
                 <Text style={[styles.macroLabel, { color: theme.textMuted }]}>{t('trackFood.calories')}</Text>
               </View>
               <View style={[styles.macroBox, { backgroundColor: theme.surfaceVariant }]}>
-                <Text style={[styles.macroValue, { color: theme.primary }]}>{getAdjustedDecimal(analysisResult.protein)}g</Text>
+                <Text style={[styles.macroValue, { color: theme.primary }]}>
+                  {(parseFloat(getAdjustedDecimal(analysisResult.protein)) + addedIngredients.reduce((sum, ing) => sum + ing.protein, 0)).toFixed(1)}g
+                </Text>
                 <Text style={[styles.macroLabel, { color: theme.textMuted }]}>{t('trackFood.protein')}</Text>
               </View>
               <View style={[styles.macroBox, { backgroundColor: theme.surfaceVariant }]}>
-                <Text style={[styles.macroValue, { color: theme.primary }]}>{getAdjustedDecimal(analysisResult.carbs)}g</Text>
+                <Text style={[styles.macroValue, { color: theme.primary }]}>
+                  {(parseFloat(getAdjustedDecimal(analysisResult.carbs)) + addedIngredients.reduce((sum, ing) => sum + ing.carbs, 0)).toFixed(1)}g
+                </Text>
                 <Text style={[styles.macroLabel, { color: theme.textMuted }]}>{t('trackFood.carbs')}</Text>
               </View>
               <View style={[styles.macroBox, { backgroundColor: theme.surfaceVariant }]}>
-                <Text style={[styles.macroValue, { color: theme.primary }]}>{getAdjustedDecimal(analysisResult.fats)}g</Text>
+                <Text style={[styles.macroValue, { color: theme.primary }]}>
+                  {(parseFloat(getAdjustedDecimal(analysisResult.fats)) + addedIngredients.reduce((sum, ing) => sum + ing.fats, 0)).toFixed(1)}g
+                </Text>
                 <Text style={[styles.macroLabel, { color: theme.textMuted }]}>{t('trackFood.fats')}</Text>
               </View>
             </View>
