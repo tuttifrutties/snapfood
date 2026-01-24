@@ -994,6 +994,187 @@ export default function PersonalProfileScreen() {
           <Text style={styles.shareButtonText}>{t2.share}</Text>
         </TouchableOpacity>
       </ScrollView>
+
+      {/* Share Image Modal - Hidden, used for capture */}
+      <Modal
+        visible={showShareModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowShareModal(false)}
+      >
+        <View style={shareStyles.modalOverlay}>
+          <ViewShot 
+            ref={shareImageRef}
+            options={{ format: 'png', quality: 1 }}
+            style={shareStyles.shareCard}
+          >
+            {/* Professional Share Card Design */}
+            <View style={shareStyles.cardContainer}>
+              {/* Header with gradient effect */}
+              <View style={shareStyles.cardHeader}>
+                <View style={shareStyles.logoContainer}>
+                  <Ionicons name="nutrition" size={32} color="#fff" />
+                  <Text style={shareStyles.logoText}>SnapFood</Text>
+                </View>
+                <Text style={shareStyles.periodText}>
+                  {showingMonthly 
+                    ? (i18n.language === 'es' ? 'Resumen Mensual' : 'Monthly Summary')
+                    : (i18n.language === 'es' ? 'Resumen Semanal' : 'Weekly Summary')
+                  }
+                </Text>
+              </View>
+
+              {/* User name */}
+              {userName && (
+                <Text style={shareStyles.userName}>{userName}</Text>
+              )}
+
+              {/* Pie Chart Visual */}
+              <View style={shareStyles.chartSection}>
+                <View style={shareStyles.pieChartContainer}>
+                  {(() => {
+                    const summary = showingMonthly ? monthSummary : weekSummary;
+                    if (!summary) return null;
+                    const total = summary.daysInDeficit + summary.daysInBalance + summary.daysInSurplus;
+                    if (total === 0) return null;
+                    
+                    const deficitPercent = (summary.daysInDeficit / total) * 100;
+                    const balancePercent = (summary.daysInBalance / total) * 100;
+                    const surplusPercent = (summary.daysInSurplus / total) * 100;
+                    
+                    return (
+                      <>
+                        <View style={shareStyles.pieChart}>
+                          <View style={[shareStyles.pieSegment, { 
+                            backgroundColor: getStatusColor('deficit'),
+                            width: `${Math.max(deficitPercent, 5)}%`,
+                          }]} />
+                          <View style={[shareStyles.pieSegment, { 
+                            backgroundColor: getStatusColor('balance'),
+                            width: `${Math.max(balancePercent, 5)}%`,
+                          }]} />
+                          <View style={[shareStyles.pieSegment, { 
+                            backgroundColor: getStatusColor('surplus'),
+                            width: `${Math.max(surplusPercent, 5)}%`,
+                          }]} />
+                        </View>
+                        
+                        {/* Legend */}
+                        <View style={shareStyles.legendContainer}>
+                          <View style={shareStyles.legendItem}>
+                            <View style={[shareStyles.legendDot, { backgroundColor: getStatusColor('deficit') }]} />
+                            <Text style={shareStyles.legendText}>
+                              {i18n.language === 'es' ? 'Déficit' : 'Deficit'} ({summary.daysInDeficit}d)
+                            </Text>
+                          </View>
+                          <View style={shareStyles.legendItem}>
+                            <View style={[shareStyles.legendDot, { backgroundColor: getStatusColor('balance') }]} />
+                            <Text style={shareStyles.legendText}>
+                              {i18n.language === 'es' ? 'Equilibrio' : 'Balance'} ({summary.daysInBalance}d)
+                            </Text>
+                          </View>
+                          <View style={shareStyles.legendItem}>
+                            <View style={[shareStyles.legendDot, { backgroundColor: getStatusColor('surplus') }]} />
+                            <Text style={shareStyles.legendText}>
+                              {i18n.language === 'es' ? 'Superávit' : 'Surplus'} ({summary.daysInSurplus}d)
+                            </Text>
+                          </View>
+                        </View>
+                      </>
+                    );
+                  })()}
+                </View>
+              </View>
+
+              {/* Stats Grid */}
+              <View style={shareStyles.statsGrid}>
+                <View style={shareStyles.statBox}>
+                  <Text style={shareStyles.statValue}>
+                    {(showingMonthly ? monthSummary : weekSummary)?.daysTracked || 0}
+                  </Text>
+                  <Text style={shareStyles.statLabel}>
+                    {i18n.language === 'es' ? 'Días' : 'Days'}
+                  </Text>
+                </View>
+                <View style={shareStyles.statBox}>
+                  <Text style={shareStyles.statValue}>
+                    {(showingMonthly ? monthSummary : weekSummary)?.averageCalories || 0}
+                  </Text>
+                  <Text style={shareStyles.statLabel}>
+                    {i18n.language === 'es' ? 'Cal/día' : 'Cal/day'}
+                  </Text>
+                </View>
+                <View style={shareStyles.statBox}>
+                  <Text style={shareStyles.statValue}>
+                    {profile?.targetCalories || '-'}
+                  </Text>
+                  <Text style={shareStyles.statLabel}>
+                    {i18n.language === 'es' ? 'Objetivo' : 'Target'}
+                  </Text>
+                </View>
+              </View>
+
+              {/* Goal Badge */}
+              <View style={[shareStyles.goalBadge, { backgroundColor: theme.primary }]}>
+                <Ionicons 
+                  name={profile?.goal === 'lose' ? 'trending-down' : profile?.goal === 'gain' ? 'trending-up' : 'remove'} 
+                  size={18} 
+                  color="#fff" 
+                />
+                <Text style={shareStyles.goalText}>
+                  {profile?.goal === 'lose' 
+                    ? (i18n.language === 'es' ? 'Bajar de peso' : 'Lose weight')
+                    : profile?.goal === 'gain'
+                    ? (i18n.language === 'es' ? 'Ganar masa' : 'Build muscle')
+                    : (i18n.language === 'es' ? 'Mantener' : 'Maintain')
+                  }
+                </Text>
+              </View>
+
+              {/* Progress Message */}
+              {(() => {
+                const summary = showingMonthly ? monthSummary : weekSummary;
+                if (!summary) return null;
+                const goal = profile?.goal || 'maintain';
+                const isOnTrack = 
+                  (goal === 'lose' && summary.daysInDeficit >= summary.daysTracked / 2) ||
+                  (goal === 'gain' && summary.daysInSurplus >= summary.daysTracked / 2) ||
+                  (goal === 'maintain' && summary.daysInBalance >= summary.daysTracked / 2);
+                
+                return (
+                  <View style={[shareStyles.progressBadge, { backgroundColor: isOnTrack ? '#4CAF5020' : '#FFC10720' }]}>
+                    <Ionicons 
+                      name={isOnTrack ? 'checkmark-circle' : 'fitness'} 
+                      size={20} 
+                      color={isOnTrack ? '#4CAF50' : '#FFC107'} 
+                    />
+                    <Text style={[shareStyles.progressText, { color: isOnTrack ? '#4CAF50' : '#FFC107' }]}>
+                      {isOnTrack 
+                        ? (i18n.language === 'es' ? '¡En camino!' : 'On track!')
+                        : (i18n.language === 'es' ? 'Sigo trabajando' : 'Keep going!')
+                      }
+                    </Text>
+                  </View>
+                );
+              })()}
+
+              {/* Footer */}
+              <View style={shareStyles.footer}>
+                <Text style={shareStyles.footerText}>snapfood.app</Text>
+              </View>
+            </View>
+          </ViewShot>
+
+          {/* Loading indicator */}
+          {isCapturing && (
+            <View style={shareStyles.loadingOverlay}>
+              <Text style={shareStyles.loadingText}>
+                {i18n.language === 'es' ? 'Generando imagen...' : 'Generating image...'}
+              </Text>
+            </View>
+          )}
+        </View>
+      </Modal>
     </View>
   );
 }
