@@ -56,6 +56,8 @@ export default function RecipeDetailScreen() {
   const [fatTablespoons, setFatTablespoons] = useState(0);
   const [portions, setPortions] = useState(1);
   const [showFatSelector, setShowFatSelector] = useState(false);
+  const [showCustomPortions, setShowCustomPortions] = useState(false);
+  const [customPortionsText, setCustomPortionsText] = useState('');
 
   useEffect(() => {
     if (params.recipeData) {
