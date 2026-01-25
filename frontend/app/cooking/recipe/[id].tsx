@@ -514,35 +514,9 @@ export default function RecipeDetailScreen() {
                 </View>
                 <Text style={styles.fatSelectorSubtitle}>
                   {i18n.language === 'es' 
-                    ? 'Las grasas suman muchas calorías. Selecciona el tipo y cantidad:'
-                    : 'Fats add many calories. Select type and amount:'}
+                    ? 'Las grasas suman muchas calorías. Selecciona el tipo y cuántas cucharadas usaste:'
+                    : 'Fats add many calories. Select the type and how many tablespoons you used:'}
                 </Text>
-
-                {/* Portions Selector */}
-                <View style={styles.portionRow}>
-                  <Text style={styles.portionLabel}>
-                    {i18n.language === 'es' ? 'Porciones:' : 'Portions:'}
-                  </Text>
-                  <View style={styles.portionButtons}>
-                    {[0.5, 1, 1.5, 2, 2.5, 3].map((p) => (
-                      <TouchableOpacity
-                        key={p}
-                        style={[
-                          styles.portionButton,
-                          portions === p && styles.portionButtonActive,
-                        ]}
-                        onPress={() => setPortions(p)}
-                      >
-                        <Text style={[
-                          styles.portionButtonText,
-                          portions === p && styles.portionButtonTextActive,
-                        ]}>
-                          {p}
-                        </Text>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                </View>
 
                 {/* Fat Type Selector */}
                 <Text style={styles.fatTypeLabel}>
@@ -581,7 +555,10 @@ export default function RecipeDetailScreen() {
                 {selectedFatType !== 'none' && (
                   <View style={styles.tablespoonRow}>
                     <Text style={styles.tablespoonLabel}>
-                      {i18n.language === 'es' ? 'Cucharadas:' : 'Tablespoons:'}
+                      {i18n.language === 'es' ? 'Cucharadas (cda):' : 'Tablespoons (tbsp):'}
+                    </Text>
+                    <Text style={styles.tablespoonHint}>
+                      {i18n.language === 'es' ? '0.5 = media cda, 1 = una cda' : '0.5 = half tbsp, 1 = one tbsp'}
                     </Text>
                     <View style={styles.tablespoonButtons}>
                       {TABLESPOON_OPTIONS.map((tbsp) => (
@@ -609,10 +586,10 @@ export default function RecipeDetailScreen() {
                 <View style={styles.caloriesSummary}>
                   <View style={styles.caloriesSummaryRow}>
                     <Text style={styles.caloriesSummaryLabel}>
-                      {i18n.language === 'es' ? 'Receta base:' : 'Base recipe:'}
+                      {i18n.language === 'es' ? `Receta (${portions} porc.):` : `Recipe (${portions} serv.):`}
                     </Text>
                     <Text style={styles.caloriesSummaryValue}>
-                      {Math.round((recipe.calories || 0) * portions)} cal
+                      {Math.round((recipe.calories || 0) * getPortionMultiplier())} cal
                     </Text>
                   </View>
                   {fatTablespoons > 0 && (
