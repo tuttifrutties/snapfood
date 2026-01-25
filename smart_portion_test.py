@@ -10,7 +10,7 @@ import os
 from datetime import datetime
 
 # Configuration
-BACKEND_URL = "https://nutritrack-upgrade-1.preview.emergentagent.com/api"
+BACKEND_URL = "https://food-tracker-191.preview.emergentagent.com/api"
 
 def create_simple_test_image():
     """Create a proper test image as base64 using PIL"""

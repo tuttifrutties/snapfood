@@ -10,7 +10,7 @@ import time
 from datetime import datetime
 
 # Configuration
-BACKEND_URL = "https://nutritrack-upgrade-1.preview.emergentagent.com/api"
+BACKEND_URL = "https://food-tracker-191.preview.emergentagent.com/api"
 
 def test_recipe_suggestions_endpoint():
     """Test the recipe suggestions endpoint with the exact payload from review request"""

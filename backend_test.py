@@ -14,7 +14,7 @@ from PIL import Image
 import io
 
 # Configuration
-BACKEND_URL = "https://nutritrack-upgrade-1.preview.emergentagent.com/api"
+BACKEND_URL = "https://food-tracker-191.preview.emergentagent.com/api"
 TEST_USER_ID = None
 
 def create_test_food_image():
