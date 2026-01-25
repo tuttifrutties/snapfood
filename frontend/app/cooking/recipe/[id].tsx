@@ -495,7 +495,7 @@ export default function RecipeDetailScreen() {
                 <View style={styles.ingredientBullet} />
                 <Text style={[
                   styles.ingredientText,
-                  portions !== 1 && styles.ingredientTextScaled
+                  portions !== (recipe.servings || 4) && styles.ingredientTextScaled
                 ]}>{ingredient}</Text>
               </View>
             ))}
