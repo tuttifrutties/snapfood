@@ -382,18 +382,20 @@ export default function RecipeDetailScreen() {
             <View style={styles.servingsBadge}>
               <Ionicons name="people-outline" size={16} color="#FF6B6B" />
               <Text style={styles.servingsText}>
-                {recipe.servings || 4} {i18n.language === 'es' ? 'porciones' : 'servings'}
+                {i18n.language === 'es' ? 'Base:' : 'Base:'} {recipe.servings || 4}
               </Text>
             </View>
           </View>
           
-          {/* Portions Multiplier */}
+          {/* Portions Selector - Clear question */}
           <View style={styles.portionsSelector}>
             <Text style={styles.portionsSelectorLabel}>
-              {i18n.language === 'es' ? '¿Cuántas porciones preparás?' : 'How many portions?'}
+              {i18n.language === 'es' 
+                ? '🍽️ ¿Para cuántas porciones vas a cocinar?' 
+                : '🍽️ How many portions will you cook?'}
             </Text>
             <View style={styles.portionsButtons}>
-              {[0.5, 1, 1.5, 2, 3, 4].map((p) => (
+              {getPortionOptions().map((p) => (
                 <TouchableOpacity
                   key={p}
                   style={[
@@ -406,19 +408,86 @@ export default function RecipeDetailScreen() {
                     styles.portionBtnText,
                     portions === p && styles.portionBtnTextActive,
                   ]}>
-                    {p === 1 ? `${recipe.servings || 4}` : `${Math.round((recipe.servings || 4) * p)}`}
+                    {p}
                   </Text>
                 </TouchableOpacity>
               ))}
+              {/* Custom number button */}
+              <TouchableOpacity
+                style={[
+                  styles.portionBtn,
+                  styles.portionBtnCustom,
+                  !getPortionOptions().includes(portions) && styles.portionBtnActive,
+                ]}
+                onPress={() => {
+                  setCustomPortionsText(portions.toString());
+                  setShowCustomPortions(true);
+                }}
+              >
+                <Text style={[
+                  styles.portionBtnText,
+                  !getPortionOptions().includes(portions) && styles.portionBtnTextActive,
+                ]}>
+                  {!getPortionOptions().includes(portions) ? portions : '...'}
+                </Text>
+              </TouchableOpacity>
             </View>
-            {portions !== 1 && (
+            {portions !== (recipe.servings || 4) && (
               <Text style={styles.portionsHint}>
                 {i18n.language === 'es' 
-                  ? `📐 Ingredientes ajustados para ${Math.round((recipe.servings || 4) * portions)} porciones`
-                  : `📐 Ingredients adjusted for ${Math.round((recipe.servings || 4) * portions)} portions`}
+                  ? `📐 Ingredientes ajustados para ${portions} porciones`
+                  : `📐 Ingredients adjusted for ${portions} portions`}
               </Text>
             )}
           </View>
+
+          {/* Custom Portions Modal */}
+          <Modal
+            visible={showCustomPortions}
+            transparent={true}
+            animationType="fade"
+            onRequestClose={() => setShowCustomPortions(false)}
+          >
+            <TouchableOpacity 
+              style={styles.modalOverlay}
+              activeOpacity={1}
+              onPress={() => setShowCustomPortions(false)}
+            >
+              <View style={styles.customPortionsModal}>
+                <Text style={styles.customPortionsTitle}>
+                  {i18n.language === 'es' ? '¿Cuántas porciones?' : 'How many portions?'}
+                </Text>
+                <TextInput
+                  style={styles.customPortionsInput}
+                  keyboardType="number-pad"
+                  value={customPortionsText}
+                  onChangeText={setCustomPortionsText}
+                  placeholder="Ej: 5"
+                  placeholderTextColor="#666"
+                  autoFocus
+                  maxLength={2}
+                />
+                <View style={styles.customPortionsButtons}>
+                  <TouchableOpacity 
+                    style={styles.customPortionsCancelBtn}
+                    onPress={() => setShowCustomPortions(false)}
+                  >
+                    <Text style={styles.customPortionsCancelText}>
+                      {i18n.language === 'es' ? 'Cancelar' : 'Cancel'}
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity 
+                    style={styles.customPortionsConfirmBtn}
+                    onPress={handleCustomPortionsSubmit}
+                  >
+                    <Text style={styles.customPortionsConfirmText}>
+                      {i18n.language === 'es' ? 'Confirmar' : 'Confirm'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </TouchableOpacity>
+          </Modal>
 
           <View style={styles.ingredientsList}>
             {getScaledIngredients().map((ingredient: string, index: number) => (
