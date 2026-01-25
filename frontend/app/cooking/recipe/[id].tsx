@@ -62,6 +62,10 @@ export default function RecipeDetailScreen() {
       try {
         const parsed = JSON.parse(params.recipeData as string);
         setRecipe(parsed);
+        // Set initial portions to recipe servings
+        if (parsed.servings) {
+          setPortions(1); // Start at 1x the recipe
+        }
       } catch (error) {
         console.error('Failed to parse recipe data:', error);
       }
@@ -76,6 +80,67 @@ export default function RecipeDetailScreen() {
       }
     }
   }, [params.recipeData, params.selectedIngredients]);
+
+  // Scale ingredient quantities based on portions
+  const scaleIngredient = (ingredient: string, portionMultiplier: number): string => {
+    if (portionMultiplier === 1) return ingredient;
+    
+    // Regular expression to find numbers at the start or after common patterns
+    const numberPattern = /^(\d+(?:[.,]\d+)?)\s*(.*)$/;
+    const fractionPattern = /^(\d+)\/(\d+)\s*(.*)$/;
+    const rangePattern = /^(\d+)-(\d+)\s*(.*)$/;
+    
+    // Check for fractions like "1/2 cup"
+    const fractionMatch = ingredient.match(fractionPattern);
+    if (fractionMatch) {
+      const numerator = parseFloat(fractionMatch[1]);
+      const denominator = parseFloat(fractionMatch[2]);
+      const value = (numerator / denominator) * portionMultiplier;
+      const rest = fractionMatch[3];
+      
+      // Format nicely
+      if (value === Math.floor(value)) {
+        return `${Math.floor(value)} ${rest}`;
+      } else {
+        return `${value.toFixed(1).replace('.0', '')} ${rest}`;
+      }
+    }
+    
+    // Check for ranges like "2-3 cups"
+    const rangeMatch = ingredient.match(rangePattern);
+    if (rangeMatch) {
+      const min = parseFloat(rangeMatch[1]) * portionMultiplier;
+      const max = parseFloat(rangeMatch[2]) * portionMultiplier;
+      const rest = rangeMatch[3];
+      return `${Math.round(min)}-${Math.round(max)} ${rest}`;
+    }
+    
+    // Check for simple numbers like "500g" or "2 cups"
+    const numberMatch = ingredient.match(numberPattern);
+    if (numberMatch) {
+      const originalValue = parseFloat(numberMatch[1].replace(',', '.'));
+      const rest = numberMatch[2];
+      const scaledValue = originalValue * portionMultiplier;
+      
+      // Format based on size
+      if (scaledValue >= 100) {
+        return `${Math.round(scaledValue)} ${rest}`;
+      } else if (scaledValue >= 1) {
+        return `${scaledValue.toFixed(1).replace('.0', '')} ${rest}`;
+      } else {
+        return `${scaledValue.toFixed(2)} ${rest}`;
+      }
+    }
+    
+    // No number found, return as-is
+    return ingredient;
+  };
+
+  // Get scaled ingredients
+  const getScaledIngredients = (): string[] => {
+    if (!recipe?.ingredients) return [];
+    return recipe.ingredients.map((ing: string) => scaleIngredient(ing, portions));
+  };
 
   // Calculate fat calories
   const getFatCalories = () => {
