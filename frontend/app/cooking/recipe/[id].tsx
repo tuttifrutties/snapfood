@@ -84,9 +84,12 @@ export default function RecipeDetailScreen() {
     }
   }, [params.recipeData, params.selectedIngredients]);
 
-  // Scale ingredient quantities based on portions
-  const scaleIngredient = (ingredient: string, portionMultiplier: number): string => {
-    if (portionMultiplier === 1) return ingredient;
+  // Scale ingredient quantities based on portions selected vs base recipe servings
+  const scaleIngredient = (ingredient: string, targetPortions: number): string => {
+    const baseServings = recipe?.servings || 4;
+    const multiplier = targetPortions / baseServings;
+    
+    if (multiplier === 1) return ingredient;
     
     // Regular expression to find numbers at the start or after common patterns
     const numberPattern = /^(\d+(?:[.,]\d+)?)\s*(.*)$/;
@@ -98,7 +101,7 @@ export default function RecipeDetailScreen() {
     if (fractionMatch) {
       const numerator = parseFloat(fractionMatch[1]);
       const denominator = parseFloat(fractionMatch[2]);
-      const value = (numerator / denominator) * portionMultiplier;
+      const value = (numerator / denominator) * multiplier;
       const rest = fractionMatch[3];
       
       // Format nicely
@@ -112,8 +115,8 @@ export default function RecipeDetailScreen() {
     // Check for ranges like "2-3 cups"
     const rangeMatch = ingredient.match(rangePattern);
     if (rangeMatch) {
-      const min = parseFloat(rangeMatch[1]) * portionMultiplier;
-      const max = parseFloat(rangeMatch[2]) * portionMultiplier;
+      const min = parseFloat(rangeMatch[1]) * multiplier;
+      const max = parseFloat(rangeMatch[2]) * multiplier;
       const rest = rangeMatch[3];
       return `${Math.round(min)}-${Math.round(max)} ${rest}`;
     }
@@ -123,7 +126,7 @@ export default function RecipeDetailScreen() {
     if (numberMatch) {
       const originalValue = parseFloat(numberMatch[1].replace(',', '.'));
       const rest = numberMatch[2];
-      const scaledValue = originalValue * portionMultiplier;
+      const scaledValue = originalValue * multiplier;
       
       // Format based on size
       if (scaledValue >= 100) {
