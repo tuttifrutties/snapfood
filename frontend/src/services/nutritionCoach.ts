@@ -174,7 +174,7 @@ export const saveUserNutritionProfile = async (
   profile: Omit<UserNutritionProfile, 'bmr' | 'tdee' | 'targetCalories' | 'createdAt' | 'updatedAt'>
 ): Promise<UserNutritionProfile> => {
   const bmr = calculateBMR(profile.weight, profile.height, profile.age, profile.gender);
-  const tdee = calculateTDEE(bmr, profile.activities);
+  const tdee = calculateTDEE(bmr, profile.activities, profile.weight);
   const targetCalories = calculateTargetCalories(tdee, profile.goal);
 
   const existingProfile = await getUserNutritionProfile();
