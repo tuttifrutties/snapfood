@@ -83,34 +83,71 @@ export const calculateBMR = (
 };
 
 /**
- * Calculate activity multiplier based on activities
+ * MET values for each activity (Metabolic Equivalent of Task)
+ * Higher MET = more calories burned
  */
-const calculateActivityMultiplier = (activities: PhysicalActivity[]): number => {
-  if (!activities || activities.length === 0) return 1.2; // Sedentary
+const ACTIVITY_MET_VALUES: { [key: string]: number } = {
+  walking: 3.5,
+  running: 9.8,
+  cycling: 7.5,
+  swimming: 8.0,
+  gym: 6.0,
+  yoga: 3.0,
+  dance: 5.5,
+  sports: 7.0,
+  hiking: 6.0,
+  martial_arts: 7.5,
+};
 
-  // Calculate total weekly exercise minutes
-  let totalWeeklyMinutes = 0;
+/**
+ * Calculate calories burned from activities per day (averaged over the week)
+ */
+const calculateActivityCalories = (activities: PhysicalActivity[], weight: number): number => {
+  if (!activities || activities.length === 0) return 0;
+
+  let totalWeeklyCalories = 0;
+  
   activities.forEach(activity => {
-    totalWeeklyMinutes += activity.durationMinutes * activity.daysPerWeek.length;
+    const met = ACTIVITY_MET_VALUES[activity.id] || 5.0; // Default MET of 5
+    const daysPerWeek = activity.daysPerWeek.length;
+    const hoursPerSession = activity.durationMinutes / 60;
+    
+    // Calories burned = MET × weight(kg) × duration(hours)
+    const caloriesPerSession = met * weight * hoursPerSession;
+    const weeklyCalories = caloriesPerSession * daysPerWeek;
+    
+    totalWeeklyCalories += weeklyCalories;
+    
+    console.log(`[NutritionCoach] Activity: ${activity.id}, MET: ${met}, ${activity.durationMinutes}min x ${daysPerWeek}days = ${Math.round(weeklyCalories)} cal/week`);
   });
 
-  // Convert to activity multiplier
-  if (totalWeeklyMinutes < 60) return 1.2; // Sedentary
-  if (totalWeeklyMinutes < 180) return 1.375; // Light
-  if (totalWeeklyMinutes < 360) return 1.55; // Moderate
-  if (totalWeeklyMinutes < 540) return 1.725; // Active
-  return 1.9; // Very active
+  // Return daily average
+  const dailyAverage = Math.round(totalWeeklyCalories / 7);
+  console.log(`[NutritionCoach] Total weekly activity calories: ${Math.round(totalWeeklyCalories)}, Daily average: ${dailyAverage}`);
+  
+  return dailyAverage;
 };
 
 /**
  * Calculate TDEE (Total Daily Energy Expenditure)
+ * BMR + Activity calories
  */
 export const calculateTDEE = (
   bmr: number,
-  activities: PhysicalActivity[]
+  activities: PhysicalActivity[],
+  weight: number = 70 // Default weight if not provided
 ): number => {
-  const multiplier = calculateActivityMultiplier(activities);
-  return Math.round(bmr * multiplier);
+  // Base multiplier for daily activities (walking, standing, etc.)
+  const baseMultiplier = 1.2;
+  const baseTDEE = Math.round(bmr * baseMultiplier);
+  
+  // Add activity calories
+  const activityCalories = calculateActivityCalories(activities, weight);
+  
+  const totalTDEE = baseTDEE + activityCalories;
+  console.log(`[NutritionCoach] BMR: ${bmr}, Base TDEE (x1.2): ${baseTDEE}, Activity calories: ${activityCalories}, Total TDEE: ${totalTDEE}`);
+  
+  return totalTDEE;
 };
 
 /**
