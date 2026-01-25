@@ -973,8 +973,9 @@ export default function PersonalProfileScreen() {
                 onPress={async () => {
                   if (profile) {
                     const updatedProfile = { ...profile, activities: editActivities };
-                    await saveUserNutritionProfile(updatedProfile);
-                    setProfile(updatedProfile);
+                    // saveUserNutritionProfile recalcula TDEE y targetCalories
+                    const savedProfile = await saveUserNutritionProfile(updatedProfile);
+                    setProfile(savedProfile); // Usar el perfil guardado con TDEE actualizado
                     setShowActivityPicker(false);
                     setConfiguringActivity(null);
                   }
