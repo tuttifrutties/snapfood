@@ -66,10 +66,9 @@ export default function RecipeDetailScreen() {
       try {
         const parsed = JSON.parse(params.recipeData as string);
         setRecipe(parsed);
-        // Set initial portions to recipe servings
-        if (parsed.servings) {
-          setPortions(1); // Start at 1x the recipe
-        }
+        // Set initial portions to recipe servings (the base value)
+        const baseServings = parsed.servings || 4;
+        setPortions(baseServings);
       } catch (error) {
         console.error('Failed to parse recipe data:', error);
       }
