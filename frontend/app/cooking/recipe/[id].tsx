@@ -336,12 +336,57 @@ export default function RecipeDetailScreen() {
           <Text style={styles.description}>{recipe.description}</Text>
 
           {/* Ingredients */}
-          <Text style={styles.sectionTitle}>{t('recipe.ingredients')}</Text>
+          <View style={styles.ingredientsTitleRow}>
+            <Text style={styles.sectionTitle}>{t('recipe.ingredients')}</Text>
+            <View style={styles.servingsBadge}>
+              <Ionicons name="people-outline" size={16} color="#FF6B6B" />
+              <Text style={styles.servingsText}>
+                {recipe.servings || 4} {i18n.language === 'es' ? 'porciones' : 'servings'}
+              </Text>
+            </View>
+          </View>
+          
+          {/* Portions Multiplier */}
+          <View style={styles.portionsSelector}>
+            <Text style={styles.portionsSelectorLabel}>
+              {i18n.language === 'es' ? '¿Cuántas porciones preparás?' : 'How many portions?'}
+            </Text>
+            <View style={styles.portionsButtons}>
+              {[0.5, 1, 1.5, 2, 3, 4].map((p) => (
+                <TouchableOpacity
+                  key={p}
+                  style={[
+                    styles.portionBtn,
+                    portions === p && styles.portionBtnActive,
+                  ]}
+                  onPress={() => setPortions(p)}
+                >
+                  <Text style={[
+                    styles.portionBtnText,
+                    portions === p && styles.portionBtnTextActive,
+                  ]}>
+                    {p === 1 ? `${recipe.servings || 4}` : `${Math.round((recipe.servings || 4) * p)}`}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+            {portions !== 1 && (
+              <Text style={styles.portionsHint}>
+                {i18n.language === 'es' 
+                  ? `📐 Ingredientes ajustados para ${Math.round((recipe.servings || 4) * portions)} porciones`
+                  : `📐 Ingredients adjusted for ${Math.round((recipe.servings || 4) * portions)} portions`}
+              </Text>
+            )}
+          </View>
+
           <View style={styles.ingredientsList}>
-            {recipe.ingredients?.map((ingredient: string, index: number) => (
+            {getScaledIngredients().map((ingredient: string, index: number) => (
               <View key={index} style={styles.ingredientItem}>
                 <View style={styles.ingredientBullet} />
-                <Text style={styles.ingredientText}>{ingredient}</Text>
+                <Text style={[
+                  styles.ingredientText,
+                  portions !== 1 && styles.ingredientTextScaled
+                ]}>{ingredient}</Text>
               </View>
             ))}
           </View>
