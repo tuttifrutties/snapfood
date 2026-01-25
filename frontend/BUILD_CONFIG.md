@@ -1,48 +1,54 @@
 # 📱 SNAPFOOD - Configuración de Build
 
-> **IMPORTANTE:** Leer este archivo antes de hacer cualquier cambio o build.
+> **IMPORTANTE:** Leer este archivo COMPLETO antes de hacer cualquier cambio o build.
+> **Última actualización:** Enero 2026 - Build v48+
 
 ---
 
-## 🔧 Package Manager
+## 🚨 REGLAS CRÍTICAS
 
-**USAR NPM (nunca yarn)**
-
-```bash
-# El proyecto usa npm con --legacy-peer-deps
-# Ya existe .npmrc con legacy-peer-deps=true
-# NUNCA usar yarn, SIEMPRE npm
-```
+1. **USAR NPM** (nunca yarn) - El proyecto tiene `.npmrc` con `legacy-peer-deps=true`
+2. **NEW ARCHITECTURE = TRUE** - Reanimated 4.x lo requiere
+3. **Slug del proyecto:** `foodsnap` (NO "snapfood")
+4. **versionCode:** Se edita MANUALMENTE en `app.json` después del `git reset`
 
 ---
 
 ## 📦 Versiones Compatibles (Enero 2026)
 
-Estas versiones funcionan juntas:
-
 | Paquete | Versión |
 |---------|---------|
-| react-native | 0.81.5 |
+| expo | ~54.x |
 | react | 19.1.0 |
-| react-native-reanimated | 4.1.6 |
-| react-native-worklets | 0.5.2 |
-| react-native-screens | 4.16.0 |
-| react-native-gesture-handler | 2.28.0 |
+| react-native | 0.81.5 |
+| react-native-reanimated | 4.2.1 |
+| react-native-worklets | 0.7.2 |
+| react-native-screens | 4.20.0 |
+| react-native-gesture-handler | 2.30.0 |
 | react-native-view-shot | latest |
 | expo-sharing | latest |
-| expo | ~54.x |
 | node (en eas.json) | 20.18.0 |
 
 ---
 
 ## 📁 Archivos Críticos
 
-### 1. `.npmrc` (en /frontend)
-```
-legacy-peer-deps=true
+### 1. `app.json` - Configuración principal
+```json
+{
+  "expo": {
+    "name": "SnapFood",
+    "slug": "foodsnap",  // ⚠️ DEBE SER "foodsnap"
+    "newArchEnabled": true,  // ⚠️ OBLIGATORIO para Reanimated 4.x
+    "android": {
+      "versionCode": XX,  // ⚠️ CAMBIAR MANUALMENTE antes de cada build
+      ...
+    }
+  }
+}
 ```
 
-### 2. `eas.json` (en /frontend)
+### 2. `eas.json` - Configuración de EAS Build
 ```json
 {
   "cli": {
@@ -60,7 +66,10 @@ legacy-peer-deps=true
       "node": "20.18.0"
     },
     "production": {
-      "node": "20.18.0"
+      "node": "20.18.0",
+      "android": {
+        "buildType": "app-bundle"
+      }
     }
   },
   "submit": {
@@ -69,69 +78,54 @@ legacy-peer-deps=true
 }
 ```
 
-### 3. `.gitignore` - Carpetas nativas ignoradas
-```gitignore
-# Native - Let EAS generate these
-android/
-ios/
+### 3. `.npmrc` - Configuración de NPM
+```
+legacy-peer-deps=true
 ```
 
-### 4. `app.json` - New Architecture habilitada
-```json
-{
-  "expo": {
-    "newArchEnabled": true,
-    ...
-  }
-}
+### 4. `.gitignore` - NO ignorar android/
+```gitignore
+# Native - iOS only (Android se sube al repo)
+ios/
 ```
+⚠️ La carpeta `android/` NO debe estar ignorada porque EAS la necesita.
 
 ---
 
-## 🚀 Pasos para Build
+## 🚀 Pasos para Build (SEGUIR EXACTAMENTE)
 
-### Desde cero (fork nuevo o problemas):
+### Desde PowerShell:
 
 ```powershell
+# 1. Ir al proyecto
+cd W:\EMERGENT\APPS\snapfood\snapfood
+
+# 2. Traer cambios de Emergent
+git fetch origin
+git reset --hard origin/main
+
+# 3. Ir a frontend
 cd frontend
 
-# 1. Limpiar e instalar dependencias
-Remove-Item -Recurse -Force node_modules -ErrorAction SilentlyContinue
+# 4. ⭐ EDITAR versionCode en app.json (ej: 49, 50, etc)
+# Abrir frontend/app.json y cambiar "versionCode": XX
+
+# 5. Eliminar carpeta android vieja
+Remove-Item -Recurse -Force android -ErrorAction SilentlyContinue
+
+# 6. Instalar dependencias
 npm install --legacy-peer-deps
 
-# 2. Verificar/instalar versiones correctas
-npm install react-native-worklets@0.5.2 --legacy-peer-deps
-npm install react-native-reanimated@4.1.6 --legacy-peer-deps
+# 7. Generar carpeta android nueva
+npx expo prebuild --clean --platform android
 
-# 3. Eliminar carpetas nativas (EAS las genera)
-Remove-Item -Recurse -Force android -ErrorAction SilentlyContinue
-Remove-Item -Recurse -Force ios -ErrorAction SilentlyContinue
-
-# 4. Commit y push
+# 8. Commit y push
 cd ..
 git add .
-git commit -m "Prepare for build"
+git commit -m "Build version XX - descripcion"
 git push origin main
 
-# 5. Build
-cd frontend
-eas build --platform android --profile production
-```
-
-### Build normal (sin problemas):
-
-```powershell
-cd frontend
-
-# 1. Incrementar versionCode en app.json
-
-# 2. Commit y push
-cd ..
-git add .
-git commit -m "Version XX"
-git push origin main
-
-# 3. Build
+# 9. Build
 cd frontend
 eas build --platform android --profile production
 ```
@@ -141,71 +135,132 @@ eas build --platform android --profile production
 ## ⚠️ Errores Comunes y Soluciones
 
 ### Error: `yarn install --frozen-lockfile`
-**Causa:** EAS intenta usar yarn
-**Solución:** Eliminar `yarn.lock` si existe
+**Causa:** Existe `yarn.lock`
+**Solución:** 
+```powershell
+Remove-Item frontend/yarn.lock
+```
 
 ### Error: `Cannot find module 'react-native-worklets/plugin'`
-**Causa:** Falta worklets o versión incorrecta
-**Solución:** `npm install react-native-worklets@0.5.2 --legacy-peer-deps`
+**Causa:** Falta worklets
+**Solución:** 
+```powershell
+npm install react-native-worklets@0.7.2 --legacy-peer-deps
+```
 
 ### Error: `ReactNativeApplicationEntryPoint` / `loadReactNative`
-**Causa:** Incompatibilidad de versiones RN
-**Solución:** `npx expo install --fix` y regenerar android
+**Causa:** Versión incorrecta de React Native
+**Solución:** 
+```powershell
+npm install react-native@0.81.5 --legacy-peer-deps
+npx expo prebuild --clean --platform android
+```
 
 ### Error: `configs.toReversed is not a function`
-**Causa:** Node version muy vieja en EAS
-**Solución:** Verificar que eas.json tenga `"node": "20.18.0"`
+**Causa:** Node version vieja
+**Solución:** Verificar que `eas.json` tenga `"node": "20.18.0"`
 
 ### Error: `Reanimated requires new architecture`
-**Causa:** New Arch no habilitada
-**Solución:** Agregar `"newArchEnabled": true` en app.json
+**Causa:** newArchEnabled está en false
+**Solución:** En `app.json` poner `"newArchEnabled": true`
 
 ### Error: `Invalid version of react-native-worklets`
-**Causa:** Versión de worklets incompatible con reanimated
-**Solución:** Ver tabla de versiones compatibles arriba
-
-### Error: Conflicto de merge en archivos
-**Causa:** Git merge sin resolver
+**Causa:** Versiones incompatibles
 **Solución:** 
+```powershell
+npm install react-native-reanimated@4.2.1 react-native-worklets@0.7.2 --legacy-peer-deps
+```
+
+### Error: `gradlew: cannot execute: required file not found`
+**Causa:** Carpeta android corrupta o vacía
+**Solución:** 
+```powershell
+Remove-Item -Recurse -Force android
+npx expo prebuild --clean --platform android
+```
+
+### Error: `slug does not match projectId`
+**Causa:** El slug en app.json no coincide con EAS
+**Solución:** Verificar que `"slug": "foodsnap"` (NO snapfood)
+
+### Error de merge en git
+**Solución:**
 ```powershell
 git merge --abort
 git reset --hard origin/main
-git pull origin main
 ```
 
 ---
 
-## 📝 Notas Adicionales
+## 📊 Funcionalidades Implementadas
 
-- **Slug del proyecto:** `foodsnap` (no "snapfood")
-- **versionCode:** Se cambia manualmente en `app.json` antes de cada build
-- **Idioma:** Español (Argentina)
-- **Repo:** tuttifrutties/snapfood
+### TDEE con MET Values
+El cálculo de gasto calórico usa valores MET reales:
+- Caminar: 3.5 MET
+- Correr: 9.8 MET
+- Ciclismo: 7.5 MET
+- Natación: 8.0 MET
+- Gimnasio: 6.0 MET
+- Yoga: 3.0 MET
+- Baile: 5.5 MET
+- Deportes: 7.0 MET
+- Senderismo: 6.0 MET
+- Artes marciales: 7.5 MET
+
+Fórmula: `Calorías = MET × Peso(kg) × Horas × Días/semana`
+
+### Porciones Inteligentes (Fotos)
+- Pizza/compartibles: 1 porción = 1/8 del total
+- Lata/botella: 1 = unidad completa
+- Plato: 1 = plato completo
+
+### Selector de Porciones en Recetas
+- Muestra cantidad de porciones base
+- Permite escalar ingredientes (regla de 3)
+- Recalcula calorías automáticamente
+
+### Compartir como Imagen
+- Genera imagen profesional del resumen
+- Usa react-native-view-shot + expo-sharing
 
 ---
 
-## 🔄 Flujo Git Completo
+## 📝 Tareas Pendientes para Próximo Fork
+
+1. **Force Update** - Mostrar cartel obligatorio cuando hay nueva versión
+2. **Probar TDEE** - Verificar que todas las actividades suman correctamente
+3. **Light Mode** - Algunos textos pueden seguir con problemas
+
+---
+
+## 🔧 Comandos Útiles
 
 ```powershell
-# 1. En Emergent: Click "Save to Git"
+# Ver versionCode actual
+Select-String -Path "app.json" -Pattern "versionCode"
 
-# 2. En PowerShell:
-cd W:\EMERGENT\APPS\snapfood\snapfood
-git pull origin main
+# Verificar dependencias
+npm list react-native react-native-reanimated react-native-worklets
 
-# 3. Cambiar versionCode en frontend/app.json
+# Limpiar cache
+npm cache clean --force
+Remove-Item -Recurse -Force node_modules
+npm install --legacy-peer-deps
 
-# 4. Commit y push
-git add .
-git commit -m "Descripción del cambio"
-git push origin main
-
-# 5. Build
-cd frontend
-eas build --platform android --profile production
+# Fix de versiones automático (a veces funciona)
+npx expo install --fix
 ```
 
 ---
 
-*Última actualización: Enero 2026*
-*Build exitoso: v45+*
+## 📱 Info del Proyecto
+
+- **Slug EAS:** foodsnap
+- **Package:** com.masiru.snapfood
+- **Repo:** tuttifrutties/snapfood
+- **Ruta local:** W:\EMERGENT\APPS\snapfood\snapfood
+- **Idioma:** Español (Argentina)
+
+---
+
+*Mantener este archivo actualizado después de cada sesión de desarrollo.*
