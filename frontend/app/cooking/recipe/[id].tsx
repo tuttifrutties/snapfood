@@ -148,6 +148,12 @@ export default function RecipeDetailScreen() {
     return recipe.ingredients.map((ing: string) => scaleIngredient(ing, portions));
   };
 
+  // Get portion multiplier for calorie calculations
+  const getPortionMultiplier = () => {
+    const baseServings = recipe?.servings || 4;
+    return portions / baseServings;
+  };
+
   // Calculate fat calories
   const getFatCalories = () => {
     const fatType = FAT_TYPES.find(f => f.id === selectedFatType);
@@ -157,8 +163,36 @@ export default function RecipeDetailScreen() {
 
   // Get total calories including fat
   const getTotalCalories = () => {
-    const baseCalories = (recipe?.calories || 0) * portions;
-    return baseCalories + getFatCalories();
+    const baseCalories = (recipe?.calories || 0) * getPortionMultiplier();
+    return Math.round(baseCalories + getFatCalories());
+  };
+
+  // Handle custom portions input
+  const handleCustomPortionsSubmit = () => {
+    const num = parseInt(customPortionsText, 10);
+    if (num >= 1 && num <= 50) {
+      setPortions(num);
+      setShowCustomPortions(false);
+      setCustomPortionsText('');
+    } else {
+      Alert.alert(
+        i18n.language === 'es' ? 'Número inválido' : 'Invalid number',
+        i18n.language === 'es' ? 'Ingresa un número entre 1 y 50' : 'Enter a number between 1 and 50'
+      );
+    }
+  };
+
+  // Get quick portion options based on recipe servings
+  const getPortionOptions = () => {
+    const baseServings = recipe?.servings || 4;
+    // Generate options: 2, 4, 6, 8, 10, 12, 14, 16, 18, 20
+    // But also include 1 if base is small, and include the base serving
+    const options = [1, 2, 4, 6, 8];
+    if (!options.includes(baseServings)) {
+      options.push(baseServings);
+      options.sort((a, b) => a - b);
+    }
+    return options.slice(0, 5); // Show max 5 buttons + custom
   };
 
   const saveToHistory = async (recipeData: any) => {
