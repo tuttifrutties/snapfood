@@ -351,14 +351,21 @@ export default function RecipeDetailScreen() {
         selectedIngredients
       );
 
-      // Save to history
-      await saveToHistory(recipe);
+      // Save to history and get the entry
+      const savedEntry = await saveToHistory(recipe);
+      
+      // Store entry id and calories for the portions eaten popup
+      if (savedEntry) {
+        setSavedEntryId(savedEntry.id);
+        const fatCalPerPortion = Math.round(getFatCalories() / portions);
+        setCaloriesPerPortion(Math.round((recipe.calories || 0) + fatCalPerPortion));
+      }
       
       setIsConfirmed(true);
       
       // Calculate per portion calories for message
       const fatCaloriesPerPortion = Math.round(getFatCalories() / portions);
-      const caloriesPerPortion = Math.round((recipe.calories || 0) + fatCaloriesPerPortion);
+      const calPerPortion = Math.round((recipe.calories || 0) + fatCaloriesPerPortion);
       
       // Show confirmation message
       const message = i18n.language === 'es'
