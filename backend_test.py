@@ -1031,142 +1031,174 @@ def test_snapfood_recipe_generation():
     print("Testing complete recipe flow as requested in review")
     print("=" * 60)
     
-    # Test payload exactly as specified in the review request
-    test_payload = {
-        "userId": "test-user-snapfood-123",
-        "ingredients": ["chicken breast", "rice", "onion", "garlic", "tomato"],
-        "language": "es"  # Test Spanish as mentioned in review
-    }
+    # Test both Spanish and English as comprehensive test
+    test_cases = [
+        {
+            "name": "Spanish Recipe Generation",
+            "payload": {
+                "userId": "test-user-snapfood-123",
+                "ingredients": ["chicken breast", "rice", "onion", "garlic", "tomato"],
+                "language": "es"
+            }
+        },
+        {
+            "name": "English Recipe Generation", 
+            "payload": {
+                "userId": "test-user-snapfood-456",
+                "ingredients": ["chicken breast", "rice", "onion", "garlic", "tomato"],
+                "language": "en"
+            }
+        }
+    ]
     
-    print(f"📤 Testing POST {BACKEND_URL}/recipe-suggestions")
-    print(f"📋 Payload: {json.dumps(test_payload, indent=2)}")
-    print()
+    overall_success = True
     
-    try:
-        start_time = time.time()
+    for test_case in test_cases:
+        print(f"\n🔍 {test_case['name']}")
+        print("=" * 50)
         
-        # Make the API request
-        response = requests.post(
-            f"{BACKEND_URL}/recipe-suggestions",
-            json=test_payload,
-            headers={"Content-Type": "application/json"},
-            timeout=60  # 60 second timeout for AI processing
-        )
+        test_payload = test_case["payload"]
+        print(f"📤 Testing POST {BACKEND_URL}/recipe-suggestions")
+        print(f"📋 Payload: {json.dumps(test_payload, indent=2)}")
+        print()
         
-        end_time = time.time()
-        response_time = end_time - start_time
-        
-        print(f"⏱️  Response time: {response_time:.2f} seconds")
-        print(f"📊 Status Code: {response.status_code}")
-        
-        if response.status_code != 200:
-            print(f"❌ ERROR: Expected status 200, got {response.status_code}")
-            print(f"📄 Response: {response.text}")
-            return False
-        
-        # Parse JSON response
         try:
-            data = response.json()
-        except json.JSONDecodeError as e:
-            print(f"❌ ERROR: Invalid JSON response: {e}")
-            print(f"📄 Raw response: {response.text[:500]}...")
-            return False
-        
-        print("✅ Valid JSON response received")
-        
-        # Verify response structure
-        if "recipes" not in data:
-            print("❌ ERROR: 'recipes' field missing from response")
-            return False
-        
-        recipes = data["recipes"]
-        if not isinstance(recipes, list):
-            print("❌ ERROR: 'recipes' should be a list")
-            return False
-        
-        if len(recipes) == 0:
-            print("❌ ERROR: No recipes returned")
-            return False
-        
-        print(f"✅ Received {len(recipes)} recipes")
-        
-        # Test each recipe for required fields and 4-serving normalization
-        all_tests_passed = True
-        
-        for i, recipe in enumerate(recipes, 1):
-            print(f"\n🍽️  TESTING RECIPE {i}: {recipe.get('name', 'Unknown')}")
-            print("-" * 50)
+            start_time = time.time()
             
-            # Check required fields
-            required_fields = [
-                "name", "description", "ingredients", "instructions", 
-                "servings", "calories", "protein", "carbs", "fats"
-            ]
+            # Make the API request
+            response = requests.post(
+                f"{BACKEND_URL}/recipe-suggestions",
+                json=test_payload,
+                headers={"Content-Type": "application/json"},
+                timeout=60  # 60 second timeout for AI processing
+            )
             
-            missing_fields = []
-            for field in required_fields:
-                if field not in recipe:
-                    missing_fields.append(field)
+            end_time = time.time()
+            response_time = end_time - start_time
             
-            if missing_fields:
-                print(f"❌ Missing required fields: {missing_fields}")
-                all_tests_passed = False
+            print(f"⏱️  Response time: {response_time:.2f} seconds")
+            print(f"📊 Status Code: {response.status_code}")
+            
+            if response.status_code != 200:
+                print(f"❌ ERROR: Expected status 200, got {response.status_code}")
+                print(f"📄 Response: {response.text}")
+                overall_success = False
                 continue
             
-            # CRITICAL TEST: Verify servings is always 4 (as specified in review)
-            servings = recipe.get("servings")
-            if servings != 4:
-                print(f"❌ CRITICAL: servings = {servings}, expected 4 (recipes must be normalized to 4 servings)")
-                all_tests_passed = False
-            else:
-                print(f"✅ Servings correctly normalized to 4")
+            # Parse JSON response
+            try:
+                data = response.json()
+            except json.JSONDecodeError as e:
+                print(f"❌ ERROR: Invalid JSON response: {e}")
+                print(f"📄 Raw response: {response.text[:500]}...")
+                overall_success = False
+                continue
             
-            # Verify ingredients is a list
-            ingredients = recipe.get("ingredients", [])
-            if not isinstance(ingredients, list):
-                print(f"❌ ingredients should be a list, got {type(ingredients)}")
-                all_tests_passed = False
-            else:
-                print(f"✅ Ingredients list with {len(ingredients)} items")
+            print("✅ Valid JSON response received")
             
-            # Verify instructions is a list
-            instructions = recipe.get("instructions", [])
-            if not isinstance(instructions, list):
-                print(f"❌ instructions should be a list, got {type(instructions)}")
-                all_tests_passed = False
-            else:
-                print(f"✅ Instructions list with {len(instructions)} steps")
+            # Verify response structure
+            if "recipes" not in data:
+                print("❌ ERROR: 'recipes' field missing from response")
+                overall_success = False
+                continue
             
-            # Verify nutrition values are per serving (numeric)
-            nutrition_fields = ["calories", "protein", "carbs", "fats"]
-            for field in nutrition_fields:
-                value = recipe.get(field)
-                if not isinstance(value, (int, float)):
-                    print(f"❌ {field} should be numeric, got {type(value)}: {value}")
-                    all_tests_passed = False
+            recipes = data["recipes"]
+            if not isinstance(recipes, list):
+                print("❌ ERROR: 'recipes' should be a list")
+                overall_success = False
+                continue
+            
+            if len(recipes) == 0:
+                print("❌ ERROR: No recipes returned")
+                overall_success = False
+                continue
+            
+            print(f"✅ Received {len(recipes)} recipes")
+            
+            # Test each recipe for required fields and 4-serving normalization
+            test_passed = True
+            
+            for i, recipe in enumerate(recipes, 1):
+                print(f"\n🍽️  TESTING RECIPE {i}: {recipe.get('name', 'Unknown')}")
+                print("-" * 40)
+                
+                # Check required fields
+                required_fields = [
+                    "name", "description", "ingredients", "instructions", 
+                    "servings", "calories", "protein", "carbs", "fats"
+                ]
+                
+                missing_fields = []
+                for field in required_fields:
+                    if field not in recipe:
+                        missing_fields.append(field)
+                
+                if missing_fields:
+                    print(f"❌ Missing required fields: {missing_fields}")
+                    test_passed = False
+                    continue
+                
+                # CRITICAL TEST: Verify servings is always 4 (as specified in review)
+                servings = recipe.get("servings")
+                if servings != 4:
+                    print(f"❌ CRITICAL: servings = {servings}, expected 4 (recipes must be normalized to 4 servings)")
+                    test_passed = False
                 else:
-                    print(f"✅ {field}: {value} (per serving)")
-        
-        print(f"\n{'='*60}")
-        if all_tests_passed:
-            print("🎉 ALL RECIPE TESTS PASSED!")
-            print("✅ Recipes are properly normalized to 4 servings")
-            print("✅ All required fields present")
-            print("✅ Nutrition data is per serving")
-            print("✅ Instructions and ingredients are properly formatted")
-            return True
-        else:
-            print("❌ SOME TESTS FAILED - See details above")
-            return False
+                    print(f"✅ Servings correctly normalized to 4")
+                
+                # Verify ingredients is a list
+                ingredients = recipe.get("ingredients", [])
+                if not isinstance(ingredients, list):
+                    print(f"❌ ingredients should be a list, got {type(ingredients)}")
+                    test_passed = False
+                else:
+                    print(f"✅ Ingredients list with {len(ingredients)} items")
+                
+                # Verify instructions is a list
+                instructions = recipe.get("instructions", [])
+                if not isinstance(instructions, list):
+                    print(f"❌ instructions should be a list, got {type(instructions)}")
+                    test_passed = False
+                else:
+                    print(f"✅ Instructions list with {len(instructions)} steps")
+                
+                # Verify nutrition values are per serving (numeric)
+                nutrition_fields = ["calories", "protein", "carbs", "fats"]
+                for field in nutrition_fields:
+                    value = recipe.get(field)
+                    if not isinstance(value, (int, float)):
+                        print(f"❌ {field} should be numeric, got {type(value)}: {value}")
+                        test_passed = False
+                    else:
+                        print(f"✅ {field}: {value} (per serving)")
             
-    except requests.exceptions.Timeout:
-        print("❌ ERROR: Request timed out (>60 seconds)")
-        return False
-    except requests.exceptions.RequestException as e:
-        print(f"❌ ERROR: Request failed: {e}")
-        return False
-    except Exception as e:
-        print(f"❌ ERROR: Unexpected error: {e}")
+            if test_passed:
+                print(f"\n✅ {test_case['name']}: ALL TESTS PASSED!")
+            else:
+                print(f"\n❌ {test_case['name']}: SOME TESTS FAILED")
+                overall_success = False
+                
+        except requests.exceptions.Timeout:
+            print("❌ ERROR: Request timed out (>60 seconds)")
+            overall_success = False
+        except requests.exceptions.RequestException as e:
+            print(f"❌ ERROR: Request failed: {e}")
+            overall_success = False
+        except Exception as e:
+            print(f"❌ ERROR: Unexpected error: {e}")
+            overall_success = False
+    
+    print(f"\n{'='*60}")
+    if overall_success:
+        print("🎉 ALL RECIPE GENERATION TESTS PASSED!")
+        print("✅ Recipes are properly normalized to 4 servings")
+        print("✅ All required fields present")
+        print("✅ Nutrition data is per serving")
+        print("✅ Instructions and ingredients are properly formatted")
+        print("✅ Both Spanish and English generation working")
+        return True
+    else:
+        print("❌ SOME RECIPE GENERATION TESTS FAILED - See details above")
         return False
 
 if __name__ == "__main__":
