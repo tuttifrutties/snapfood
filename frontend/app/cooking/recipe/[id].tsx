@@ -5,7 +5,7 @@
  * Saves to history when confirmed
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -17,8 +17,9 @@ import {
   Alert,
   TextInput,
   Modal,
+  BackHandler,
 } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams, useRouter, useFocusEffect } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { getCountryFlag } from '../../../src/services/recipeImage';
@@ -41,6 +42,7 @@ const FAT_TYPES = [
 ];
 
 const TABLESPOON_OPTIONS = [0, 0.5, 1, 1.5, 2, 2.5, 3];
+const PORTIONS_EATEN_OPTIONS = [0.5, 1, 1.5, 2, 2.5, 3];
 
 export default function RecipeDetailScreen() {
   const router = useRouter();
@@ -60,6 +62,13 @@ export default function RecipeDetailScreen() {
   const [showFatSelector, setShowFatSelector] = useState(false);
   const [showCustomPortions, setShowCustomPortions] = useState(false);
   const [customPortionsText, setCustomPortionsText] = useState('');
+
+  // Portions eaten popup state
+  const [showPortionsEatenModal, setShowPortionsEatenModal] = useState(false);
+  const [portionsEaten, setPortionsEaten] = useState(1);
+  const [savedEntryId, setSavedEntryId] = useState<string | null>(null);
+  const [caloriesPerPortion, setCaloriesPerPortion] = useState(0);
+  const pendingNavigation = useRef<(() => void) | null>(null);
 
   useEffect(() => {
     if (params.recipeData) {
