@@ -331,6 +331,46 @@ backend:
           ✅ Main recipes correctly use only provided ingredients
           
           CRITICAL: API budget exhaustion is blocking translation functionality and causing intermittent failures.
+      - working: false
+        agent: "testing"
+        comment: |
+          ❌ SNAPFOOD RECIPE GENERATION TESTING RESULTS - CRITICAL PYDANTIC VALIDATION ISSUE CONFIRMED
+          
+          TESTED ENDPOINT: POST /api/recipe-suggestions with exact payload from review request:
+          - userId: "test-user-snapfood-123"
+          - ingredients: ["chicken breast", "rice", "onion", "garlic", "tomato"]
+          - language: "es" and "en"
+          
+          🎯 SPANISH RECIPE GENERATION: ✅ WORKING CORRECTLY
+          - Response time: ~51-59 seconds (acceptable for AI processing)
+          - Returns 8 recipes as expected
+          - ✅ ALL recipes normalized to exactly 4 servings (CRITICAL REQUIREMENT MET)
+          - ✅ Proper nutrition data per serving (calories, protein, carbs, fats)
+          - ✅ Valid JSON response with all required fields
+          - ✅ Instructions present as list of steps
+          - ✅ Ingredients present as list
+          - ✅ Spanish translation working correctly
+          - Backend logs confirm: "Successfully translated 8 recipes to es"
+          
+          ❌ ENGLISH RECIPE GENERATION: CRITICAL PYDANTIC VALIDATION ERROR
+          - Status: HTTP 500 Internal Server Error
+          - Root cause: AI returning ingredients as objects instead of strings
+          - Error: "Input should be a valid string [type=string_type, input_value={'name': 'chicken breast', 'quantity': '400g, diced'}]"
+          - This affects ALL 9 ingredient fields in the recipe
+          - Spanish works because translation step converts objects back to strings
+          - English fails because it skips translation and hits Pydantic validation directly
+          
+          🔧 TECHNICAL ANALYSIS:
+          - The AI prompt needs strengthening to enforce string format for ingredients
+          - Current prompt says "ingredients: List of ingredients with quantities (simple strings)" but AI ignores this
+          - Translation system accidentally fixes the format, masking the underlying issue
+          - This is the same Pydantic validation error mentioned in previous test results
+          
+          ⚠️ IMPACT ASSESSMENT:
+          - Spanish recipe generation: WORKING (meets all review requirements)
+          - English recipe generation: BROKEN (500 errors)
+          - Core functionality (4-serving normalization, nutrition data) working correctly when AI responds properly
+          - Issue is in AI response format consistency, not core recipe logic
 
   - task: "External food search API endpoint"
     implemented: true
