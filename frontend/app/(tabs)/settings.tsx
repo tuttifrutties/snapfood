@@ -318,9 +318,11 @@ export default function SettingsScreen() {
               <Text style={[styles.settingLabel, { color: theme.text }]}>
                 {t('settings.lunchReminder')}
               </Text>
-              <Text style={[styles.settingDescription, { color: theme.textMuted }]}>
-                {t('settings.lunchReminderDesc')}
-              </Text>
+              <TouchableOpacity onPress={() => openTimePicker('lunch')}>
+                <Text style={[styles.timeButton, { color: theme.primary }]}>
+                  🕐 {formatTime(reminderTimes.lunch.hour, reminderTimes.lunch.minute)}
+                </Text>
+              </TouchableOpacity>
             </View>
             <Switch
               value={lunchReminder}
@@ -333,9 +335,11 @@ export default function SettingsScreen() {
           <View style={[styles.settingRow, { backgroundColor: theme.surface }]}>
             <View style={styles.settingInfo}>
               <Text style={[styles.settingLabel, { color: theme.text }]}>{t('settings.dinnerReminder')}</Text>
-              <Text style={[styles.settingDescription, { color: theme.textMuted }]}>
-                {t('settings.dinnerReminderDesc')}
-              </Text>
+              <TouchableOpacity onPress={() => openTimePicker('dinner')}>
+                <Text style={[styles.timeButton, { color: theme.primary }]}>
+                  🕐 {formatTime(reminderTimes.dinner.hour, reminderTimes.dinner.minute)}
+                </Text>
+              </TouchableOpacity>
             </View>
             <Switch
               value={dinnerReminder}
