@@ -257,6 +257,7 @@ export async function scheduleLunchReminder(enabled: boolean, language: string =
 
   const smartContent = await getSmartNotificationContent('lunch', language);
   const content = smartContent || getFallbackContent('lunch', language);
+  const time = await getReminderTime('lunch');
 
   await Notifications.scheduleNotificationAsync({
     identifier: 'lunch-reminder',
@@ -269,8 +270,8 @@ export async function scheduleLunchReminder(enabled: boolean, language: string =
     },
     trigger: {
       type: Notifications.SchedulableTriggerInputTypes.DAILY,
-      hour: 10,
-      minute: 0,
+      hour: time.hour,
+      minute: time.minute,
     },
   });
 }
@@ -292,6 +293,7 @@ export async function scheduleDinnerReminder(enabled: boolean, language: string 
 
   const smartContent = await getSmartNotificationContent('dinner', language);
   const content = smartContent || getFallbackContent('dinner', language);
+  const time = await getReminderTime('dinner');
 
   await Notifications.scheduleNotificationAsync({
     identifier: 'dinner-reminder',
@@ -304,8 +306,8 @@ export async function scheduleDinnerReminder(enabled: boolean, language: string 
     },
     trigger: {
       type: Notifications.SchedulableTriggerInputTypes.DAILY,
-      hour: 18,
-      minute: 0,
+      hour: time.hour,
+      minute: time.minute,
     },
   });
 }
