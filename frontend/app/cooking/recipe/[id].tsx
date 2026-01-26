@@ -370,15 +370,17 @@ export default function RecipeDetailScreen() {
       // Show confirmation message
       const message = i18n.language === 'es'
         ? unusedIngredients.length > 0
-          ? `¡Perfecto! Registramos ${caloriesPerPortion} cal por porción en tu historial. Los ingredientes que no usaste (${unusedIngredients.join(', ')}) quedarán guardados.`
-          : `¡Perfecto! Registramos ${caloriesPerPortion} cal por porción en tu historial. ¡A cocinar!`
+          ? `¡Perfecto! Registramos ${calPerPortion} cal por porción en tu historial. Los ingredientes que no usaste (${unusedIngredients.join(', ')}) quedarán guardados.`
+          : `¡Perfecto! Registramos ${calPerPortion} cal por porción en tu historial. ¡A cocinar!`
         : unusedIngredients.length > 0
-          ? `Great! Logged ${caloriesPerPortion} cal per serving to your history. Unused ingredients (${unusedIngredients.join(', ')}) will be saved.`
-          : `Great! Logged ${caloriesPerPortion} cal per serving to your history. Let's cook!`;
+          ? `Great! Logged ${calPerPortion} cal per serving to your history. Unused ingredients (${unusedIngredients.join(', ')}) will be saved.`
+          : `Great! Logged ${calPerPortion} cal per serving to your history. Let's cook!`;
       
       Alert.alert(
         i18n.language === 'es' ? '¡Manos a la obra!' : 'Let\'s Cook!',
-        message,
+        message + (i18n.language === 'es' 
+          ? '\n\n⚠️ No te olvides de indicar cuántas porciones comiste antes de salir.'
+          : '\n\n⚠️ Don\'t forget to indicate how many portions you ate before leaving.'),
         [{ text: 'OK' }]
       );
     } catch (error) {
