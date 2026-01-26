@@ -81,6 +81,18 @@ export default function SettingsScreen() {
     setDinnerReminder(dinnerStatus);
     setSnackReminder(snackStatus);
     setFridayReminder(fridayStatus);
+    
+    // Load custom times
+    const lunchTime = await getReminderTime('lunch');
+    const dinnerTime = await getReminderTime('dinner');
+    const snackTime = await getReminderTime('snack');
+    const fridayTime = await getReminderTime('friday');
+    setReminderTimes({
+      lunch: lunchTime,
+      dinner: dinnerTime,
+      snack: snackTime,
+      friday: fridayTime,
+    });
   };
 
   const toggleSaveToGallery = async (value: boolean) => {
