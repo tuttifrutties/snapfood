@@ -175,6 +175,57 @@ export default function SettingsScreen() {
     if (fridayReminder) await scheduleFridayReminder(true, langCode);
   };
 
+  const formatTime = (hour: number, minute: number) => {
+    const h = hour % 12 || 12;
+    const m = minute.toString().padStart(2, '0');
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    return `${h}:${m} ${ampm}`;
+  };
+
+  const openTimePicker = (type: 'lunch' | 'dinner' | 'snack' | 'friday') => {
+    setEditingReminderType(type);
+    setTimePickerVisible(true);
+  };
+
+  const selectTime = async (hour: number, minute: number) => {
+    if (!editingReminderType) return;
+    
+    await setReminderTime(editingReminderType, hour, minute);
+    setReminderTimes(prev => ({
+      ...prev,
+      [editingReminderType]: { hour, minute }
+    }));
+    
+    // Reschedule the notification with new time
+    const isEnabled = {
+      lunch: lunchReminder,
+      dinner: dinnerReminder,
+      snack: snackReminder,
+      friday: fridayReminder,
+    }[editingReminderType];
+    
+    if (isEnabled) {
+      const scheduleFunc = {
+        lunch: scheduleLunchReminder,
+        dinner: scheduleDinnerReminder,
+        snack: scheduleSnackReminder,
+        friday: scheduleFridayReminder,
+      }[editingReminderType];
+      
+      await scheduleFunc(true, i18n.language);
+    }
+    
+    setTimePickerVisible(false);
+    setEditingReminderType(null);
+  };
+
+  // Generate time options (every 30 minutes)
+  const timeOptions = [];
+  for (let h = 6; h <= 23; h++) {
+    timeOptions.push({ hour: h, minute: 0 });
+    timeOptions.push({ hour: h, minute: 30 });
+  }
+
   const getCurrentLanguageDisplay = () => {
     const currentLang = supportedLanguages.find(l => l.code === i18n.language);
     return currentLang ? `${currentLang.flag} ${currentLang.name}` : 'English';
