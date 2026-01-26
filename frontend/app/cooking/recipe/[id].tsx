@@ -1282,4 +1282,73 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     fontStyle: 'italic',
   },
+  // Per portion nutrition styles
+  perPortionTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#4CAF50',
+    marginBottom: 12,
+  },
+  macrosPerPortion: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    backgroundColor: '#1a1a1a',
+    borderRadius: 12,
+    padding: 12,
+    marginBottom: 12,
+  },
+  macroPerPortionItem: {
+    alignItems: 'center',
+  },
+  macroPerPortionValue: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  macroPerPortionLabel: {
+    fontSize: 11,
+    color: '#888',
+    marginTop: 2,
+  },
+  fatPerPortionRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#333',
+  },
+  fatPerPortionLabel: {
+    fontSize: 13,
+    color: '#FFD700',
+  },
+  fatPerPortionValue: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#FFD700',
+  },
+  totalPerPortionRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 12,
+    marginTop: 4,
+  },
+  totalPerPortionLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  totalPerPortionValue: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#4CAF50',
+  },
+  totalCookingNote: {
+    fontSize: 12,
+    color: '#666',
+    textAlign: 'center',
+    marginTop: 10,
+    fontStyle: 'italic',
+  },
 });
