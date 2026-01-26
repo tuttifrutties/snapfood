@@ -14,6 +14,19 @@
 
 ---
 
+## ⚠️ RECORDATORIOS PARA EL AGENTE
+
+**CAMBIOS EN FRONTEND:**
+- Recordar al usuario hacer "Save to Git" en Emergent
+- Luego seguir los pasos de build
+
+**CAMBIOS EN BACKEND:**
+- Recordar al usuario hacer **REDEPLOY** (Deploy en Emergent)
+- El backend de producción es el del deployment, NO el de desarrollo
+- Sin redeploy, los cambios de backend NO se aplican en la app de Play Store
+
+---
+
 ## 📦 Versiones Compatibles (Enero 2026)
 
 | Paquete | Versión |
