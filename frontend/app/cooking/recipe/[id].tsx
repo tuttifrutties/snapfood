@@ -267,14 +267,18 @@ export default function RecipeDetailScreen() {
       
       setIsConfirmed(true);
       
+      // Calculate per portion calories for message
+      const fatCaloriesPerPortion = Math.round(getFatCalories() / portions);
+      const caloriesPerPortion = Math.round((recipe.calories || 0) + fatCaloriesPerPortion);
+      
       // Show confirmation message
       const message = i18n.language === 'es'
         ? unusedIngredients.length > 0
-          ? `¡Perfecto! Guardado en tu historial (1 porción). Los ingredientes que no usaste (${unusedIngredients.join(', ')}) quedarán guardados para la próxima vez.`
-          : '¡Perfecto! Guardado en tu historial (1 porción). ¡A cocinar!'
+          ? `¡Perfecto! Registramos ${caloriesPerPortion} cal por porción en tu historial. Los ingredientes que no usaste (${unusedIngredients.join(', ')}) quedarán guardados.`
+          : `¡Perfecto! Registramos ${caloriesPerPortion} cal por porción en tu historial. ¡A cocinar!`
         : unusedIngredients.length > 0
-          ? `Great! Saved to history (1 serving). Unused ingredients (${unusedIngredients.join(', ')}) will be saved for next time.`
-          : 'Great! Saved to history (1 serving). Let\'s cook!';
+          ? `Great! Logged ${caloriesPerPortion} cal per serving to your history. Unused ingredients (${unusedIngredients.join(', ')}) will be saved.`
+          : `Great! Logged ${caloriesPerPortion} cal per serving to your history. Let's cook!`;
       
       Alert.alert(
         i18n.language === 'es' ? '¡Manos a la obra!' : 'Let\'s Cook!',
