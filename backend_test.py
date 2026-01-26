@@ -1018,6 +1018,157 @@ def run_full_test_suite():
     
     return results
 
+def test_snapfood_recipe_generation():
+    """
+    Test the complete Snapfood recipe generation flow as requested in the review.
+    Tests POST /api/recipe-suggestions with specific requirements:
+    - Recipes normalized to 4 servings
+    - Proper nutrition data per serving
+    - Valid JSON response
+    - Instructions and ingredients present
+    """
+    print("🧪 SNAPFOOD RECIPE GENERATION TESTING")
+    print("Testing complete recipe flow as requested in review")
+    print("=" * 60)
+    
+    # Test payload exactly as specified in the review request
+    test_payload = {
+        "userId": "test-user-snapfood-123",
+        "ingredients": ["chicken breast", "rice", "onion", "garlic", "tomato"],
+        "language": "es"  # Test Spanish as mentioned in review
+    }
+    
+    print(f"📤 Testing POST {BACKEND_URL}/recipe-suggestions")
+    print(f"📋 Payload: {json.dumps(test_payload, indent=2)}")
+    print()
+    
+    try:
+        start_time = time.time()
+        
+        # Make the API request
+        response = requests.post(
+            f"{BACKEND_URL}/recipe-suggestions",
+            json=test_payload,
+            headers={"Content-Type": "application/json"},
+            timeout=60  # 60 second timeout for AI processing
+        )
+        
+        end_time = time.time()
+        response_time = end_time - start_time
+        
+        print(f"⏱️  Response time: {response_time:.2f} seconds")
+        print(f"📊 Status Code: {response.status_code}")
+        
+        if response.status_code != 200:
+            print(f"❌ ERROR: Expected status 200, got {response.status_code}")
+            print(f"📄 Response: {response.text}")
+            return False
+        
+        # Parse JSON response
+        try:
+            data = response.json()
+        except json.JSONDecodeError as e:
+            print(f"❌ ERROR: Invalid JSON response: {e}")
+            print(f"📄 Raw response: {response.text[:500]}...")
+            return False
+        
+        print("✅ Valid JSON response received")
+        
+        # Verify response structure
+        if "recipes" not in data:
+            print("❌ ERROR: 'recipes' field missing from response")
+            return False
+        
+        recipes = data["recipes"]
+        if not isinstance(recipes, list):
+            print("❌ ERROR: 'recipes' should be a list")
+            return False
+        
+        if len(recipes) == 0:
+            print("❌ ERROR: No recipes returned")
+            return False
+        
+        print(f"✅ Received {len(recipes)} recipes")
+        
+        # Test each recipe for required fields and 4-serving normalization
+        all_tests_passed = True
+        
+        for i, recipe in enumerate(recipes, 1):
+            print(f"\n🍽️  TESTING RECIPE {i}: {recipe.get('name', 'Unknown')}")
+            print("-" * 50)
+            
+            # Check required fields
+            required_fields = [
+                "name", "description", "ingredients", "instructions", 
+                "servings", "calories", "protein", "carbs", "fats"
+            ]
+            
+            missing_fields = []
+            for field in required_fields:
+                if field not in recipe:
+                    missing_fields.append(field)
+            
+            if missing_fields:
+                print(f"❌ Missing required fields: {missing_fields}")
+                all_tests_passed = False
+                continue
+            
+            # CRITICAL TEST: Verify servings is always 4 (as specified in review)
+            servings = recipe.get("servings")
+            if servings != 4:
+                print(f"❌ CRITICAL: servings = {servings}, expected 4 (recipes must be normalized to 4 servings)")
+                all_tests_passed = False
+            else:
+                print(f"✅ Servings correctly normalized to 4")
+            
+            # Verify ingredients is a list
+            ingredients = recipe.get("ingredients", [])
+            if not isinstance(ingredients, list):
+                print(f"❌ ingredients should be a list, got {type(ingredients)}")
+                all_tests_passed = False
+            else:
+                print(f"✅ Ingredients list with {len(ingredients)} items")
+            
+            # Verify instructions is a list
+            instructions = recipe.get("instructions", [])
+            if not isinstance(instructions, list):
+                print(f"❌ instructions should be a list, got {type(instructions)}")
+                all_tests_passed = False
+            else:
+                print(f"✅ Instructions list with {len(instructions)} steps")
+            
+            # Verify nutrition values are per serving (numeric)
+            nutrition_fields = ["calories", "protein", "carbs", "fats"]
+            for field in nutrition_fields:
+                value = recipe.get(field)
+                if not isinstance(value, (int, float)):
+                    print(f"❌ {field} should be numeric, got {type(value)}: {value}")
+                    all_tests_passed = False
+                else:
+                    print(f"✅ {field}: {value} (per serving)")
+        
+        print(f"\n{'='*60}")
+        if all_tests_passed:
+            print("🎉 ALL RECIPE TESTS PASSED!")
+            print("✅ Recipes are properly normalized to 4 servings")
+            print("✅ All required fields present")
+            print("✅ Nutrition data is per serving")
+            print("✅ Instructions and ingredients are properly formatted")
+            return True
+        else:
+            print("❌ SOME TESTS FAILED - See details above")
+            return False
+            
+    except requests.exceptions.Timeout:
+        print("❌ ERROR: Request timed out (>60 seconds)")
+        return False
+    except requests.exceptions.RequestException as e:
+        print(f"❌ ERROR: Request failed: {e}")
+        return False
+    except Exception as e:
+        print(f"❌ ERROR: Unexpected error: {e}")
+        return False
+
 if __name__ == "__main__":
     # Install required packages if not available
     try:
@@ -1030,23 +1181,18 @@ if __name__ == "__main__":
     # Check if we should run specific tests
     import sys
     if len(sys.argv) > 1:
-        if sys.argv[1] == "recipe-translation":
+        if sys.argv[1] == "recipe-generation":
+            # Run the specific Snapfood recipe generation test
+            success = test_snapfood_recipe_generation()
+            exit(0 if success else 1)
+        elif sys.argv[1] == "recipe-translation":
             test_recipe_translation_feature()
         elif sys.argv[1] == "food-search":
             test_food_search_endpoint()
         else:
-            print("Available test options: recipe-translation, food-search")
+            print("Available test options: recipe-generation, recipe-translation, food-search")
     else:
-        # Run full test suite first, then specific tests
-        print("Running full backend test suite first...")
-        run_full_test_suite()
-        
-        print("\n" + "="*60)
-        print("Now running specific food search endpoint tests...")
-        print("="*60)
-        test_food_search_endpoint()
-        
-        print("\n" + "="*60)
-        print("Now running specific recipe translation tests...")
-        print("="*60)
-        test_recipe_translation_feature()
+        # Run the specific Snapfood recipe generation test as requested
+        print("🚀 Running Snapfood Recipe Generation Test as requested in review")
+        success = test_snapfood_recipe_generation()
+        exit(0 if success else 1)
