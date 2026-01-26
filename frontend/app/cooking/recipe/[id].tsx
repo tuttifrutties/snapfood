@@ -93,6 +93,78 @@ export default function RecipeDetailScreen() {
     }
   }, [params.recipeData, params.selectedIngredients]);
 
+  // Handle back button and navigation interception
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        // If recipe was confirmed and we haven't asked about portions eaten yet
+        if (isConfirmed && savedEntryId && !showPortionsEatenModal) {
+          setShowPortionsEatenModal(true);
+          return true; // Prevent default back behavior
+        }
+        return false; // Allow default back behavior
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [isConfirmed, savedEntryId, showPortionsEatenModal])
+  );
+
+  // Custom back handler that shows popup
+  const handleBackWithPopup = () => {
+    if (isConfirmed && savedEntryId) {
+      setShowPortionsEatenModal(true);
+    } else {
+      router.back();
+    }
+  };
+
+  // Update history with portions eaten
+  const updatePortionsEaten = async (portionsEatenValue: number) => {
+    if (!savedEntryId) return;
+    
+    try {
+      const historyKey = `food_history_${userId}`;
+      const existingHistory = await AsyncStorage.getItem(historyKey);
+      const history = existingHistory ? JSON.parse(existingHistory) : [];
+      
+      const updatedHistory = history.map((entry: any) => {
+        if (entry.id === savedEntryId) {
+          const totalCalories = Math.round(caloriesPerPortion * portionsEatenValue);
+          return {
+            ...entry,
+            portionsEaten: portionsEatenValue,
+            calories: totalCalories,
+            protein: Math.round((entry.protein || 0) * portionsEatenValue),
+            carbs: Math.round((entry.carbs || 0) * portionsEatenValue),
+            fats: Math.round((entry.fats || 0) * portionsEatenValue),
+            needsPortionsEatenConfirmation: false,
+          };
+        }
+        return entry;
+      });
+      
+      await AsyncStorage.setItem(historyKey, JSON.stringify(updatedHistory));
+      
+      // Update daily calories (subtract old 1 portion, add new amount)
+      const caloriesDiff = Math.round(caloriesPerPortion * (portionsEatenValue - 1));
+      if (caloriesDiff !== 0) {
+        await updateDailyCalories(caloriesDiff);
+      }
+      
+      console.log('[Recipe] Updated portions eaten:', portionsEatenValue, 'total calories:', Math.round(caloriesPerPortion * portionsEatenValue));
+    } catch (error) {
+      console.error('[Recipe] Failed to update portions eaten:', error);
+    }
+  };
+
+  // Handle portions eaten confirmation
+  const confirmPortionsEaten = async () => {
+    await updatePortionsEaten(portionsEaten);
+    setShowPortionsEatenModal(false);
+    router.back();
+  };
+
   // Scale ingredient quantities based on portions selected vs base recipe servings
   const scaleIngredient = (ingredient: string, targetPortions: number): string => {
     const baseServings = recipe?.servings || 4;
