@@ -716,6 +716,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#aaa',
   },
+  timeButton: {
+    fontSize: 14,
+    fontWeight: '500',
+    marginTop: 4,
+  },
   upgradeCard: {
     flexDirection: 'row',
     alignItems: 'center',
