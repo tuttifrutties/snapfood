@@ -815,6 +815,68 @@ export default function RecipeDetailScreen() {
           <View style={{ height: 40 }} />
         </View>
       </ScrollView>
+
+      {/* Portions Eaten Modal - Shows when leaving after confirming */}
+      <Modal
+        visible={showPortionsEatenModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => {}} // Prevent closing without answering
+      >
+        <View style={styles.portionsEatenOverlay}>
+          <View style={styles.portionsEatenModal}>
+            <Ionicons name="restaurant" size={40} color="#FF6B6B" />
+            <Text style={styles.portionsEatenTitle}>
+              {i18n.language === 'es' 
+                ? '🍽️ ¿Cuántas porciones comiste?' 
+                : '🍽️ How many portions did you eat?'}
+            </Text>
+            <Text style={styles.portionsEatenSubtitle}>
+              {i18n.language === 'es' 
+                ? `Cada porción tiene ${caloriesPerPortion} calorías` 
+                : `Each portion has ${caloriesPerPortion} calories`}
+            </Text>
+            
+            <View style={styles.portionsEatenOptions}>
+              {PORTIONS_EATEN_OPTIONS.map((p) => (
+                <TouchableOpacity
+                  key={p}
+                  style={[
+                    styles.portionsEatenBtn,
+                    portionsEaten === p && styles.portionsEatenBtnActive,
+                  ]}
+                  onPress={() => setPortionsEaten(p)}
+                >
+                  <Text style={[
+                    styles.portionsEatenBtnText,
+                    portionsEaten === p && styles.portionsEatenBtnTextActive,
+                  ]}>
+                    {p}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+
+            <View style={styles.portionsEatenCaloriesPreview}>
+              <Text style={styles.portionsEatenCaloriesLabel}>
+                {i18n.language === 'es' ? 'Total consumido:' : 'Total consumed:'}
+              </Text>
+              <Text style={styles.portionsEatenCaloriesValue}>
+                {Math.round(caloriesPerPortion * portionsEaten)} cal
+              </Text>
+            </View>
+
+            <TouchableOpacity 
+              style={styles.portionsEatenConfirmBtn}
+              onPress={confirmPortionsEaten}
+            >
+              <Text style={styles.portionsEatenConfirmText}>
+                {i18n.language === 'es' ? 'Confirmar y salir' : 'Confirm and exit'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
