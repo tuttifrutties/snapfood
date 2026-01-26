@@ -585,6 +585,62 @@ export default function SettingsScreen() {
           </View>
         </TouchableOpacity>
       </Modal>
+
+      {/* Time Picker Modal */}
+      <Modal
+        visible={timePickerVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setTimePickerVisible(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setTimePickerVisible(false)}
+        >
+          <View style={[styles.modalContent, { maxHeight: '70%' }]}>
+            <Text style={styles.modalTitle}>
+              {i18n.language === 'es' ? '🕐 Seleccionar hora' : '🕐 Select time'}
+            </Text>
+            <ScrollView style={{ maxHeight: 350 }}>
+              {timeOptions.map((t, idx) => (
+                <TouchableOpacity
+                  key={idx}
+                  style={[
+                    styles.languageOption,
+                    editingReminderType && 
+                    reminderTimes[editingReminderType].hour === t.hour && 
+                    reminderTimes[editingReminderType].minute === t.minute && 
+                    styles.languageOptionSelected
+                  ]}
+                  onPress={() => selectTime(t.hour, t.minute)}
+                >
+                  <Text style={[
+                    styles.languageText,
+                    editingReminderType && 
+                    reminderTimes[editingReminderType].hour === t.hour && 
+                    reminderTimes[editingReminderType].minute === t.minute && 
+                    styles.languageTextSelected
+                  ]}>
+                    {formatTime(t.hour, t.minute)}
+                  </Text>
+                  {editingReminderType && 
+                   reminderTimes[editingReminderType].hour === t.hour && 
+                   reminderTimes[editingReminderType].minute === t.minute && (
+                    <Ionicons name="checkmark" size={24} color="#FF6B6B" />
+                  )}
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+            <TouchableOpacity
+              style={styles.modalCloseButton}
+              onPress={() => setTimePickerVisible(false)}
+            >
+              <Text style={styles.modalCloseText}>{t('common.cancel')}</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
     </View>
   );
 }
