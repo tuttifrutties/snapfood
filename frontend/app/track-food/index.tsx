@@ -377,6 +377,7 @@ export default function TrackFoodScreen() {
             ingredients: [...analysisResult.ingredients, ...addedIngredients.map(i => i.name)],
             warnings: analysisResult.warnings,
             portions: portions,
+            timestamp: Date.now(), // Send local timestamp from device
             // Fat tracking
             fatType: photoFatType,
             fatTypeName: fatType ? (i18n.language === 'es' ? fatType.es : fatType.en) : null,
