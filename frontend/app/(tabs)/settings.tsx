@@ -51,6 +51,14 @@ export default function SettingsScreen() {
   const [fridayReminder, setFridayReminder] = useState(false);
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
   const [themeModalVisible, setThemeModalVisible] = useState(false);
+  const [timePickerVisible, setTimePickerVisible] = useState(false);
+  const [editingReminderType, setEditingReminderType] = useState<'lunch' | 'dinner' | 'snack' | 'friday' | null>(null);
+  const [reminderTimes, setReminderTimes] = useState({
+    lunch: { hour: DEFAULT_LUNCH_HOUR, minute: DEFAULT_LUNCH_MINUTE },
+    dinner: { hour: DEFAULT_DINNER_HOUR, minute: DEFAULT_DINNER_MINUTE },
+    snack: { hour: DEFAULT_SNACK_HOUR, minute: DEFAULT_SNACK_MINUTE },
+    friday: { hour: DEFAULT_FRIDAY_HOUR, minute: DEFAULT_FRIDAY_MINUTE },
+  });
   
   const supportedLanguages = getSupportedLanguages();
 
