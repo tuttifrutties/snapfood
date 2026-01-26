@@ -352,9 +352,11 @@ export default function SettingsScreen() {
           <View style={[styles.settingRow, { backgroundColor: theme.surface }]}>
             <View style={styles.settingInfo}>
               <Text style={[styles.settingLabel, { color: theme.text }]}>{t('settings.snackReminder')}</Text>
-              <Text style={[styles.settingDescription, { color: theme.textMuted }]}>
-                {t('settings.snackReminderDesc')}
-              </Text>
+              <TouchableOpacity onPress={() => openTimePicker('snack')}>
+                <Text style={[styles.timeButton, { color: theme.primary }]}>
+                  🕐 {formatTime(reminderTimes.snack.hour, reminderTimes.snack.minute)}
+                </Text>
+              </TouchableOpacity>
             </View>
             <Switch
               value={snackReminder}
@@ -367,9 +369,11 @@ export default function SettingsScreen() {
           <View style={[styles.settingRow, { backgroundColor: theme.surface }]}>
             <View style={styles.settingInfo}>
               <Text style={[styles.settingLabel, { color: theme.text }]}>{t('settings.fridayReminder')}</Text>
-              <Text style={[styles.settingDescription, { color: theme.textMuted }]}>
-                {t('settings.fridayReminderDesc')}
-              </Text>
+              <TouchableOpacity onPress={() => openTimePicker('friday')}>
+                <Text style={[styles.timeButton, { color: theme.primary }]}>
+                  🕐 {formatTime(reminderTimes.friday.hour, reminderTimes.friday.minute)}
+                </Text>
+              </TouchableOpacity>
             </View>
             <Switch
               value={fridayReminder}
