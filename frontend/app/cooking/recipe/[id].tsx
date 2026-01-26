@@ -582,34 +582,62 @@ export default function RecipeDetailScreen() {
                   </View>
                 )}
 
-                {/* Total Calories Summary */}
+                {/* PER PORTION Nutrition Summary */}
                 <View style={styles.caloriesSummary}>
-                  <View style={styles.caloriesSummaryRow}>
-                    <Text style={styles.caloriesSummaryLabel}>
-                      {i18n.language === 'es' ? `Receta (${portions} porc.):` : `Recipe (${portions} serv.):`}
-                    </Text>
-                    <Text style={styles.caloriesSummaryValue}>
-                      {Math.round((recipe.calories || 0) * getPortionMultiplier())} cal
-                    </Text>
+                  <Text style={styles.perPortionTitle}>
+                    {i18n.language === 'es' 
+                      ? `📊 POR CADA PORCIÓN (de ${portions}):` 
+                      : `📊 PER SERVING (of ${portions}):`}
+                  </Text>
+                  
+                  {/* Base recipe per portion */}
+                  <View style={styles.macrosPerPortion}>
+                    <View style={styles.macroPerPortionItem}>
+                      <Text style={styles.macroPerPortionValue}>{recipe.calories || 0}</Text>
+                      <Text style={styles.macroPerPortionLabel}>cal</Text>
+                    </View>
+                    <View style={styles.macroPerPortionItem}>
+                      <Text style={styles.macroPerPortionValue}>{recipe.protein || 0}g</Text>
+                      <Text style={styles.macroPerPortionLabel}>{i18n.language === 'es' ? 'prot' : 'prot'}</Text>
+                    </View>
+                    <View style={styles.macroPerPortionItem}>
+                      <Text style={styles.macroPerPortionValue}>{recipe.carbs || 0}g</Text>
+                      <Text style={styles.macroPerPortionLabel}>{i18n.language === 'es' ? 'carbs' : 'carbs'}</Text>
+                    </View>
+                    <View style={styles.macroPerPortionItem}>
+                      <Text style={styles.macroPerPortionValue}>{recipe.fats || 0}g</Text>
+                      <Text style={styles.macroPerPortionLabel}>{i18n.language === 'es' ? 'grasas' : 'fats'}</Text>
+                    </View>
                   </View>
+
+                  {/* Fat calories per portion (if added) */}
                   {fatTablespoons > 0 && (
-                    <View style={styles.caloriesSummaryRow}>
-                      <Text style={styles.caloriesSummaryLabel}>
-                        + {i18n.language === 'es' ? 'Grasa:' : 'Fat:'} ({fatTablespoons} {i18n.language === 'es' ? 'cda' : 'tbsp'})
+                    <View style={styles.fatPerPortionRow}>
+                      <Text style={styles.fatPerPortionLabel}>
+                        + {i18n.language === 'es' ? 'Grasa' : 'Fat'} ({fatTablespoons} {i18n.language === 'es' ? 'cda' : 'tbsp'} ÷ {portions}):
                       </Text>
-                      <Text style={[styles.caloriesSummaryValue, { color: '#FFD700' }]}>
-                        +{getFatCalories()} cal
+                      <Text style={styles.fatPerPortionValue}>
+                        +{Math.round(getFatCalories() / portions)} cal/porción
                       </Text>
                     </View>
                   )}
-                  <View style={[styles.caloriesSummaryRow, styles.caloriesSummaryTotal]}>
-                    <Text style={styles.caloriesSummaryTotalLabel}>
-                      {i18n.language === 'es' ? 'TOTAL:' : 'TOTAL:'}
+
+                  {/* TOTAL per portion */}
+                  <View style={styles.totalPerPortionRow}>
+                    <Text style={styles.totalPerPortionLabel}>
+                      🍽️ {i18n.language === 'es' ? 'TOTAL POR PORCIÓN:' : 'TOTAL PER SERVING:'}
                     </Text>
-                    <Text style={styles.caloriesSummaryTotalValue}>
-                      {getTotalCalories()} cal
+                    <Text style={styles.totalPerPortionValue}>
+                      {Math.round((recipe.calories || 0) + (getFatCalories() / portions))} cal
                     </Text>
                   </View>
+
+                  {/* Small note about total cooking */}
+                  <Text style={styles.totalCookingNote}>
+                    {i18n.language === 'es' 
+                      ? `(Total cocinando ${portions} porciones: ${getTotalCalories()} cal)` 
+                      : `(Total cooking ${portions} servings: ${getTotalCalories()} cal)`}
+                  </Text>
                 </View>
               </View>
 
