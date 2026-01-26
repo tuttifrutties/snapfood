@@ -406,7 +406,7 @@ export default function RecipeDetailScreen() {
       <View style={styles.header}>
         <TouchableOpacity 
           style={styles.backButton} 
-          onPress={() => router.back()}
+          onPress={handleBackWithPopup}
         >
           <Ionicons name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
