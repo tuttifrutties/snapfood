@@ -93,22 +93,20 @@ export default function RecipeDetailScreen() {
     }
   }, [params.recipeData, params.selectedIngredients]);
 
-  // Handle back button and navigation interception
-  useFocusEffect(
-    useCallback(() => {
-      const onBackPress = () => {
-        // If recipe was confirmed and we haven't asked about portions eaten yet
-        if (isConfirmed && savedEntryId && !showPortionsEatenModal) {
-          setShowPortionsEatenModal(true);
-          return true; // Prevent default back behavior
-        }
-        return false; // Allow default back behavior
-      };
+  // Handle back button press on Android
+  useEffect(() => {
+    const onBackPress = () => {
+      // If recipe was confirmed and we haven't asked about portions eaten yet
+      if (isConfirmed && savedEntryId && !showPortionsEatenModal) {
+        setShowPortionsEatenModal(true);
+        return true; // Prevent default back behavior
+      }
+      return false; // Allow default back behavior
+    };
 
-      BackHandler.addEventListener('hardwareBackPress', onBackPress);
-      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-    }, [isConfirmed, savedEntryId, showPortionsEatenModal])
-  );
+    BackHandler.addEventListener('hardwareBackPress', onBackPress);
+    return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+  }, [isConfirmed, savedEntryId, showPortionsEatenModal]);
 
   // Custom back handler that shows popup
   const handleBackWithPopup = () => {
