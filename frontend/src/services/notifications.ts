@@ -11,7 +11,61 @@ const USER_ID_KEY = 'userId';
 const SMART_NOTIFICATION_CACHE_KEY = 'smart_notification_cache';
 const LAST_WEIGHT_CHECK_KEY = 'last_weight_check_month';
 
+// Custom time keys
+const LUNCH_TIME_KEY = 'lunch_reminder_time';
+const DINNER_TIME_KEY = 'dinner_reminder_time';
+const SNACK_TIME_KEY = 'snack_reminder_time';
+const FRIDAY_TIME_KEY = 'friday_reminder_time';
+
+// Default times
+export const DEFAULT_LUNCH_HOUR = 10;
+export const DEFAULT_LUNCH_MINUTE = 0;
+export const DEFAULT_DINNER_HOUR = 20; // Changed from 18 to 20
+export const DEFAULT_DINNER_MINUTE = 0;
+export const DEFAULT_SNACK_HOUR = 15;
+export const DEFAULT_SNACK_MINUTE = 30;
+export const DEFAULT_FRIDAY_HOUR = 19;
+export const DEFAULT_FRIDAY_MINUTE = 0;
+
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
+
+// Helper functions to get/set custom times
+export async function getReminderTime(type: 'lunch' | 'dinner' | 'snack' | 'friday'): Promise<{ hour: number; minute: number }> {
+  const key = {
+    lunch: LUNCH_TIME_KEY,
+    dinner: DINNER_TIME_KEY,
+    snack: SNACK_TIME_KEY,
+    friday: FRIDAY_TIME_KEY,
+  }[type];
+  
+  const defaults = {
+    lunch: { hour: DEFAULT_LUNCH_HOUR, minute: DEFAULT_LUNCH_MINUTE },
+    dinner: { hour: DEFAULT_DINNER_HOUR, minute: DEFAULT_DINNER_MINUTE },
+    snack: { hour: DEFAULT_SNACK_HOUR, minute: DEFAULT_SNACK_MINUTE },
+    friday: { hour: DEFAULT_FRIDAY_HOUR, minute: DEFAULT_FRIDAY_MINUTE },
+  }[type];
+  
+  try {
+    const stored = await AsyncStorage.getItem(key);
+    if (stored) {
+      return JSON.parse(stored);
+    }
+  } catch (e) {
+    console.log('Error getting reminder time:', e);
+  }
+  return defaults;
+}
+
+export async function setReminderTime(type: 'lunch' | 'dinner' | 'snack' | 'friday', hour: number, minute: number): Promise<void> {
+  const key = {
+    lunch: LUNCH_TIME_KEY,
+    dinner: DINNER_TIME_KEY,
+    snack: SNACK_TIME_KEY,
+    friday: FRIDAY_TIME_KEY,
+  }[type];
+  
+  await AsyncStorage.setItem(key, JSON.stringify({ hour, minute }));
+}
 
 // Configure notification handler
 Notifications.setNotificationHandler({
