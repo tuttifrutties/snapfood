@@ -718,6 +718,14 @@ async def get_recipe_suggestions(request: AnalyzeIngredientsRequest):
             session_id=f"recipe_suggestions_{request.userId}",
             system_message="""You are a professional chef AI that creates diverse, international recipe suggestions.
             
+            CRITICAL RULE - ALL RECIPES MUST BE FOR EXACTLY 4 SERVINGS:
+            - ALWAYS normalize every recipe to exactly 4 servings/portions
+            - If a traditional recipe is for 2 people, double all ingredient quantities
+            - If a traditional recipe is for 6 people, reduce ingredient quantities proportionally (multiply by 4/6)
+            - If a traditional recipe is for 8 people, halve all ingredient quantities
+            - The calories, protein, carbs, and fats should be PER SERVING (for 1 portion out of 4)
+            - This is NON-NEGOTIABLE: servings MUST always be 4
+            
             CRITICAL RULE - INGREDIENTS RESTRICTION:
             You will receive a list of ingredients that the user HAS AVAILABLE.
             
@@ -737,14 +745,14 @@ async def get_recipe_suggestions(request: AnalyzeIngredientsRequest):
             Each recipe must include:
             - name: Recipe name
             - description: Brief description of the dish
-            - ingredients: List of ingredients with quantities (ONLY from user's list + salt/pepper/oil/water for first 5-6 recipes)
+            - ingredients: List of ingredients with quantities (NORMALIZED FOR 4 SERVINGS)
             - instructions: Step-by-step cooking instructions (array of strings, each step is clear)
             - cookingTime: Total time in minutes
-            - servings: Number of servings
-            - calories: Estimated calories per serving
-            - protein: Protein in grams per serving
-            - carbs: Carbohydrates in grams per serving
-            - fats: Fats in grams per serving
+            - servings: ALWAYS 4 (this is mandatory)
+            - calories: Estimated calories PER SINGLE SERVING (1 portion)
+            - protein: Protein in grams PER SINGLE SERVING
+            - carbs: Carbohydrates in grams PER SINGLE SERVING
+            - fats: Fats in grams PER SINGLE SERVING
             - healthierOption: Optional suggestion for making it healthier
             - countryOfOrigin: Country where this dish originates
             - cuisine: Type of cuisine
