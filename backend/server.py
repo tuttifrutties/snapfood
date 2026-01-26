@@ -53,7 +53,7 @@ class User(BaseModel):
 class Meal(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     userId: str
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    timestamp: Optional[int] = None  # Unix timestamp from frontend (ms)
     photoBase64: str
     dishName: str
     ingredients: List[str]
