@@ -202,9 +202,10 @@ export default function RecipeDetailScreen() {
       const history = existingHistory ? JSON.parse(existingHistory) : [];
 
       const fatType = FAT_TYPES.find(f => f.id === selectedFatType);
-      const fatCalories = getFatCalories();
-      const totalCalories = getTotalCalories();
-      const multiplier = getPortionMultiplier();
+      const fatCaloriesPerPortion = Math.round(getFatCalories() / portions);
+      
+      // Calories PER PORTION (what one person eats)
+      const caloriesPerPortion = Math.round((recipeData.calories || 0) + fatCaloriesPerPortion);
 
       const newEntry = {
         id: `cooked_${Date.now()}`,
@@ -212,19 +213,20 @@ export default function RecipeDetailScreen() {
         timestamp: Date.now(), // Unix timestamp for consistent timezone handling
         foodName: recipeData.name,
         mealType: 'cooking',
-        portions: portions,
-        calories: totalCalories,
-        protein: Math.round((recipeData.protein || 0) * multiplier),
-        carbs: Math.round((recipeData.carbs || 0) * multiplier),
-        fats: Math.round((recipeData.fats || 0) * multiplier) + (fatTablespoons > 0 ? Math.round(fatTablespoons * 14) : 0), // ~14g fat per tbsp
+        portions: portions, // How many portions were cooked
+        // Store PER PORTION values (what one person consumes)
+        calories: caloriesPerPortion,
+        protein: Math.round(recipeData.protein || 0),
+        carbs: Math.round(recipeData.carbs || 0),
+        fats: Math.round((recipeData.fats || 0) + (fatTablespoons > 0 ? Math.round((fatTablespoons * 14) / portions) : 0)),
         isCooked: true,
         cuisine: recipeData.cuisine || recipeData.countryOfOrigin,
         // Fat tracking
         fatType: selectedFatType,
         fatTypeName: fatType ? (i18n.language === 'es' ? fatType.es : fatType.en) : null,
         fatTablespoons: fatTablespoons,
-        fatCalories: fatCalories,
-        baseCalories: Math.round((recipeData.calories || 0) * multiplier),
+        fatCaloriesPerPortion: fatCaloriesPerPortion,
+        baseCaloriesPerPortion: recipeData.calories || 0,
       };
 
       history.unshift(newEntry);
@@ -238,12 +240,12 @@ export default function RecipeDetailScreen() {
 
       await AsyncStorage.setItem(historyKey, JSON.stringify(filteredHistory));
       
-      // Update daily calories for nutrition tracking (with total including fat)
-      if (totalCalories) {
-        await updateDailyCalories(totalCalories);
+      // Update daily calories for nutrition tracking (ONE PORTION)
+      if (caloriesPerPortion) {
+        await updateDailyCalories(caloriesPerPortion);
       }
 
-      console.log('[Recipe] Saved to history:', newEntry.foodName, 'portions:', portions, 'with', fatTablespoons, 'tbsp of', selectedFatType);
+      console.log('[Recipe] Saved to history:', newEntry.foodName, '- calories per portion:', caloriesPerPortion);
     } catch (error) {
       console.error('[Recipe] Failed to save to history:', error);
     }
