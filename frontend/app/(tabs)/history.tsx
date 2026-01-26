@@ -193,11 +193,21 @@ export default function HistoryScreen() {
         
         const updatedMeals = localMeals.map((m: any) => {
           if (m.id === meal.id) {
-            const baseCalories = m.baseCalories || m.calories / (m.portions || 1);
-            const newCalories = Math.round(baseCalories * newPortions) + fatCalories;
+            // baseCaloriesPerPortion is the per-portion calories without fat
+            // If not available, calories already represents per-portion value
+            const baseCaloriesPerPortion = m.baseCaloriesPerPortion || m.calories;
+            
+            // Fat calories should also be per portion
+            const fatCaloriesPerPortion = m.portionsCooked 
+              ? Math.round(fatCalories / m.portionsCooked) 
+              : fatCalories;
+            
+            // Total calories = (base per portion + fat per portion) * portions eaten
+            const newCalories = Math.round((baseCaloriesPerPortion + fatCaloriesPerPortion) * newPortions);
+            
             return { 
               ...m, 
-              portions: newPortions,
+              portionsEaten: newPortions, // How many portions the user ATE
               fatType: newFatType !== undefined ? newFatType : m.fatType,
               fatTablespoons: newFatTablespoons !== undefined ? newFatTablespoons : m.fatTablespoons,
               fatCalories: fatCalories,
