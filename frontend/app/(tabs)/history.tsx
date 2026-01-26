@@ -252,6 +252,9 @@ export default function HistoryScreen() {
                 // Delete from API
                 await fetch(`${API_URL}/api/meals/${mealId}`, { method: 'DELETE' });
               }
+              // Close detail modal after deleting
+              setShowDetailModal(false);
+              setDetailMeal(null);
               loadHistory(); // Reload
             } catch (error) {
               console.error('Failed to delete meal:', error);
