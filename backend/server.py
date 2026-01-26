@@ -789,6 +789,29 @@ Return as JSON array with requiresExtraIngredients and extraIngredientsNeeded fi
             
             recipes_data = json.loads(response_text)
             
+            # Helper function to convert ingredient objects to strings
+            def normalize_ingredients(ingredients_list):
+                normalized = []
+                for ing in ingredients_list:
+                    if isinstance(ing, dict):
+                        # Convert object like {'name': 'chicken', 'quantity': '500g'} to "500g chicken"
+                        name = ing.get('name', ing.get('ingredient', ''))
+                        quantity = ing.get('quantity', ing.get('amount', ''))
+                        if quantity and name:
+                            normalized.append(f"{quantity} {name}")
+                        elif name:
+                            normalized.append(name)
+                        else:
+                            normalized.append(str(ing))
+                    else:
+                        normalized.append(str(ing))
+                return normalized
+            
+            # Normalize ingredients in all recipes before translation
+            for recipe_dict in recipes_data:
+                if 'ingredients' in recipe_dict:
+                    recipe_dict['ingredients'] = normalize_ingredients(recipe_dict['ingredients'])
+            
             # STEP 2: If not English, translate all recipe content
             if request.language and request.language != "en":
                 logger.info(f"Translating recipes to {request.language}")
