@@ -704,6 +704,45 @@ agent_communication:
       The external food search API is production-ready and handles all test scenarios correctly.
   - agent: "testing"
     message: |
+      🧪 SNAPFOOD RECIPE GENERATION TESTING COMPLETE - MIXED RESULTS
+      
+      Tested the complete recipe generation flow as requested in the review with exact payload:
+      - ingredients: ["chicken breast", "rice", "onion", "garlic", "tomato"]
+      - Testing both Spanish (es) and English (en) languages
+      
+      📊 TEST RESULTS:
+      
+      ✅ SPANISH RECIPE GENERATION: FULLY WORKING
+      - Response time: 51-59 seconds (acceptable for AI processing)
+      - Returns 8 recipes as expected
+      - ✅ ALL recipes normalized to exactly 4 servings (CRITICAL REQUIREMENT MET)
+      - ✅ Proper nutrition data per serving (calories, protein, carbs, fats)
+      - ✅ Valid JSON response with all required fields
+      - ✅ Instructions present as list of steps
+      - ✅ Ingredients present as list
+      - ✅ Spanish translation working correctly
+      - Backend logs confirm successful translation: "Successfully translated 8 recipes to es"
+      
+      ❌ ENGLISH RECIPE GENERATION: CRITICAL PYDANTIC VALIDATION ERROR
+      - Status: HTTP 500 Internal Server Error
+      - Root cause: AI returning ingredients as objects {'name': 'chicken breast', 'quantity': '400g'} instead of strings
+      - This affects ALL ingredient fields causing complete failure for English requests
+      - Spanish works because translation step accidentally converts objects back to strings
+      
+      🎯 CORE FUNCTIONALITY VERIFICATION:
+      ✅ Recipe normalization to 4 servings: WORKING PERFECTLY
+      ✅ Nutrition data per serving: WORKING CORRECTLY  
+      ✅ JSON response format: VALID when AI responds properly
+      ✅ Spanish language support: FULLY FUNCTIONAL
+      ❌ English language support: BROKEN due to Pydantic validation
+      
+      🔧 TECHNICAL ROOT CAUSE:
+      The AI prompt needs strengthening to enforce string format for ingredients. Current prompt says "ingredients: List of ingredients with quantities (simple strings)" but AI inconsistently returns objects instead of strings. The translation system accidentally fixes this format issue, masking the underlying problem.
+      
+      📋 RECOMMENDATION:
+      Main agent should strengthen the AI prompt to be more explicit about ingredient format requirements or add preprocessing to convert ingredient objects to strings before Pydantic validation.
+  - agent: "testing"
+    message: |
       🎯 SMART PORTION LOGIC TESTING COMPLETE - WORKING PERFECTLY
       
       Tested the /api/analyze-food endpoint specifically for the new smart portion logic as requested in the review.
