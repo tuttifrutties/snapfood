@@ -653,8 +653,8 @@ export default function RecipeDetailScreen() {
                     <Ionicons name="checkmark-circle" size={24} color="#fff" />
                     <Text style={styles.confirmButtonText}>
                       {i18n.language === 'es' 
-                        ? `¡Quiero preparar esto! (${getTotalCalories()} cal)` 
-                        : `I want to prepare this! (${getTotalCalories()} cal)`}
+                        ? `¡Quiero preparar esto!` 
+                        : `I want to prepare this!`}
                     </Text>
                   </>
                 )}
