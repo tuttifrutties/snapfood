@@ -96,6 +96,7 @@ class SaveMealRequest(BaseModel):
     portionSize: Optional[str] = "medium"  # Made optional with default
     portions: Optional[float] = 1.0  # Added portions field
     warnings: Optional[List[str]] = []  # Made optional with default
+    timestamp: Optional[int] = None  # Unix timestamp from frontend (ms)
 
 class SetUserGoalsRequest(BaseModel):
     userId: str
