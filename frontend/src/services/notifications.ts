@@ -332,6 +332,7 @@ export async function scheduleSnackReminder(enabled: boolean, language: string =
 
   const region = await getUserRegion();
   const snacks = getSnackSuggestions(region, language);
+  const time = await getReminderTime('snack');
   
   const title = language === 'es' ? '🍎 ¡Hora del snack!' : '🍎 Snack time!';
   const body = language === 'es'
@@ -349,8 +350,8 @@ export async function scheduleSnackReminder(enabled: boolean, language: string =
     },
     trigger: {
       type: Notifications.SchedulableTriggerInputTypes.DAILY,
-      hour: 15,
-      minute: 30,
+      hour: time.hour,
+      minute: time.minute,
     },
   });
 }
@@ -378,6 +379,8 @@ export async function scheduleFridayReminder(enabled: boolean, language: string 
     ? 'Disfrutá tu fin de semana, pero recordá mantener el equilibrio. Un exceso hoy no arruina tu progreso si volvés al plan mañana. ¡Vos podés! 💪'
     : 'Enjoy your weekend, but remember balance is key. One indulgence won\'t ruin your progress if you get back on track tomorrow. You got this! 💪';
 
+  const time = await getReminderTime('friday');
+
   await Notifications.scheduleNotificationAsync({
     identifier: 'friday-balance',
     content: {
@@ -390,8 +393,8 @@ export async function scheduleFridayReminder(enabled: boolean, language: string 
     trigger: {
       type: Notifications.SchedulableTriggerInputTypes.WEEKLY,
       weekday: 6, // Friday (1 = Sunday, 6 = Friday)
-      hour: 19,
-      minute: 0,
+      hour: time.hour,
+      minute: time.minute,
     },
   });
 }
