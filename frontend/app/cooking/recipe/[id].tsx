@@ -209,12 +209,17 @@ export default function RecipeDetailScreen() {
 
       const newEntry = {
         id: `cooked_${Date.now()}`,
+        odName: recipeData.name,
         userId,
         timestamp: Date.now(), // Unix timestamp for consistent timezone handling
         foodName: recipeData.name,
         mealType: 'cooking',
-        portions: portions, // How many portions were cooked
-        // Store PER PORTION values (what one person consumes)
+        portionsCooked: portions, // How many portions were COOKED
+        portionsEaten: 1, // Default: user ate 1 portion (will be updated via popup)
+        // Store PER PORTION values (base values for 1 portion)
+        baseCaloriesPerPortion: recipeData.calories || 0,
+        baseFatCaloriesPerPortion: fatCaloriesPerPortion,
+        // Actual calories = per portion values (default 1 portion eaten)
         calories: caloriesPerPortion,
         protein: Math.round(recipeData.protein || 0),
         carbs: Math.round(recipeData.carbs || 0),
@@ -226,7 +231,8 @@ export default function RecipeDetailScreen() {
         fatTypeName: fatType ? (i18n.language === 'es' ? fatType.es : fatType.en) : null,
         fatTablespoons: fatTablespoons,
         fatCaloriesPerPortion: fatCaloriesPerPortion,
-        baseCaloriesPerPortion: recipeData.calories || 0,
+        // Flag to show popup when leaving recipe screen
+        needsPortionsEatenConfirmation: true,
       };
 
       history.unshift(newEntry);
@@ -240,14 +246,16 @@ export default function RecipeDetailScreen() {
 
       await AsyncStorage.setItem(historyKey, JSON.stringify(filteredHistory));
       
-      // Update daily calories for nutrition tracking (ONE PORTION)
+      // Update daily calories for nutrition tracking (ONE PORTION by default)
       if (caloriesPerPortion) {
         await updateDailyCalories(caloriesPerPortion);
       }
 
       console.log('[Recipe] Saved to history:', newEntry.foodName, '- calories per portion:', caloriesPerPortion);
+      return newEntry; // Return for popup use
     } catch (error) {
       console.error('[Recipe] Failed to save to history:', error);
+      return null;
     }
   };
 
