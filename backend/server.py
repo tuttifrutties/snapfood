@@ -420,8 +420,12 @@ async def analyze_food(request: AnalyzeFoodRequest):
 async def save_meal(request: SaveMealRequest):
     """Save a meal to the database"""
     try:
+        # Use timestamp from frontend if provided, otherwise use current UTC time
+        meal_timestamp = request.timestamp if request.timestamp else int(datetime.utcnow().timestamp() * 1000)
+        
         meal = Meal(
             userId=request.userId,
+            timestamp=meal_timestamp,
             photoBase64=request.photoBase64,
             dishName=request.dishName,
             ingredients=request.ingredients,
