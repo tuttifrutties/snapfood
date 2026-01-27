@@ -395,16 +395,25 @@ async def analyze_food(request: AnalyzeFoodRequest):
         
         response = await chat.send_message(user_message)
         
+        # Log response type and content for debugging
+        logger.info(f"Response type: {type(response)}, Response is None: {response is None}")
+        
+        # Check if response is None or empty
+        if response is None:
+            logger.error("AI returned None response")
+            raise HTTPException(status_code=500, detail="AI returned empty response - please try again")
+        
         # Parse the response
         import json
         try:
             # Log raw response for debugging
-            logger.info(f"Raw AI response (first 500 chars): {response[:500] if response else 'EMPTY'}")
+            response_str = str(response) if response else ""
+            logger.info(f"Raw AI response (first 500 chars): {response_str[:500] if response_str else 'EMPTY'}")
             
             # Try to extract JSON from response
-            response_text = response.strip() if response else ""
+            response_text = response_str.strip() if response_str else ""
             if not response_text:
-                logger.error("AI returned empty response")
+                logger.error("AI returned empty string response")
                 raise HTTPException(status_code=500, detail="AI returned empty response")
                 
             if "```json" in response_text:
@@ -415,7 +424,7 @@ async def analyze_food(request: AnalyzeFoodRequest):
             nutrition_data = json.loads(response_text)
         except json.JSONDecodeError as e:
             logger.error(f"Failed to parse AI response as JSON: {e}")
-            logger.error(f"Response text was: {response_text[:200] if response_text else 'EMPTY'}")
+            logger.error(f"Response text was: {response_text[:500] if response_text else 'EMPTY'}")
             raise HTTPException(status_code=500, detail="Failed to parse nutrition analysis")
         except Exception as e:
             logger.error(f"Failed to parse AI response: {e}")
