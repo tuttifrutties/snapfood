@@ -410,6 +410,17 @@ async def analyze_food(request: AnalyzeFoodRequest):
             response_str = str(response) if response else ""
             logger.info(f"Raw AI response (first 500 chars): {response_str[:500] if response_str else 'EMPTY'}")
             
+            # Check if AI couldn't identify food
+            no_food_phrases = [
+                "no puedo identificar", "cannot identify", "can't identify",
+                "no food", "no alimento", "not a food", "no es comida",
+                "unable to", "no puedo ver", "can't see", "cannot see"
+            ]
+            response_lower = response_str.lower()
+            if any(phrase in response_lower for phrase in no_food_phrases):
+                logger.warning(f"AI couldn't identify food in image")
+                raise HTTPException(status_code=400, detail="No se pudo identificar comida en la imagen. Por favor, intenta con otra foto más clara.")
+            
             # Try to extract JSON from response
             response_text = response_str.strip() if response_str else ""
             if not response_text:
@@ -425,7 +436,9 @@ async def analyze_food(request: AnalyzeFoodRequest):
         except json.JSONDecodeError as e:
             logger.error(f"Failed to parse AI response as JSON: {e}")
             logger.error(f"Response text was: {response_text[:500] if response_text else 'EMPTY'}")
-            raise HTTPException(status_code=500, detail="Failed to parse nutrition analysis")
+            raise HTTPException(status_code=500, detail="No se pudo analizar la imagen. Intenta con otra foto más clara.")
+        except HTTPException:
+            raise
         except Exception as e:
             logger.error(f"Failed to parse AI response: {e}")
             raise HTTPException(status_code=500, detail="Failed to parse nutrition analysis")
