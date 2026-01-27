@@ -398,14 +398,25 @@ async def analyze_food(request: AnalyzeFoodRequest):
         # Parse the response
         import json
         try:
+            # Log raw response for debugging
+            logger.info(f"Raw AI response (first 500 chars): {response[:500] if response else 'EMPTY'}")
+            
             # Try to extract JSON from response
-            response_text = response.strip()
+            response_text = response.strip() if response else ""
+            if not response_text:
+                logger.error("AI returned empty response")
+                raise HTTPException(status_code=500, detail="AI returned empty response")
+                
             if "```json" in response_text:
                 response_text = response_text.split("```json")[1].split("```")[0].strip()
             elif "```" in response_text:
                 response_text = response_text.split("```")[1].split("```")[0].strip()
             
             nutrition_data = json.loads(response_text)
+        except json.JSONDecodeError as e:
+            logger.error(f"Failed to parse AI response as JSON: {e}")
+            logger.error(f"Response text was: {response_text[:200] if response_text else 'EMPTY'}")
+            raise HTTPException(status_code=500, detail="Failed to parse nutrition analysis")
         except Exception as e:
             logger.error(f"Failed to parse AI response: {e}")
             raise HTTPException(status_code=500, detail="Failed to parse nutrition analysis")
