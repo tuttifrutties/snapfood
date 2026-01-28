@@ -27,6 +27,8 @@ export interface UserNutritionProfile {
   country: string;
   region: string;
   activities: PhysicalActivity[];
+  healthConditions?: string[];
+  foodAllergies?: string[];
   bmr?: number;
   tdee?: number;
   targetCalories?: number;
