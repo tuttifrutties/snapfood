@@ -46,6 +46,83 @@ const FAT_TYPES = [
 const TABLESPOON_OPTIONS = [0, 0.5, 1, 1.5, 2, 2.5, 3];
 const PORTIONS_EATEN_OPTIONS = [0.5, 1, 1.5, 2, 2.5, 3];
 
+// Ingredient to emoji mapping for visual recipe representation
+const INGREDIENT_EMOJIS: { [key: string]: string } = {
+  // Proteins
+  chicken: '🍗', pollo: '🍗', pechuga: '🍗',
+  beef: '🥩', carne: '🥩', res: '🥩', ternera: '🥩',
+  pork: '🥓', cerdo: '🥓', tocino: '🥓', bacon: '🥓',
+  fish: '🐟', pescado: '🐟', salmon: '🐟', salmón: '🐟', tuna: '🐟', atún: '🐟',
+  shrimp: '🦐', camarones: '🦐', gambas: '🦐', prawns: '🦐',
+  egg: '🥚', eggs: '🥚', huevo: '🥚', huevos: '🥚',
+  // Grains & Carbs
+  rice: '🍚', arroz: '🍚',
+  pasta: '🍝', spaghetti: '🍝', noodles: '🍝', fideos: '🍝',
+  bread: '🍞', pan: '🍞',
+  potato: '🥔', potatoes: '🥔', papa: '🥔', papas: '🥔', patata: '🥔', patatas: '🥔',
+  // Vegetables
+  tomato: '🍅', tomate: '🍅',
+  onion: '🧅', cebolla: '🧅',
+  garlic: '🧄', ajo: '🧄',
+  pepper: '🌶️', pimiento: '🫑', bell: '🫑',
+  carrot: '🥕', zanahoria: '🥕',
+  broccoli: '🥦', brócoli: '🥦',
+  lettuce: '🥬', lechuga: '🥬', salad: '🥗', ensalada: '🥗',
+  corn: '🌽', maíz: '🌽', choclo: '🌽',
+  mushroom: '🍄', champiñon: '🍄', setas: '🍄',
+  avocado: '🥑', aguacate: '🥑', palta: '🥑',
+  cucumber: '🥒', pepino: '🥒',
+  eggplant: '🍆', berenjena: '🍆',
+  // Fruits
+  apple: '🍎', manzana: '🍎',
+  banana: '🍌', plátano: '🍌', banano: '🍌',
+  orange: '🍊', naranja: '🍊',
+  lemon: '🍋', limón: '🍋',
+  strawberry: '🍓', fresa: '🍓', frutilla: '🍓',
+  // Dairy
+  cheese: '🧀', queso: '🧀',
+  milk: '🥛', leche: '🥛',
+  butter: '🧈', mantequilla: '🧈', manteca: '🧈',
+  // Others
+  chocolate: '🍫',
+  honey: '🍯', miel: '🍯',
+  salt: '🧂', sal: '🧂',
+  oil: '🫒', aceite: '🫒',
+  soup: '🍲', sopa: '🍲', guiso: '🍲', stew: '🍲',
+  pizza: '🍕',
+  burger: '🍔', hamburguesa: '🍔',
+  taco: '🌮',
+  sushi: '🍣',
+  ramen: '🍜',
+  // Default food icons
+  default: '🍽️',
+};
+
+// Get emojis for main ingredients
+const getIngredientEmojis = (ingredients: string[]): string => {
+  const foundEmojis: string[] = [];
+  const usedEmojis = new Set<string>();
+  
+  for (const ingredient of ingredients) {
+    const lowerIng = ingredient.toLowerCase();
+    for (const [key, emoji] of Object.entries(INGREDIENT_EMOJIS)) {
+      if (lowerIng.includes(key) && !usedEmojis.has(emoji)) {
+        foundEmojis.push(emoji);
+        usedEmojis.add(emoji);
+        if (foundEmojis.length >= 3) break; // Max 3 emojis
+      }
+    }
+    if (foundEmojis.length >= 3) break;
+  }
+  
+  // If no matches, use default
+  if (foundEmojis.length === 0) {
+    return '🍽️';
+  }
+  
+  return foundEmojis.join(' ');
+};
+
 export default function RecipeDetailScreen() {
   const router = useRouter();
   const { t, i18n } = useTranslation();
