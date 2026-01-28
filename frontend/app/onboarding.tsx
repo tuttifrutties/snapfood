@@ -142,6 +142,11 @@ export default function OnboardingScreen() {
   const [activityDuration, setActivityDuration] = useState('30');
   const [activityDays, setActivityDays] = useState<number[]>([]);
 
+  // Health & restrictions state
+  const [healthConditions, setHealthConditions] = useState<string[]>(['none']);
+  const [foodAllergies, setFoodAllergies] = useState<string[]>([]);
+  const [allergySearch, setAllergySearch] = useState('');
+
   const filteredCountries = COUNTRIES.filter(c => 
     c.name.toLowerCase().includes(countrySearch.toLowerCase()) ||
     c.code.toLowerCase().includes(countrySearch.toLowerCase())
