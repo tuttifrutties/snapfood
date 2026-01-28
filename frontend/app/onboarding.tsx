@@ -1313,7 +1313,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     gap: 10,
   },
-  searchInput: {
+  allergySearchInput: {
     flex: 1,
     color: '#fff',
     fontSize: 16,
