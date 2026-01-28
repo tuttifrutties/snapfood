@@ -653,7 +653,134 @@ export default function OnboardingScreen() {
     );
   }
 
-  // Step 6: Personal info (final step)
+  // Step 6: Health & Restrictions
+  if (step === 6) {
+    return (
+      <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.content}>
+          <Text style={styles.title}>
+            {i18n.language === 'es' ? '🏥 Salud y Restricciones' : '🏥 Health & Restrictions'}
+          </Text>
+          <Text style={styles.subtitle}>
+            {i18n.language === 'es' 
+              ? 'Esto nos ayuda a personalizar mejor tus recomendaciones' 
+              : 'This helps us personalize your recommendations'}
+          </Text>
+
+          {/* Health Conditions */}
+          <Text style={styles.sectionTitle}>
+            {i18n.language === 'es' ? 'Condiciones de salud' : 'Health conditions'}
+          </Text>
+          <View style={styles.optionsGrid}>
+            {HEALTH_CONDITIONS.map((condition) => (
+              <TouchableOpacity
+                key={condition.id}
+                style={[
+                  styles.healthOption,
+                  healthConditions.includes(condition.id) && styles.healthOptionSelected,
+                ]}
+                onPress={() => toggleHealthCondition(condition.id)}
+              >
+                <Text style={styles.healthOptionIcon}>{condition.icon}</Text>
+                <Text style={[
+                  styles.healthOptionText,
+                  healthConditions.includes(condition.id) && styles.healthOptionTextSelected,
+                ]}>
+                  {i18n.language === 'es' ? condition.es : condition.en}
+                </Text>
+                {healthConditions.includes(condition.id) && (
+                  <View style={styles.checkBadgeSmall}>
+                    <Ionicons name="checkmark" size={12} color="#fff" />
+                  </View>
+                )}
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          {/* Food Allergies */}
+          <Text style={[styles.sectionTitle, { marginTop: 24 }]}>
+            {i18n.language === 'es' ? 'Alergias / Intolerancias alimentarias' : 'Food Allergies / Intolerances'}
+          </Text>
+          <Text style={styles.sectionSubtitle}>
+            {i18n.language === 'es' ? '(Opcional) Selecciona los alimentos que debés evitar' : '(Optional) Select foods you need to avoid'}
+          </Text>
+          
+          {/* Search allergies */}
+          <View style={styles.searchContainer}>
+            <Ionicons name="search" size={20} color="#666" />
+            <TextInput
+              style={styles.searchInput}
+              placeholder={i18n.language === 'es' ? 'Buscar alergia...' : 'Search allergy...'}
+              placeholderTextColor="#666"
+              value={allergySearch}
+              onChangeText={setAllergySearch}
+            />
+            {allergySearch.length > 0 && (
+              <TouchableOpacity onPress={() => setAllergySearch('')}>
+                <Ionicons name="close-circle" size={20} color="#666" />
+              </TouchableOpacity>
+            )}
+          </View>
+
+          {/* Selected allergies */}
+          {foodAllergies.length > 0 && (
+            <View style={styles.selectedAllergiesContainer}>
+              {foodAllergies.map((allergyId) => {
+                const allergy = FOOD_ALLERGIES.find(a => a.id === allergyId);
+                if (!allergy) return null;
+                return (
+                  <TouchableOpacity
+                    key={allergyId}
+                    style={styles.selectedAllergyChip}
+                    onPress={() => toggleFoodAllergy(allergyId)}
+                  >
+                    <Text style={styles.selectedAllergyText}>
+                      {allergy.icon} {i18n.language === 'es' ? allergy.es : allergy.en}
+                    </Text>
+                    <Ionicons name="close" size={16} color="#fff" />
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          )}
+
+          {/* Allergy options */}
+          <View style={styles.allergyOptionsGrid}>
+            {filteredAllergies.map((allergy) => (
+              <TouchableOpacity
+                key={allergy.id}
+                style={[
+                  styles.allergyOption,
+                  foodAllergies.includes(allergy.id) && styles.allergyOptionSelected,
+                ]}
+                onPress={() => toggleFoodAllergy(allergy.id)}
+              >
+                <Text style={styles.allergyOptionIcon}>{allergy.icon}</Text>
+                <Text style={[
+                  styles.allergyOptionText,
+                  foodAllergies.includes(allergy.id) && styles.allergyOptionTextSelected,
+                ]} numberOfLines={1}>
+                  {i18n.language === 'es' ? allergy.es : allergy.en}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+
+          <TouchableOpacity style={styles.button} onPress={() => setStep(7)}>
+            <Text style={styles.buttonText}>{t('common.continue')}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.skipButton} onPress={() => setStep(7)}>
+            <Text style={styles.skipButtonText}>
+              {i18n.language === 'es' ? 'Sin restricciones, continuar' : 'No restrictions, continue'}
+            </Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </View>
+    );
+  }
+
+  // Step 7: Personal info (final step)
   return (
     <KeyboardAvoidingView
       style={styles.container}
