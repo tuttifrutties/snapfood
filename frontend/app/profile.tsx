@@ -1988,6 +1988,69 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 12,
   },
+  // Nueva lista vertical para salud/alergias
+  healthListContainer: {
+    gap: 8,
+  },
+  healthListItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderRadius: 12,
+    borderWidth: 1,
+    gap: 12,
+  },
+  healthListIcon: {
+    fontSize: 22,
+  },
+  healthListText: {
+    fontSize: 15,
+    flex: 1,
+  },
+  // Buscador de alergias
+  allergySearchBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginBottom: 12,
+    gap: 10,
+  },
+  allergySearchInput: {
+    flex: 1,
+    fontSize: 15,
+    padding: 0,
+  },
+  // Chips de alergias seleccionadas
+  selectedAllergiesRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+    marginBottom: 12,
+  },
+  selectedAllergyChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFD700',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    gap: 6,
+  },
+  selectedAllergyText: {
+    color: '#000',
+    fontSize: 13,
+    fontWeight: '500',
+  },
+  allergyHint: {
+    fontSize: 13,
+    textAlign: 'center',
+    marginTop: 16,
+    fontStyle: 'italic',
+  },
+  // Estilos viejos por compatibilidad (se pueden borrar después)
   healthOptionsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
