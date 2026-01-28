@@ -326,7 +326,13 @@ export default function PersonalProfileScreen() {
         height: parseFloat(editHeight) || profile.height,
         age: parseInt(editAge) || profile.age,
         goal: editGoal,
+        healthConditions: editHealthConditions,
+        foodAllergies: editFoodAllergies,
       });
+      
+      // Save health restrictions to AsyncStorage
+      await AsyncStorage.setItem('user_health_conditions', JSON.stringify(editHealthConditions));
+      await AsyncStorage.setItem('user_food_allergies', JSON.stringify(editFoodAllergies));
       
       setProfile(updatedProfile);
       setIsEditing(false);
