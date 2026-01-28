@@ -1,7 +1,7 @@
 # 📱 SNAPFOOD - Configuración de Build
 
 > **IMPORTANTE:** Leer este archivo COMPLETO antes de hacer cualquier cambio o build.
-> **Última actualización:** Enero 2026 - Build v48+
+> **Última actualización:** Enero 2026 - Build v50+
 
 ---
 
@@ -11,6 +11,7 @@
 2. **NEW ARCHITECTURE = TRUE** - Reanimated 4.x lo requiere
 3. **Slug del proyecto:** `foodsnap` (NO "snapfood")
 4. **versionCode:** Se edita MANUALMENTE en `app.json` después del `git reset`
+5. **Usuario:** Facu (Argentina) - Responder siempre en español
 
 ---
 
@@ -24,6 +25,10 @@
 - Recordar al usuario hacer **REDEPLOY** (Deploy en Emergent)
 - El backend de producción es el del deployment, NO el de desarrollo
 - Sin redeploy, los cambios de backend NO se aplican en la app de Play Store
+
+**PowerShell:**
+- Los comandos de PowerShell NO aceptan `&&` - usar comandos separados
+- El usuario NO es programador, dar instrucciones paso a paso muy claras
 
 ---
 
@@ -228,21 +233,68 @@ Fórmula: `Calorías = MET × Peso(kg) × Horas × Días/semana`
 - Plato: 1 = plato completo
 
 ### Selector de Porciones en Recetas
-- Muestra cantidad de porciones base
-- Permite escalar ingredientes (regla de 3)
-- Recalcula calorías automáticamente
+- Pregunta clara: "¿Para cuántas porciones vas a cocinar?"
+- Opciones rápidas: 1, 2, 4, 6, 8 + botón "..." para número personalizado
+- Los ingredientes se escalan automáticamente (regla de 3)
+- Muestra calorías POR PORCIÓN (no total)
+- Las recetas siempre se normalizan a 4 porciones base desde el backend
 
-### Compartir como Imagen
-- Genera imagen profesional del resumen
+### Popup "¿Cuántas porciones comiste?"
+- Aparece al salir de la pantalla de receta
+- Obliga al usuario a indicar cuántas porciones realmente comió
+- Actualiza el historial con las calorías correctas
+
+### Compartir Recetas como Imagen
+- Botón de compartir en header de cada receta
+- Genera imagen con emojis de ingredientes principales
+- Incluye macros, tiempo de cocción y branding "📱 SnapFood"
 - Usa react-native-view-shot + expo-sharing
+
+### Compartir Resumen como Imagen (Perfil)
+- En la pantalla de perfil/Mi Ficha
+- Genera imagen profesional del resumen semanal/mensual
+
+### Horarios de Notificaciones Personalizables
+- Almuerzo: default 10:00 AM
+- Cena: default 8:00 PM (antes era 6:00 PM)
+- Snack: default 3:30 PM
+- Balance viernes: default 7:00 PM
+- El usuario puede cambiar cada horario desde Ajustes
+
+### Timezone Fix
+- Los timestamps se guardan con `Date.now()` (hora local del dispositivo)
+- El backend también respeta el timestamp del frontend
+- El historial muestra la hora correcta independiente de la zona horaria
+
+### Salud y Restricciones (NUEVO)
+**En Onboarding (Step 6):**
+- Condiciones de salud: Diabetes, Celiaquía, Hipertensión, Colesterol alto, Intolerancia a lactosa, Vegetariano, Vegano, Keto, Embarazo, Gastritis, IBS
+- Alergias/Intolerancias: Maní, Frutos secos, Leche, Huevos, Trigo, Soja, Pescado, Mariscos, Banana, Fresa, etc.
+- Buscador para encontrar alergias rápidamente
+- Default: "Sin restricciones"
+
+**En Mi Ficha (Perfil):**
+- Tarjeta de "Salud y Restricciones" después de actividades
+- Botón para editar en cualquier momento
+- Modal con todas las opciones
+
+**En Backend:**
+- El prompt de recetas considera las restricciones
+- Si es diabético, evita azúcares
+- Si es celíaco, evita gluten
+- Si tiene alergias, NUNCA incluye esos ingredientes
+
+**Almacenamiento (AsyncStorage):**
+- `user_health_conditions`: Array de IDs (ej: ['diabetes', 'lactose'])
+- `user_food_allergies`: Array de IDs (ej: ['peanuts', 'eggs'])
 
 ---
 
 ## 📝 Tareas Pendientes para Próximo Fork
 
-1. **Force Update** - Mostrar cartel obligatorio cuando hay nueva versión
-2. **Probar TDEE** - Verificar que todas las actividades suman correctamente
-3. **Light Mode** - Algunos textos pueden seguir con problemas
+1. **Force Update** - Mostrar cartel obligatorio cuando hay nueva versión (necesita URL de Play Store)
+2. **Light Mode** - Algunos textos pueden seguir con problemas en modo claro
+3. **Plan anual** - El plan de suscripción anual no se muestra
 
 ---
 
@@ -272,7 +324,47 @@ npx expo install --fix
 - **Package:** com.masiru.snapfood
 - **Repo:** tuttifrutties/snapfood
 - **Ruta local:** W:\EMERGENT\APPS\snapfood\snapfood
-- **Idioma:** Español (Argentina)
+- **Idioma UI:** Español (Argentina) e Inglés
+- **Usuario:** Facu
+
+---
+
+## 🗂️ Estructura de Archivos Clave
+
+```
+/app/frontend/
+├── app/
+│   ├── (tabs)/
+│   │   ├── home.tsx          # Pantalla principal
+│   │   ├── history.tsx       # Historial de comidas
+│   │   └── settings.tsx      # Ajustes (horarios notificaciones)
+│   ├── cooking/
+│   │   ├── index.tsx         # Selección de ingredientes
+│   │   └── recipe/[id].tsx   # Detalle de receta (compartir, porciones)
+│   ├── track-food/
+│   │   └── index.tsx         # Rastrear comida (foto, galería, buscar)
+│   ├── onboarding.tsx        # Onboarding (paso 6 = salud)
+│   └── profile.tsx           # Mi Ficha (editar salud, compartir resumen)
+├── src/
+│   └── services/
+│       ├── nutritionCoach.ts # Cálculos de TDEE con MET
+│       └── notifications.ts  # Notificaciones personalizables
+└── assets/images/
+    ├── icon.png
+    ├── adaptive-icon.png
+    ├── adaptive-icon-background.png  # Fondo blanco
+    ├── splash-icon.png
+    └── favicon.png
+```
+
+---
+
+## 🔑 Integraciones
+
+- **OpenAI GPT-4o**: Análisis de fotos y generación de recetas (via Emergent LLM Key)
+- **RevenueCat**: Suscripciones premium
+- **expo-notifications**: Recordatorios
+- **expo-sharing + react-native-view-shot**: Compartir imágenes
 
 ---
 
