@@ -278,15 +278,17 @@ export default function PersonalProfileScreen() {
   const loadData = async () => {
     setIsLoading(true);
     try {
-      const [profileData, summaryData, monthData] = await Promise.all([
+      const [profileData, summaryData, monthData, name] = await Promise.all([
         getUserNutritionProfile(),
         getWeekSummary(),
         getMonthSummary(-1), // Previous month
+        getUserName(),
       ]);
       
       setProfile(profileData);
       setWeekSummary(summaryData);
       setMonthSummary(monthData);
+      setUserName(name);
       
       if (profileData) {
         setEditWeight(profileData.weight.toString());
