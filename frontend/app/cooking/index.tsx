@@ -71,7 +71,28 @@ export default function CookingScreen() {
     checkTodayCookingCount();
     loadRememberedIngredients();
     loadUserName();
+    checkNotificationRecipes();
   }, [userId]);
+  
+  // Check if user came from a notification with suggested recipes
+  const checkNotificationRecipes = async () => {
+    try {
+      const stored = await AsyncStorage.getItem('notification_suggested_recipes');
+      if (stored) {
+        const data = JSON.parse(stored);
+        // Only use if less than 30 minutes old
+        if (Date.now() - data.timestamp < 30 * 60 * 1000) {
+          setNotificationRecipes(data.recipes || []);
+          setNotificationMealType(data.mealType || null);
+          console.log('[Cooking] Loaded notification recipes:', data.recipes);
+        }
+        // Clear it after reading
+        await AsyncStorage.removeItem('notification_suggested_recipes');
+      }
+    } catch (error) {
+      console.error('[Cooking] Error loading notification recipes:', error);
+    }
+  };
 
   const loadUserName = async () => {
     const name = await getUserName();
