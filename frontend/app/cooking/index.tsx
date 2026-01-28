@@ -1930,4 +1930,55 @@ const styles = StyleSheet.create({
     marginTop: 16,
     paddingHorizontal: 20,
   },
+  // Notification Banner Styles
+  notificationBanner: {
+    backgroundColor: '#1a1a2e',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#FF6B6B',
+  },
+  notificationBannerHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 8,
+  },
+  notificationBannerTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  notificationBannerSubtitle: {
+    fontSize: 13,
+    color: '#aaa',
+    marginBottom: 12,
+  },
+  notificationRecipesList: {
+    gap: 8,
+  },
+  notificationRecipeItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: 'rgba(255,107,107,0.1)',
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    borderRadius: 10,
+  },
+  notificationRecipeText: {
+    color: '#fff',
+    fontSize: 15,
+    flex: 1,
+  },
+  notificationDismissBtn: {
+    alignItems: 'center',
+    marginTop: 12,
+    paddingVertical: 8,
+  },
+  notificationDismissText: {
+    color: '#888',
+    fontSize: 13,
+  },
 });
