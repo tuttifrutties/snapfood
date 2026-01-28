@@ -247,6 +247,49 @@ export default function RecipeDetailScreen() {
     router.back();
   };
 
+  // Share recipe as image
+  const handleShareRecipe = async () => {
+    if (!recipe) return;
+    
+    setShowShareModal(true);
+    setIsSharing(true);
+    
+    // Small delay to ensure the view is rendered
+    setTimeout(async () => {
+      try {
+        if (shareCardRef.current) {
+          const uri = await captureRef(shareCardRef, {
+            format: 'png',
+            quality: 1,
+          });
+          
+          setShowShareModal(false);
+          setIsSharing(false);
+          
+          if (await Sharing.isAvailableAsync()) {
+            await Sharing.shareAsync(uri, {
+              mimeType: 'image/png',
+              dialogTitle: i18n.language === 'es' ? 'Compartir receta' : 'Share recipe',
+            });
+          } else {
+            Alert.alert(
+              i18n.language === 'es' ? 'No disponible' : 'Not available',
+              i18n.language === 'es' ? 'Compartir no está disponible en este dispositivo' : 'Sharing is not available on this device'
+            );
+          }
+        }
+      } catch (error) {
+        console.error('Error sharing recipe:', error);
+        setShowShareModal(false);
+        setIsSharing(false);
+        Alert.alert(
+          i18n.language === 'es' ? 'Error' : 'Error',
+          i18n.language === 'es' ? 'No se pudo compartir la receta' : 'Could not share the recipe'
+        );
+      }
+    }, 500);
+  };
+
   // Scale ingredient quantities based on portions selected vs base recipe servings
   const scaleIngredient = (ingredient: string, targetPortions: number): string => {
     const baseServings = recipe?.servings || 4;
