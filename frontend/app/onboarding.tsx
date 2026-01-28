@@ -717,7 +717,7 @@ export default function OnboardingScreen() {
           <View style={styles.searchContainer}>
             <Ionicons name="search" size={20} color="#666" />
             <TextInput
-              style={styles.searchInput}
+              style={styles.allergySearchInput}
               placeholder={i18n.language === 'es' ? 'Buscar alergia...' : 'Search allergy...'}
               placeholderTextColor="#666"
               value={allergySearch}
