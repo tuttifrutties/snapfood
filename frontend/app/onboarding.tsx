@@ -255,6 +255,10 @@ export default function OnboardingScreen() {
       await AsyncStorage.setItem('user_region', countryData?.region || 'other');
       await AsyncStorage.setItem('user_gender', gender);
       await AsyncStorage.setItem('user_name', userName.trim());
+      
+      // Save health restrictions
+      await AsyncStorage.setItem('user_health_conditions', JSON.stringify(healthConditions));
+      await AsyncStorage.setItem('user_food_allergies', JSON.stringify(foodAllergies));
 
       // Save to backend
       await fetch(`${API_URL}/api/users/${userId}/goals`, {
@@ -273,6 +277,8 @@ export default function OnboardingScreen() {
           gender,
           country: country || 'OTHER',
           region: countryData?.region || 'other',
+          healthConditions: healthConditions,
+          foodAllergies: foodAllergies,
         }),
       });
 
@@ -287,6 +293,8 @@ export default function OnboardingScreen() {
         country: country || 'OTHER',
         region: countryData?.region || 'other',
         activities: selectedActivities,
+        healthConditions: healthConditions,
+        foodAllergies: foodAllergies,
       });
 
       await completeOnboarding();
