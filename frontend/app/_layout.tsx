@@ -4,8 +4,9 @@ import { UserProvider } from '../src/contexts/UserContext';
 import { PremiumProvider } from '../src/contexts/PremiumContext';
 import { ThemeProvider, useTheme } from '../src/contexts/ThemeContext';
 import React, { useEffect, useState } from 'react';
-import { View, ActivityIndicator, StyleSheet, Text } from 'react-native';
+import { View, ActivityIndicator, StyleSheet, Text, Platform } from 'react-native';
 import initI18n from '../src/i18n';
+import * as NavigationBar from 'expo-navigation-bar';
 
 // Error boundary component to catch crashes
 class ErrorBoundary extends React.Component<
