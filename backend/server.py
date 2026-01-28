@@ -753,10 +753,44 @@ async def get_recipe_suggestions(request: AnalyzeIngredientsRequest):
         ingredients_str = ", ".join(request.ingredients)
         
         # STEP 1: Generate recipes in English (most reliable)
+        # Build health restrictions context
+        health_context = ""
+        if request.healthConditions and 'none' not in request.healthConditions:
+            conditions_str = ', '.join(request.healthConditions)
+            health_context += f"\n\nUSER HEALTH CONDITIONS: {conditions_str}"
+            health_context += "\nYou MUST consider these conditions when suggesting recipes:"
+            if 'diabetes' in request.healthConditions:
+                health_context += "\n- DIABETES: Avoid high-sugar recipes, prefer low glycemic index foods"
+            if 'celiac' in request.healthConditions:
+                health_context += "\n- CELIAC: NO wheat, barley, rye, or gluten-containing ingredients"
+            if 'hypertension' in request.healthConditions:
+                health_context += "\n- HYPERTENSION: Minimize salt, avoid processed foods"
+            if 'cholesterol' in request.healthConditions:
+                health_context += "\n- HIGH CHOLESTEROL: Minimize saturated fats, avoid fried foods"
+            if 'lactose' in request.healthConditions:
+                health_context += "\n- LACTOSE INTOLERANT: NO milk, cheese, cream, or dairy products"
+            if 'vegetarian' in request.healthConditions:
+                health_context += "\n- VEGETARIAN: NO meat or fish"
+            if 'vegan' in request.healthConditions:
+                health_context += "\n- VEGAN: NO animal products (meat, fish, eggs, dairy, honey)"
+            if 'keto' in request.healthConditions:
+                health_context += "\n- KETO DIET: Very low carbs, high fat, moderate protein"
+            if 'pregnant' in request.healthConditions:
+                health_context += "\n- PREGNANCY: Avoid raw fish, unpasteurized products, limit caffeine"
+            if 'gastritis' in request.healthConditions:
+                health_context += "\n- GASTRITIS: Avoid spicy, acidic, fried foods"
+            if 'ibs' in request.healthConditions:
+                health_context += "\n- IBS: Low FODMAP suggestions preferred"
+        
+        if request.foodAllergies and len(request.foodAllergies) > 0:
+            allergies_str = ', '.join(request.foodAllergies)
+            health_context += f"\n\nUSER FOOD ALLERGIES: {allergies_str}"
+            health_context += "\nYou MUST NEVER include these foods in any recipe. This is critical for user safety."
+        
         chat = LlmChat(
             api_key=api_key,
             session_id=f"recipe_suggestions_{request.userId}",
-            system_message="""You are a professional chef AI that creates diverse, international recipe suggestions.
+            system_message=f"""You are a professional chef AI that creates diverse, international recipe suggestions.
             
             CRITICAL RULE - ALL RECIPES MUST BE FOR EXACTLY 4 SERVINGS:
             - ALWAYS normalize every recipe to exactly 4 servings/portions
@@ -781,6 +815,7 @@ async def get_recipe_suggestions(request: AnalyzeIngredientsRequest):
             - Only suggest very common ingredients like: rice, pasta, bread, milk, cheese, onion, garlic, tomato, lemon
             - Set "requiresExtraIngredients": true for these recipes
             - Add "extraIngredientsNeeded": ["ingredient1", "ingredient2"] listing ONLY the extra items needed
+            {health_context}
             
             Each recipe must include:
             - name: Recipe name
