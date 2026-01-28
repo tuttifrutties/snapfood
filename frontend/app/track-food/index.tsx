@@ -133,7 +133,7 @@ export default function TrackFoodScreen() {
   };
 
   // Debounce search to avoid too many API calls
-  const [searchTimeout, setSearchTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [searchTimeout, setSearchTimeout] = useState<ReturnType<typeof setTimeout> | null>(null);
   
   const debouncedSearch = (query: string) => {
     setSearchQuery(query);
