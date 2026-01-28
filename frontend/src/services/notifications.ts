@@ -305,7 +305,7 @@ export async function scheduleDinnerReminder(enabled: boolean, language: string 
   await AsyncStorage.setItem(DINNER_REMINDER_KEY, 'true');
 
   const smartContent = await getSmartNotificationContent('dinner', language);
-  const content = smartContent || getFallbackContent('dinner', language);
+  const content = smartContent || { ...getFallbackContent('dinner', language), suggestedRecipes: [] };
   const time = await getReminderTime('dinner');
 
   await Notifications.scheduleNotificationAsync({
@@ -315,7 +315,12 @@ export async function scheduleDinnerReminder(enabled: boolean, language: string 
       body: content.body,
       sound: true,
       priority: Notifications.AndroidNotificationPriority.HIGH,
-      data: { type: 'smart_dinner', language },
+      data: { 
+        type: 'smart_dinner', 
+        language,
+        suggestedRecipes: content.suggestedRecipes || [],
+        navigateTo: 'cooking'
+      },
     },
     trigger: {
       type: Notifications.SchedulableTriggerInputTypes.DAILY,
