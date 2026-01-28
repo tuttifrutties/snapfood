@@ -292,6 +292,12 @@ export default function PersonalProfileScreen() {
         setEditAge(profileData.age.toString());
         setEditGoal(profileData.goal);
         setEditActivities(profileData.activities || []);
+        
+        // Load health restrictions
+        const healthConditionsStr = await AsyncStorage.getItem('user_health_conditions');
+        const foodAllergiesStr = await AsyncStorage.getItem('user_food_allergies');
+        setEditHealthConditions(healthConditionsStr ? JSON.parse(healthConditionsStr) : ['none']);
+        setEditFoodAllergies(foodAllergiesStr ? JSON.parse(foodAllergiesStr) : []);
       }
     } catch (error) {
       console.error('Failed to load profile:', error);
