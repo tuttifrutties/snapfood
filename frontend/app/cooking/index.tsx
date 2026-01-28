@@ -511,6 +511,50 @@ export default function CookingScreen() {
         </View>
 
         <ScrollView contentContainerStyle={styles.content}>
+          {/* Notification Suggested Recipes Banner */}
+          {notificationRecipes.length > 0 && (
+            <View style={styles.notificationBanner}>
+              <View style={styles.notificationBannerHeader}>
+                <Ionicons name="restaurant" size={20} color="#FF6B6B" />
+                <Text style={styles.notificationBannerTitle}>
+                  {i18n.language === 'es' 
+                    ? `🔔 Sugerencias para tu ${notificationMealType === 'lunch' ? 'almuerzo' : 'cena'}`
+                    : `🔔 Suggestions for your ${notificationMealType}`}
+                </Text>
+              </View>
+              <Text style={styles.notificationBannerSubtitle}>
+                {i18n.language === 'es' 
+                  ? 'Basado en tus ingredientes:'
+                  : 'Based on your ingredients:'}
+              </Text>
+              <View style={styles.notificationRecipesList}>
+                {notificationRecipes.map((recipe, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={styles.notificationRecipeItem}
+                    onPress={() => {
+                      setRecipeSearchQuery(recipe);
+                      setMode('searchRecipe');
+                    }}
+                  >
+                    <Text style={styles.notificationRecipeText}>
+                      👨‍🍳 {recipe}
+                    </Text>
+                    <Ionicons name="chevron-forward" size={16} color="#FF6B6B" />
+                  </TouchableOpacity>
+                ))}
+              </View>
+              <TouchableOpacity
+                style={styles.notificationDismissBtn}
+                onPress={() => setNotificationRecipes([])}
+              >
+                <Text style={styles.notificationDismissText}>
+                  {i18n.language === 'es' ? 'Cerrar' : 'Dismiss'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+          
           <Text style={styles.subtitle}>{t('cooking.subtitle')}</Text>
 
           <TouchableOpacity
