@@ -1,12 +1,14 @@
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { UserProvider } from '../src/contexts/UserContext';
 import { PremiumProvider } from '../src/contexts/PremiumContext';
 import { ThemeProvider, useTheme } from '../src/contexts/ThemeContext';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { View, ActivityIndicator, StyleSheet, Text, Platform } from 'react-native';
 import initI18n from '../src/i18n';
 import * as NavigationBar from 'expo-navigation-bar';
+import * as Notifications from 'expo-notifications';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Error boundary component to catch crashes
 class ErrorBoundary extends React.Component<
