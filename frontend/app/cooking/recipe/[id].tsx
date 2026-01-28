@@ -1834,4 +1834,102 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  // Share Recipe Modal styles
+  shareModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  shareCard: {
+    width: 320,
+    borderRadius: 24,
+    overflow: 'hidden',
+  },
+  shareCardGradient: {
+    backgroundColor: '#FF6B6B',
+    padding: 24,
+    alignItems: 'center',
+  },
+  shareCardTop: {
+    marginBottom: 16,
+  },
+  shareCardEmojis: {
+    fontSize: 60,
+    textAlign: 'center',
+  },
+  shareCardTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'center',
+    marginBottom: 8,
+    textShadowColor: 'rgba(0,0,0,0.3)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 3,
+  },
+  shareCardFlag: {
+    fontSize: 16,
+    color: 'rgba(255,255,255,0.9)',
+    marginBottom: 16,
+  },
+  shareCardMacros: {
+    flexDirection: 'row',
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    borderRadius: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 12,
+    marginBottom: 16,
+    width: '100%',
+  },
+  shareCardMacroItem: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  shareCardMacroValue: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  shareCardMacroLabel: {
+    fontSize: 11,
+    color: 'rgba(255,255,255,0.8)',
+    marginTop: 2,
+  },
+  shareCardMacroDivider: {
+    width: 1,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    marginVertical: 4,
+  },
+  shareCardTime: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 20,
+  },
+  shareCardTimeText: {
+    fontSize: 14,
+    color: '#fff',
+  },
+  shareCardBranding: {
+    paddingTop: 16,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255,255,255,0.2)',
+    width: '100%',
+    alignItems: 'center',
+  },
+  shareCardBrandingText: {
+    fontSize: 14,
+    color: 'rgba(255,255,255,0.9)',
+    fontWeight: '500',
+  },
+  shareLoadingContainer: {
+    position: 'absolute',
+    alignItems: 'center',
+  },
+  shareLoadingText: {
+    color: '#fff',
+    marginTop: 12,
+    fontSize: 14,
+  },
 });
