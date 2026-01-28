@@ -1889,16 +1889,22 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   // Share Recipe Modal styles
-  shareModalOverlay: {
+  shareModalScrollView: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.9)',
+    backgroundColor: 'rgba(0,0,0,0.95)',
+  },
+  shareModalOverlay: {
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingVertical: 40,
+    paddingHorizontal: 20,
   },
   shareCard: {
-    width: 320,
+    width: 340,
     borderRadius: 24,
     overflow: 'hidden',
+    backgroundColor: '#1a1a2e',
   },
   shareCardGradient: {
     backgroundColor: '#FF6B6B',
@@ -1909,11 +1915,11 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   shareCardEmojis: {
-    fontSize: 60,
+    fontSize: 50,
     textAlign: 'center',
   },
   shareCardTitle: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 'bold',
     color: '#fff',
     textAlign: 'center',
@@ -1923,17 +1929,17 @@ const styles = StyleSheet.create({
     textShadowRadius: 3,
   },
   shareCardFlag: {
-    fontSize: 16,
+    fontSize: 14,
     color: 'rgba(255,255,255,0.9)',
-    marginBottom: 16,
+    marginBottom: 12,
   },
   shareCardMacros: {
     flexDirection: 'row',
     backgroundColor: 'rgba(0,0,0,0.2)',
-    borderRadius: 16,
-    paddingVertical: 16,
-    paddingHorizontal: 12,
-    marginBottom: 16,
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    marginBottom: 12,
     width: '100%',
   },
   shareCardMacroItem: {
@@ -1941,12 +1947,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   shareCardMacroValue: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#fff',
   },
   shareCardMacroLabel: {
-    fontSize: 11,
+    fontSize: 10,
     color: 'rgba(255,255,255,0.8)',
     marginTop: 2,
   },
@@ -1959,11 +1965,70 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    marginBottom: 20,
   },
   shareCardTimeText: {
-    fontSize: 14,
+    fontSize: 13,
     color: '#fff',
+  },
+  // Ingredients & Instructions sections
+  shareCardSection: {
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: 'rgba(255,255,255,0.1)',
+  },
+  shareCardSectionTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#FF6B6B',
+    marginBottom: 12,
+  },
+  shareCardIngredient: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 6,
+  },
+  shareCardBullet: {
+    color: '#FF6B6B',
+    fontSize: 14,
+    marginRight: 8,
+    marginTop: 1,
+  },
+  shareCardIngredientText: {
+    color: '#fff',
+    fontSize: 13,
+    flex: 1,
+    lineHeight: 18,
+  },
+  shareCardStep: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    marginBottom: 12,
+  },
+  shareCardStepNumber: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: '#FF6B6B',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
+  },
+  shareCardStepNumberText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  shareCardStepText: {
+    color: '#fff',
+    fontSize: 13,
+    flex: 1,
+    lineHeight: 20,
+  },
+  // Footer
+  shareCardFooter: {
+    padding: 16,
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.3)',
   },
   shareCardBranding: {
     paddingTop: 16,
@@ -1973,17 +2038,31 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   shareCardBrandingText: {
-    fontSize: 14,
-    color: 'rgba(255,255,255,0.9)',
-    fontWeight: '500',
+    fontSize: 16,
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  shareCardBrandingSubtext: {
+    fontSize: 11,
+    color: 'rgba(255,255,255,0.6)',
+    marginTop: 4,
   },
   shareLoadingContainer: {
     position: 'absolute',
     alignItems: 'center',
+    justifyContent: 'center',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.7)',
   },
   shareLoadingText: {
     color: '#fff',
     marginTop: 12,
     fontSize: 14,
+  },
+  shareCloseButton: {
+    marginTop: 20,
   },
 });
