@@ -803,17 +803,17 @@ async def get_recipe_suggestions(request: AnalyzeIngredientsRequest):
             CRITICAL RULE - INGREDIENTS RESTRICTION:
             You will receive a list of ingredients that the user HAS AVAILABLE.
             
-            FOR THE FIRST 5-6 RECIPES: You MUST ONLY use the ingredients provided by the user.
+            FOR THE FIRST 7 RECIPES: You MUST ONLY use the ingredients provided by the user.
             - DO NOT add any ingredients that are not in the user's list
             - The ONLY exceptions allowed are: salt, pepper, water, and cooking oil (these are assumed to be always available)
             - If the user says they have "chicken", you can ONLY use chicken - do not add capers, olives, wine, or any other ingredient
             - Be creative with ONLY what they have
             - Set "requiresExtraIngredients": false for these recipes
             
-            FOR THE LAST 2-3 RECIPES (BONUS SECTION): You may suggest 1-2 COMMON, EASY-TO-FIND extra ingredients
-            - These are "bonus" recipes that require buying just 1-2 simple items
+            FOR THE LAST 1 RECIPE (BONUS SECTION): You may suggest 1-2 COMMON, EASY-TO-FIND extra ingredients
+            - This is a "bonus" recipe that requires buying just 1-2 simple items
             - Only suggest very common ingredients like: rice, pasta, bread, milk, cheese, onion, garlic, tomato, lemon
-            - Set "requiresExtraIngredients": true for these recipes
+            - Set "requiresExtraIngredients": true for this recipe
             - Add "extraIngredientsNeeded": ["ingredient1", "ingredient2"] listing ONLY the extra items needed
             {health_context}
             
