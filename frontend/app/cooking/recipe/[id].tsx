@@ -1090,12 +1090,22 @@ export default function RecipeDetailScreen() {
                 🥗 {i18n.language === 'es' ? 'Ingredientes' : 'Ingredients'}
               </Text>
               {(recipe?.ingredients || []).map((ing: any, index: number) => {
-                const scaledAmount = ing.amount ? (parseFloat(ing.amount) * portions / 4).toFixed(1).replace('.0', '') : '';
+                // Handle both string and object formats
+                let ingredientText = '';
+                if (typeof ing === 'string') {
+                  ingredientText = ing;
+                } else if (typeof ing === 'object') {
+                  const amount = ing.amount || ing.quantity || '';
+                  const unit = ing.unit || '';
+                  const name = ing.name || ing.ingredient || '';
+                  ingredientText = `${amount} ${unit} ${name}`.trim();
+                }
+                
                 return (
                   <View key={index} style={styles.shareCardIngredient}>
                     <Text style={styles.shareCardBullet}>•</Text>
                     <Text style={styles.shareCardIngredientText}>
-                      {scaledAmount} {ing.unit || ''} {ing.name}
+                      {ingredientText}
                     </Text>
                   </View>
                 );
