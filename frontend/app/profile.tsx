@@ -1285,6 +1285,123 @@ export default function PersonalProfileScreen() {
           )}
         </View>
       </Modal>
+
+      {/* Health & Restrictions Modal */}
+      <Modal
+        visible={showHealthModal}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setShowHealthModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={[styles.activityModal, { backgroundColor: theme.surface }]}>
+            <View style={styles.activityModalHeader}>
+              <Text style={[styles.activityModalTitle, { color: theme.text }]}>
+                {i18n.language === 'es' ? '🏥 Salud y Restricciones' : '🏥 Health & Restrictions'}
+              </Text>
+              <TouchableOpacity onPress={() => setShowHealthModal(false)}>
+                <Ionicons name="close" size={28} color={theme.text} />
+              </TouchableOpacity>
+            </View>
+            
+            <ScrollView style={{ maxHeight: 500 }}>
+              {/* Health Conditions */}
+              <Text style={[styles.healthModalSubtitle, { color: theme.text }]}>
+                {i18n.language === 'es' ? 'Condiciones de salud' : 'Health conditions'}
+              </Text>
+              <View style={styles.healthOptionsGrid}>
+                {HEALTH_CONDITIONS.map((condition) => {
+                  const isSelected = editHealthConditions.includes(condition.id);
+                  return (
+                    <TouchableOpacity
+                      key={condition.id}
+                      style={[
+                        styles.healthModalOption,
+                        { borderColor: theme.border },
+                        isSelected && { backgroundColor: theme.primary + '20', borderColor: theme.primary },
+                      ]}
+                      onPress={() => {
+                        if (condition.id === 'none') {
+                          setEditHealthConditions(['none']);
+                        } else {
+                          let updated = editHealthConditions.filter(c => c !== 'none');
+                          if (updated.includes(condition.id)) {
+                            updated = updated.filter(c => c !== condition.id);
+                            if (updated.length === 0) updated = ['none'];
+                          } else {
+                            updated.push(condition.id);
+                          }
+                          setEditHealthConditions(updated);
+                        }
+                      }}
+                    >
+                      <Text style={styles.healthModalOptionIcon}>{condition.icon}</Text>
+                      <Text style={[
+                        styles.healthModalOptionText,
+                        { color: isSelected ? theme.primary : theme.text }
+                      ]} numberOfLines={2}>
+                        {i18n.language === 'es' ? condition.es : condition.en}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+
+              {/* Food Allergies */}
+              <Text style={[styles.healthModalSubtitle, { color: theme.text, marginTop: 20 }]}>
+                {i18n.language === 'es' ? 'Alergias / Intolerancias' : 'Allergies / Intolerances'}
+              </Text>
+              <View style={styles.healthOptionsGrid}>
+                {FOOD_ALLERGIES.map((allergy) => {
+                  const isSelected = editFoodAllergies.includes(allergy.id);
+                  return (
+                    <TouchableOpacity
+                      key={allergy.id}
+                      style={[
+                        styles.healthModalOption,
+                        { borderColor: theme.border },
+                        isSelected && { backgroundColor: '#FFD70030', borderColor: '#FFD700' },
+                      ]}
+                      onPress={() => {
+                        if (isSelected) {
+                          setEditFoodAllergies(editFoodAllergies.filter(a => a !== allergy.id));
+                        } else {
+                          setEditFoodAllergies([...editFoodAllergies, allergy.id]);
+                        }
+                      }}
+                    >
+                      <Text style={styles.healthModalOptionIcon}>{allergy.icon}</Text>
+                      <Text style={[
+                        styles.healthModalOptionText,
+                        { color: isSelected ? '#FFD700' : theme.text }
+                      ]} numberOfLines={1}>
+                        {i18n.language === 'es' ? allergy.es : allergy.en}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+            </ScrollView>
+
+            <TouchableOpacity
+              style={[styles.healthModalSaveBtn, { backgroundColor: theme.primary }]}
+              onPress={async () => {
+                await AsyncStorage.setItem('user_health_conditions', JSON.stringify(editHealthConditions));
+                await AsyncStorage.setItem('user_food_allergies', JSON.stringify(editFoodAllergies));
+                setShowHealthModal(false);
+                Alert.alert(
+                  i18n.language === 'es' ? '¡Guardado!' : 'Saved!',
+                  i18n.language === 'es' ? 'Tus restricciones se han actualizado' : 'Your restrictions have been updated'
+                );
+              }}
+            >
+              <Text style={styles.healthModalSaveBtnText}>
+                {i18n.language === 'es' ? 'Guardar cambios' : 'Save changes'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
