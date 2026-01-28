@@ -1890,6 +1890,66 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  // Health & Restrictions styles
+  healthSubtitle: {
+    fontSize: 13,
+    marginBottom: 8,
+  },
+  healthChipsContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  healthChip: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+  },
+  allergyChipColor: {
+    backgroundColor: '#FFD70030',
+  },
+  healthChipText: {
+    fontSize: 13,
+    color: '#fff',
+  },
+  healthModalSubtitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 12,
+  },
+  healthOptionsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  healthModalOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    gap: 6,
+    minWidth: 100,
+  },
+  healthModalOptionIcon: {
+    fontSize: 18,
+  },
+  healthModalOptionText: {
+    fontSize: 13,
+    flex: 1,
+  },
+  healthModalSaveBtn: {
+    padding: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  healthModalSaveBtnText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });
 
 // Styles for the share image card
