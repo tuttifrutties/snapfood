@@ -845,8 +845,8 @@ async def get_recipe_suggestions(request: AnalyzeIngredientsRequest):
 
 STRICT RULES:
 1. ALL RECIPES MUST BE NORMALIZED TO EXACTLY 4 SERVINGS - adjust all ingredient quantities accordingly
-2. For the FIRST 5-6 recipes: Use ONLY the ingredients I listed above. Do NOT add anything else except salt, pepper, water, and cooking oil.
-3. For the LAST 2-3 recipes: You may add 1-2 VERY COMMON extra ingredients (like rice, pasta, onion, garlic) and mark them as bonus recipes.
+2. For the FIRST 7 recipes: Use ONLY the ingredients I listed above. Do NOT add anything else except salt, pepper, water, and cooking oil.
+3. For the LAST 1 recipe: You may add 1-2 VERY COMMON extra ingredients (like rice, pasta, onion, garlic) and mark it as a bonus recipe.
 4. Calories, protein, carbs, and fats must be PER SINGLE SERVING (1 portion out of 4)
 
 Return as JSON array with requiresExtraIngredients and extraIngredientsNeeded fields."""
