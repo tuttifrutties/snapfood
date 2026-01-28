@@ -45,9 +45,14 @@ class ErrorBoundary extends React.Component<
   }
 }
 
+// Key for storing notification recipes to show in cooking screen
+const NOTIFICATION_RECIPES_KEY = 'notification_suggested_recipes';
+
 export default function RootLayout() {
   const [i18nReady, setI18nReady] = useState(false);
   const [initError, setInitError] = useState<string | null>(null);
+  const notificationListener = useRef<Notifications.EventSubscription>();
+  const responseListener = useRef<Notifications.EventSubscription>();
 
   useEffect(() => {
     const initialize = async () => {
@@ -71,6 +76,34 @@ export default function RootLayout() {
     };
 
     initialize();
+    
+    // Handle notification tap - this fires when user taps a notification
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(async (response) => {
+      console.log('[Notification] User tapped notification:', response);
+      const data = response.notification.request.content.data;
+      
+      if (data?.navigateTo === 'cooking' && data?.suggestedRecipes) {
+        // Store the suggested recipes so cooking screen can pick them up
+        await AsyncStorage.setItem(
+          NOTIFICATION_RECIPES_KEY,
+          JSON.stringify({
+            recipes: data.suggestedRecipes,
+            timestamp: Date.now(),
+            mealType: data.type === 'smart_lunch' ? 'lunch' : 'dinner'
+          })
+        );
+        console.log('[Notification] Stored suggested recipes for cooking screen');
+      }
+    });
+
+    return () => {
+      if (notificationListener.current) {
+        Notifications.removeNotificationSubscription(notificationListener.current);
+      }
+      if (responseListener.current) {
+        Notifications.removeNotificationSubscription(responseListener.current);
+      }
+    };
   }, []);
 
   if (!i18nReady) {
