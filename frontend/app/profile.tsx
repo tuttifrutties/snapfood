@@ -37,6 +37,7 @@ import {
   getActivityLabel,
   PhysicalActivity,
   UserNutritionProfile,
+  getUserName,
 } from '../src/services/nutritionCoach';
 
 const { width } = Dimensions.get('window');
