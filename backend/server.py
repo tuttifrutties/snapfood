@@ -137,6 +137,8 @@ class AnalyzeIngredientsRequest(BaseModel):
     imageBase64: Optional[str] = None
     ingredients: Optional[List[str]] = None
     language: Optional[str] = "en"  # Language code: en, es, etc.
+    healthConditions: Optional[List[str]] = None  # User's health conditions
+    foodAllergies: Optional[List[str]] = None  # User's food allergies
 
 class Recipe(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
