@@ -177,6 +177,7 @@ export default function PersonalProfileScreen() {
   const [editFoodAllergies, setEditFoodAllergies] = useState<string[]>([]);
   const [showHealthModal, setShowHealthModal] = useState(false);
   const [showActivityPicker, setShowActivityPicker] = useState(false);
+  const [allergySearchQuery, setAllergySearchQuery] = useState('');
   
   // Activity configuration state
   const [configuringActivity, setConfiguringActivity] = useState<string | null>(null);
