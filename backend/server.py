@@ -824,15 +824,20 @@ async def get_recipe_suggestions(request: AnalyzeIngredientsRequest):
             - instructions: Step-by-step cooking instructions (array of strings, each step is clear)
             - cookingTime: Total time in minutes
             - servings: ALWAYS 4 (this is mandatory)
-            - calories: Estimated calories PER SINGLE SERVING (1 portion)
+            - calories: Estimated calories PER SINGLE SERVING (1 portion) - IMPORTANT: DO NOT include calories from cooking oils/fats/butter. The user will add these separately.
             - protein: Protein in grams PER SINGLE SERVING
-            - carbs: Carbohydrates in grams PER SINGLE SERVING
-            - fats: Fats in grams PER SINGLE SERVING
+            - carbs: Carbohydrates in grams PER SINGLE SERVING  
+            - fats: Fats in grams PER SINGLE SERVING - IMPORTANT: DO NOT include fats from cooking oils/butter. Only include fats naturally present in the ingredients.
             - healthierOption: Optional suggestion for making it healthier
             - countryOfOrigin: Country where this dish originates
             - cuisine: Type of cuisine
-            - requiresExtraIngredients: boolean (false for first 5-6, true for bonus recipes)
-            - extraIngredientsNeeded: array of strings (empty for first recipes, 1-2 items for bonus recipes)
+            - requiresExtraIngredients: boolean (false for first 7, true for bonus recipe)
+            - extraIngredientsNeeded: array of strings (empty for first recipes, 1-2 items for bonus recipe)
+            
+            IMPORTANT ABOUT COOKING OILS/FATS:
+            - When a recipe needs oil, butter, or any cooking fat, include it in the ingredients list
+            - But DO NOT count those calories/fats in the nutrition values
+            - The user will manually select the type and amount of fat they used after cooking
             
             Return as JSON array of 8 recipes total.
             Make recipes beginner-friendly with clear, sequential instructions.
