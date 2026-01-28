@@ -292,6 +292,29 @@ Fórmula: `Calorías = MET × Peso(kg) × Horas × Días/semana`
 
 ## 📝 Tareas Pendientes para Próximo Fork
 
+### 🔴 ERRORES A ARREGLAR PRIMERO (TypeScript)
+
+**1. profile.tsx - Falta import de AsyncStorage:**
+```typescript
+// Agregar en los imports:
+import AsyncStorage from '@react-native-async-storage/async-storage';
+```
+
+**2. nutritionCoach.ts - Agregar campos al tipo UserNutritionProfile:**
+```typescript
+// En el tipo UserNutritionProfile agregar:
+healthConditions?: string[];
+foodAllergies?: string[];
+```
+
+**3. onboarding.tsx línea ~1316 - Estilos duplicados:**
+- Buscar propiedades duplicadas en StyleSheet.create y eliminar duplicados
+
+**4. cooking/index.tsx línea ~1739 - Estilos duplicados:**
+- Buscar propiedades duplicadas en StyleSheet.create y eliminar duplicados
+
+### 🟡 FEATURES PENDIENTES
+
 1. **Force Update** - Mostrar cartel obligatorio cuando hay nueva versión (necesita URL de Play Store)
 2. **Light Mode** - Algunos textos pueden seguir con problemas en modo claro
 3. **Plan anual** - El plan de suscripción anual no se muestra
