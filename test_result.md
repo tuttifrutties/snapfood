@@ -550,11 +550,11 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Recipe suggestions with translation system"
+    []
   stuck_tasks:
-    - "Recipe suggestions with translation system"
+    []
   test_all: false
-  test_priority: "stuck_first"
+  test_priority: "high_first"
 
 agent_communication:
   - agent: "main"
