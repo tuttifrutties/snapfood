@@ -154,10 +154,10 @@ export default function PersonalProfileScreen() {
   const { t, i18n } = useTranslation();
   const { isPremium } = usePremium();
   const { theme } = useTheme();
-  const { userName } = useUser();
   const summaryScrollRef = useRef<ScrollView>(null);
   const shareImageRef = useRef<ViewShot>(null);
 
+  const [userName, setUserName] = useState<string | null>(null);
   const [profile, setProfile] = useState<UserNutritionProfile | null>(null);
   const [weekSummary, setWeekSummary] = useState<any>(null);
   const [monthSummary, setMonthSummary] = useState<any>(null);
