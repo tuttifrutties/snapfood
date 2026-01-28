@@ -792,12 +792,12 @@ export default function CookingScreen() {
           onRequestClose={() => setShowConfirmModal(false)}
         >
           <View style={styles.modalOverlay}>
-            <View style={[styles.confirmModal, { backgroundColor: theme.isDark ? '#1a1a2e' : '#fff' }]}>
+            <View style={[styles.confirmModal, { backgroundColor: theme.mode === 'dark' ? '#1a1a2e' : '#fff' }]}>
               <Ionicons name="help-circle" size={60} color={theme.primary} />
-              <Text style={[styles.confirmTitle, { color: theme.isDark ? '#fff' : '#000' }]}>
+              <Text style={[styles.confirmTitle, { color: theme.mode === 'dark' ? '#fff' : '#000' }]}>
                 {i18n.language === 'es' ? '¿Estás seguro?' : 'Are you sure?'}
               </Text>
-              <Text style={[styles.confirmMessage, { color: theme.isDark ? '#aaa' : '#666' }]}>
+              <Text style={[styles.confirmMessage, { color: theme.mode === 'dark' ? '#aaa' : '#666' }]}>
                 {i18n.language === 'es' 
                   ? '¿No te olvidaste ningún ingrediente?' 
                   : "Didn't you forget any ingredient?"}
@@ -830,14 +830,14 @@ export default function CookingScreen() {
           transparent={false}
           animationType="fade"
         >
-          <View style={[styles.loadingFullScreen, { backgroundColor: theme.isDark ? '#0a0a0a' : '#f5f5f5' }]}>
-            <View style={[styles.menuCard, { backgroundColor: theme.isDark ? '#1a1a2e' : '#fff' }]}>
+          <View style={[styles.loadingFullScreen, { backgroundColor: theme.mode === 'dark' ? '#0a0a0a' : '#f5f5f5' }]}>
+            <View style={[styles.menuCard, { backgroundColor: theme.mode === 'dark' ? '#1a1a2e' : '#fff' }]}>
               {/* Restaurant Menu Header */}
               <View style={styles.menuHeader}>
                 <View style={styles.menuLogoContainer}>
                   <Ionicons name="restaurant" size={40} color={theme.primary} />
                 </View>
-                <Text style={[styles.menuRestaurantName, { color: theme.isDark ? '#fff' : '#000' }]}>
+                <Text style={[styles.menuRestaurantName, { color: theme.mode === 'dark' ? '#fff' : '#000' }]}>
                   Snapfood
                 </Text>
                 <View style={styles.menuDivider} />
@@ -850,20 +850,20 @@ export default function CookingScreen() {
 
               {/* Ingredients List */}
               <View style={styles.menuIngredientsContainer}>
-                <Text style={[styles.menuIngredientsTitle, { color: theme.isDark ? '#aaa' : '#666' }]}>
+                <Text style={[styles.menuIngredientsTitle, { color: theme.mode === 'dark' ? '#aaa' : '#666' }]}>
                   {i18n.language === 'es' ? 'Ingredientes seleccionados' : 'Selected ingredients'}
                 </Text>
                 <View style={styles.menuIngredientsList}>
                   {selectedIngredients.slice(0, 8).map((ing, index) => (
                     <View key={ing} style={styles.menuIngredientLine}>
                       <View style={styles.menuBullet} />
-                      <Text style={[styles.menuIngredientText, { color: theme.isDark ? '#ccc' : '#333' }]} numberOfLines={1}>
+                      <Text style={[styles.menuIngredientText, { color: theme.mode === 'dark' ? '#ccc' : '#333' }]} numberOfLines={1}>
                         {ing}
                       </Text>
                     </View>
                   ))}
                   {selectedIngredients.length > 8 && (
-                    <Text style={[styles.menuMoreText, { color: theme.isDark ? '#888' : '#999' }]}>
+                    <Text style={[styles.menuMoreText, { color: theme.mode === 'dark' ? '#888' : '#999' }]}>
                       +{selectedIngredients.length - 8} más...
                     </Text>
                   )}

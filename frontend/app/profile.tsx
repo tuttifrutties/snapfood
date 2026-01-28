@@ -27,6 +27,7 @@ import { useUser } from '../src/contexts/UserContext';
 import { useFocusEffect } from '@react-navigation/native';
 import ViewShot from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   getUserNutritionProfile,
   saveUserNutritionProfile,
