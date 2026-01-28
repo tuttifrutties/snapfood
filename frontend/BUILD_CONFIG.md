@@ -292,26 +292,17 @@ Fórmula: `Calorías = MET × Peso(kg) × Horas × Días/semana`
 
 ## 📝 Tareas Pendientes para Próximo Fork
 
-### 🔴 ERRORES A ARREGLAR PRIMERO (TypeScript)
+### ✅ ERRORES DE TYPESCRIPT CORREGIDOS (Enero 2026)
 
-**1. profile.tsx - Falta import de AsyncStorage:**
-```typescript
-// Agregar en los imports:
-import AsyncStorage from '@react-native-async-storage/async-storage';
-```
-
-**2. nutritionCoach.ts - Agregar campos al tipo UserNutritionProfile:**
-```typescript
-// En el tipo UserNutritionProfile agregar:
-healthConditions?: string[];
-foodAllergies?: string[];
-```
-
-**3. onboarding.tsx línea ~1316 - Estilos duplicados:**
-- Buscar propiedades duplicadas en StyleSheet.create y eliminar duplicados
-
-**4. cooking/index.tsx línea ~1739 - Estilos duplicados:**
-- Buscar propiedades duplicadas en StyleSheet.create y eliminar duplicados
+**Todos los errores de compilación fueron arreglados:**
+- ✅ profile.tsx - Import de AsyncStorage agregado
+- ✅ nutritionCoach.ts - Campos healthConditions y foodAllergies agregados al tipo
+- ✅ onboarding.tsx - Estilos duplicados renombrados (searchInput → allergySearchInput)
+- ✅ cooking/index.tsx - Estilos duplicados renombrados (searchResultsContainer → recipeSearchResultsContainer)
+- ✅ cooking/index.tsx - theme.isDark → theme.mode === 'dark' (9 ocurrencias)
+- ✅ track-food/index.tsx - Tipo de setTimeout corregido
+- ✅ profile.tsx - PhysicalActivity con campo 'type' agregado
+- ✅ profile.tsx - userName ahora se obtiene con getUserName() en lugar de UserContext
 
 ### 🟡 FEATURES PENDIENTES
 
