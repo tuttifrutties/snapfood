@@ -1058,6 +1058,7 @@ export default function PersonalProfileScreen() {
                               onPress={() => {
                                 setEditActivities([...editActivities, {
                                   id: activity.id,
+                                  type: activity.type,
                                   icon: activity.icon,
                                   durationMinutes: activityMinutes,
                                   daysPerWeek: activityDays,
