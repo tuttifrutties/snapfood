@@ -207,6 +207,41 @@ export default function OnboardingScreen() {
     }
   };
 
+  // Health condition toggle
+  const toggleHealthCondition = (conditionId: string) => {
+    if (conditionId === 'none') {
+      // If selecting "none", clear all others
+      setHealthConditions(['none']);
+    } else {
+      // Remove 'none' if selecting a condition
+      let updated = healthConditions.filter(c => c !== 'none');
+      if (updated.includes(conditionId)) {
+        updated = updated.filter(c => c !== conditionId);
+        // If empty, set back to 'none'
+        if (updated.length === 0) updated = ['none'];
+      } else {
+        updated.push(conditionId);
+      }
+      setHealthConditions(updated);
+    }
+  };
+
+  // Food allergy toggle
+  const toggleFoodAllergy = (allergyId: string) => {
+    if (foodAllergies.includes(allergyId)) {
+      setFoodAllergies(foodAllergies.filter(a => a !== allergyId));
+    } else {
+      setFoodAllergies([...foodAllergies, allergyId]);
+    }
+  };
+
+  // Filter allergies based on search
+  const filteredAllergies = FOOD_ALLERGIES.filter(a => {
+    const searchLower = allergySearch.toLowerCase();
+    return a.es.toLowerCase().includes(searchLower) || 
+           a.en.toLowerCase().includes(searchLower);
+  });
+
   const handleFinish = async () => {
     if (!userName.trim() || !age || !height || !weight) {
       Alert.alert(t('onboarding.missingInfo'), t('onboarding.fillAllFields'));
