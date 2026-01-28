@@ -1008,6 +1008,91 @@ export default function RecipeDetailScreen() {
           </View>
         </View>
       </Modal>
+
+      {/* Share Recipe Modal */}
+      <Modal
+        visible={showShareModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => !isSharing && setShowShareModal(false)}
+      >
+        <View style={styles.shareModalOverlay}>
+          {/* This is the shareable card */}
+          <View 
+            ref={shareCardRef}
+            style={styles.shareCard}
+            collapsable={false}
+          >
+            {/* Gradient Background */}
+            <View style={styles.shareCardGradient}>
+              {/* Top section with emojis */}
+              <View style={styles.shareCardTop}>
+                <Text style={styles.shareCardEmojis}>
+                  {getIngredientEmojis(recipe?.ingredients || [])}
+                </Text>
+              </View>
+              
+              {/* Recipe name */}
+              <Text style={styles.shareCardTitle} numberOfLines={2}>
+                {recipe?.name}
+              </Text>
+              
+              {/* Country flag if available */}
+              {getCountryFlag(recipe?.countryOfOrigin || recipe?.cuisine || '') && (
+                <Text style={styles.shareCardFlag}>
+                  {getCountryFlag(recipe?.countryOfOrigin || recipe?.cuisine || '')} {recipe?.cuisine}
+                </Text>
+              )}
+              
+              {/* Macros */}
+              <View style={styles.shareCardMacros}>
+                <View style={styles.shareCardMacroItem}>
+                  <Text style={styles.shareCardMacroValue}>{recipe?.calories || 0}</Text>
+                  <Text style={styles.shareCardMacroLabel}>cal</Text>
+                </View>
+                <View style={styles.shareCardMacroDivider} />
+                <View style={styles.shareCardMacroItem}>
+                  <Text style={styles.shareCardMacroValue}>{recipe?.protein || 0}g</Text>
+                  <Text style={styles.shareCardMacroLabel}>prot</Text>
+                </View>
+                <View style={styles.shareCardMacroDivider} />
+                <View style={styles.shareCardMacroItem}>
+                  <Text style={styles.shareCardMacroValue}>{recipe?.carbs || 0}g</Text>
+                  <Text style={styles.shareCardMacroLabel}>carbs</Text>
+                </View>
+                <View style={styles.shareCardMacroDivider} />
+                <View style={styles.shareCardMacroItem}>
+                  <Text style={styles.shareCardMacroValue}>{recipe?.fats || 0}g</Text>
+                  <Text style={styles.shareCardMacroLabel}>grasas</Text>
+                </View>
+              </View>
+              
+              {/* Cooking time */}
+              <View style={styles.shareCardTime}>
+                <Ionicons name="time-outline" size={16} color="#fff" />
+                <Text style={styles.shareCardTimeText}>
+                  {recipe?.cookingTime || 30} min
+                </Text>
+              </View>
+              
+              {/* Branding */}
+              <View style={styles.shareCardBranding}>
+                <Text style={styles.shareCardBrandingText}>📱 SnapFood</Text>
+              </View>
+            </View>
+          </View>
+          
+          {/* Loading indicator */}
+          {isSharing && (
+            <View style={styles.shareLoadingContainer}>
+              <ActivityIndicator size="large" color="#FF6B6B" />
+              <Text style={styles.shareLoadingText}>
+                {i18n.language === 'es' ? 'Preparando imagen...' : 'Preparing image...'}
+              </Text>
+            </View>
+          )}
+        </View>
+      </Modal>
     </View>
   );
 }
