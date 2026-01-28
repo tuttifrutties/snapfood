@@ -1357,11 +1357,19 @@ const styles = StyleSheet.create({
     marginTop: 6,
     marginRight: 12,
   },
-  ingredientText: {
+  ingredientTextContainer: {
     flex: 1,
+  },
+  ingredientText: {
     fontSize: 16,
     color: '#ddd',
     lineHeight: 22,
+  },
+  ingredientFatReminder: {
+    fontSize: 12,
+    color: '#FFD700',
+    fontStyle: 'italic',
+    marginTop: 2,
   },
 
   // Instructions
