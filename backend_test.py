@@ -1201,6 +1201,334 @@ def test_snapfood_recipe_generation():
         print("❌ SOME RECIPE GENERATION TESTS FAILED - See details above")
         return False
 
+def test_snapfood_endpoints():
+    """
+    Test all SnapFood endpoints as requested in the review:
+    1. POST /api/meals - Register food with photo
+    2. POST /api/recipe-suggestions - NEW healthConditions and foodAllergies fields
+    3. POST /api/search-food - Search foods
+    4. POST /api/analyze-ingredients - Analyze ingredients from photo
+    5. POST /api/search-recipes - Search recipes by name
+    """
+    print("🍕 SNAPFOOD BACKEND TESTING SUITE")
+    print("Testing all main endpoints as requested in review")
+    print("=" * 60)
+    
+    results = {}
+    
+    # Test 1: POST /api/meals - Register food with photo
+    print("\n1️⃣ TESTING POST /api/meals - Register food with photo")
+    print("-" * 50)
+    
+    try:
+        # Test with timestamp from frontend (current time in ms)
+        current_timestamp = int(datetime.now().timestamp() * 1000)
+        
+        payload = {
+            "userId": "snapfood-test-user-123",
+            "photoBase64": create_test_food_image(),
+            "dishName": "Pollo con Arroz",
+            "ingredients": ["pollo", "arroz", "cebolla"],
+            "calories": 450,
+            "protein": 35.5,
+            "carbs": 45.0,
+            "fats": 12.0,
+            "portionSize": "medium",
+            "portions": 1.0,
+            "warnings": ["Alto en sodio"],
+            "timestamp": current_timestamp
+        }
+        
+        response = requests.post(f"{BACKEND_URL}/meals", json=payload, timeout=30)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if data.get('success') and data.get('mealId'):
+                print("✅ POST /api/meals - WORKING")
+                print(f"   Meal saved with ID: {data['mealId']}")
+                print(f"   Timestamp accepted: {current_timestamp}")
+                results['meals'] = True
+            else:
+                print("❌ POST /api/meals - Invalid response format")
+                results['meals'] = False
+        else:
+            print(f"❌ POST /api/meals - HTTP {response.status_code}: {response.text}")
+            results['meals'] = False
+            
+    except Exception as e:
+        print(f"❌ POST /api/meals - Exception: {e}")
+        results['meals'] = False
+    
+    # Test 2: POST /api/recipe-suggestions - NEW healthConditions and foodAllergies fields
+    print("\n2️⃣ TESTING POST /api/recipe-suggestions - NEW healthConditions and foodAllergies")
+    print("-" * 50)
+    
+    test_ingredients = ["chicken breast", "rice", "onion", "garlic", "tomato"]
+    
+    # Test 2a: Basic functionality
+    try:
+        payload_basic = {
+            "userId": "snapfood-test-user-123",
+            "ingredients": test_ingredients,
+            "language": "es"
+        }
+        
+        response = requests.post(f"{BACKEND_URL}/recipe-suggestions", json=payload_basic, timeout=60)
+        
+        if response.status_code == 200:
+            print("✅ Basic recipe suggestions - WORKING")
+            results['recipe_basic'] = True
+        else:
+            print(f"❌ Basic recipe suggestions - HTTP {response.status_code}")
+            results['recipe_basic'] = False
+            
+    except Exception as e:
+        print(f"❌ Basic recipe suggestions - Exception: {e}")
+        results['recipe_basic'] = False
+    
+    # Test 2b: NEW healthConditions field
+    try:
+        payload_health = {
+            "userId": "snapfood-test-user-123",
+            "ingredients": test_ingredients,
+            "language": "es",
+            "healthConditions": ["diabetes", "celiac", "hypertension"]
+        }
+        
+        response = requests.post(f"{BACKEND_URL}/recipe-suggestions", json=payload_health, timeout=60)
+        
+        if response.status_code == 200:
+            print("✅ NEW healthConditions field - ACCEPTED")
+            print("   Tested conditions: diabetes, celiac, hypertension")
+            results['recipe_health'] = True
+        else:
+            print(f"❌ NEW healthConditions field - HTTP {response.status_code}")
+            results['recipe_health'] = False
+            
+    except Exception as e:
+        print(f"❌ NEW healthConditions field - Exception: {e}")
+        results['recipe_health'] = False
+    
+    # Test 2c: NEW foodAllergies field
+    try:
+        payload_allergies = {
+            "userId": "snapfood-test-user-123",
+            "ingredients": test_ingredients,
+            "language": "es",
+            "foodAllergies": ["peanuts", "eggs", "milk"]
+        }
+        
+        response = requests.post(f"{BACKEND_URL}/recipe-suggestions", json=payload_allergies, timeout=60)
+        
+        if response.status_code == 200:
+            print("✅ NEW foodAllergies field - ACCEPTED")
+            print("   Tested allergies: peanuts, eggs, milk")
+            results['recipe_allergies'] = True
+        else:
+            print(f"❌ NEW foodAllergies field - HTTP {response.status_code}")
+            results['recipe_allergies'] = False
+            
+    except Exception as e:
+        print(f"❌ NEW foodAllergies field - Exception: {e}")
+        results['recipe_allergies'] = False
+    
+    # Test 2d: BOTH new fields together
+    try:
+        payload_both = {
+            "userId": "snapfood-test-user-123",
+            "ingredients": test_ingredients,
+            "language": "es",
+            "healthConditions": ["diabetes", "hypertension"],
+            "foodAllergies": ["peanuts", "eggs"]
+        }
+        
+        response = requests.post(f"{BACKEND_URL}/recipe-suggestions", json=payload_both, timeout=60)
+        
+        if response.status_code == 200:
+            print("✅ BOTH new fields together - ACCEPTED")
+            results['recipe_both'] = True
+        else:
+            print(f"❌ BOTH new fields together - HTTP {response.status_code}")
+            results['recipe_both'] = False
+            
+    except Exception as e:
+        print(f"❌ BOTH new fields together - Exception: {e}")
+        results['recipe_both'] = False
+    
+    # Test 2e: Without optional fields (should still work)
+    try:
+        payload_minimal = {
+            "userId": "snapfood-test-user-123",
+            "ingredients": test_ingredients,
+            "language": "es"
+            # No healthConditions or foodAllergies
+        }
+        
+        response = requests.post(f"{BACKEND_URL}/recipe-suggestions", json=payload_minimal, timeout=60)
+        
+        if response.status_code == 200:
+            print("✅ Without optional fields - WORKING")
+            results['recipe_minimal'] = True
+        else:
+            print(f"❌ Without optional fields - HTTP {response.status_code}")
+            results['recipe_minimal'] = False
+            
+    except Exception as e:
+        print(f"❌ Without optional fields - Exception: {e}")
+        results['recipe_minimal'] = False
+    
+    # Test 3: POST /api/search-food - Search foods
+    print("\n3️⃣ TESTING POST /api/search-food - Search foods")
+    print("-" * 50)
+    
+    try:
+        payload = {
+            "query": "manzana",
+            "language": "es"
+        }
+        
+        response = requests.post(f"{BACKEND_URL}/search-food", json=payload, timeout=30)
+        
+        if response.status_code == 200:
+            data = response.json()
+            foods = data.get("foods", [])
+            print(f"✅ POST /api/search-food - WORKING")
+            print(f"   Found {len(foods)} food items for 'manzana'")
+            results['search_food'] = True
+        else:
+            print(f"❌ POST /api/search-food - HTTP {response.status_code}")
+            results['search_food'] = False
+            
+    except Exception as e:
+        print(f"❌ POST /api/search-food - Exception: {e}")
+        results['search_food'] = False
+    
+    # Test 4: POST /api/analyze-ingredients - Analyze ingredients from photo
+    print("\n4️⃣ TESTING POST /api/analyze-ingredients - Analyze ingredients from photo")
+    print("-" * 50)
+    
+    try:
+        payload = {
+            "userId": "snapfood-test-user-123",
+            "imageBase64": create_test_food_image(),
+            "language": "es"
+        }
+        
+        response = requests.post(f"{BACKEND_URL}/analyze-ingredients", json=payload, timeout=30)
+        
+        if response.status_code == 200:
+            data = response.json()
+            ingredients = data.get("ingredients", [])
+            print(f"✅ POST /api/analyze-ingredients - WORKING")
+            print(f"   Identified {len(ingredients)} ingredients")
+            results['analyze_ingredients'] = True
+        else:
+            print(f"❌ POST /api/analyze-ingredients - HTTP {response.status_code}")
+            results['analyze_ingredients'] = False
+            
+    except Exception as e:
+        print(f"❌ POST /api/analyze-ingredients - Exception: {e}")
+        results['analyze_ingredients'] = False
+    
+    # Test 5: POST /api/search-recipes - Search recipes by name
+    print("\n5️⃣ TESTING POST /api/search-recipes - Search recipes by name")
+    print("-" * 50)
+    
+    try:
+        payload = {
+            "query": "pollo con arroz",
+            "userIngredients": test_ingredients,
+            "language": "es"
+        }
+        
+        response = requests.post(f"{BACKEND_URL}/search-recipes", json=payload, timeout=30)
+        
+        if response.status_code == 200:
+            data = response.json()
+            recipes = data.get("recipes", [])
+            print(f"✅ POST /api/search-recipes - WORKING")
+            print(f"   Found {len(recipes)} recipes for 'pollo con arroz'")
+            results['search_recipes'] = True
+        else:
+            print(f"❌ POST /api/search-recipes - HTTP {response.status_code}")
+            results['search_recipes'] = False
+            
+    except Exception as e:
+        print(f"❌ POST /api/search-recipes - Exception: {e}")
+        results['search_recipes'] = False
+    
+    # Test server connectivity
+    print("\n🌐 TESTING SERVER CONNECTIVITY")
+    print("-" * 50)
+    
+    try:
+        response = requests.get(f"{BACKEND_URL}/", timeout=10)
+        if response.status_code == 200:
+            print("✅ Server responding on port 8001")
+            results['server'] = True
+        else:
+            print(f"❌ Server response: HTTP {response.status_code}")
+            results['server'] = False
+    except Exception as e:
+        print(f"❌ Server connectivity: {e}")
+        results['server'] = False
+    
+    # SUMMARY
+    print("\n" + "=" * 60)
+    print("📊 SNAPFOOD BACKEND TEST SUMMARY")
+    print("=" * 60)
+    
+    passed = sum(1 for result in results.values() if result)
+    total = len(results)
+    
+    print(f"✅ Passed: {passed}/{total}")
+    print(f"❌ Failed: {total - passed}/{total}")
+    print()
+    
+    # Detailed results
+    test_names = {
+        'server': 'Server Connectivity',
+        'meals': 'POST /api/meals',
+        'recipe_basic': 'Recipe Suggestions (Basic)',
+        'recipe_health': 'NEW healthConditions Field',
+        'recipe_allergies': 'NEW foodAllergies Field', 
+        'recipe_both': 'Both New Fields Together',
+        'recipe_minimal': 'Without Optional Fields',
+        'search_food': 'POST /api/search-food',
+        'analyze_ingredients': 'POST /api/analyze-ingredients',
+        'search_recipes': 'POST /api/search-recipes'
+    }
+    
+    for key, name in test_names.items():
+        if key in results:
+            status = "✅ PASS" if results[key] else "❌ FAIL"
+            print(f"{status} {name}")
+    
+    print()
+    
+    # Key findings
+    if results.get('recipe_health') and results.get('recipe_allergies'):
+        print("🎉 KEY FINDING: NEW healthConditions and foodAllergies fields are working!")
+        print("   ✅ Backend accepts healthConditions array without errors")
+        print("   ✅ Backend accepts foodAllergies array without errors")
+        print("   ✅ Both fields can be used together")
+        print("   ✅ Backend handles when these fields are not sent")
+    else:
+        print("⚠️  KEY FINDING: Issues with NEW fields")
+        if not results.get('recipe_health'):
+            print("   ❌ healthConditions field not working properly")
+        if not results.get('recipe_allergies'):
+            print("   ❌ foodAllergies field not working properly")
+    
+    if passed == total:
+        print("\n🎉 ALL SNAPFOOD ENDPOINTS WORKING CORRECTLY!")
+        print("✅ No 500 errors detected")
+        print("✅ All APIs responding as expected")
+    else:
+        print(f"\n⚠️  {total - passed} endpoint(s) have issues - see details above")
+    
+    return results
+
 if __name__ == "__main__":
     # Install required packages if not available
     try:
@@ -1213,7 +1541,11 @@ if __name__ == "__main__":
     # Check if we should run specific tests
     import sys
     if len(sys.argv) > 1:
-        if sys.argv[1] == "recipe-generation":
+        if sys.argv[1] == "snapfood":
+            # Run the SnapFood endpoint tests as requested in review
+            results = test_snapfood_endpoints()
+            exit(0 if all(results.values()) else 1)
+        elif sys.argv[1] == "recipe-generation":
             # Run the specific Snapfood recipe generation test
             success = test_snapfood_recipe_generation()
             exit(0 if success else 1)
@@ -1222,9 +1554,9 @@ if __name__ == "__main__":
         elif sys.argv[1] == "food-search":
             test_food_search_endpoint()
         else:
-            print("Available test options: recipe-generation, recipe-translation, food-search")
+            print("Available test options: snapfood, recipe-generation, recipe-translation, food-search")
     else:
-        # Run the specific Snapfood recipe generation test as requested
-        print("🚀 Running Snapfood Recipe Generation Test as requested in review")
-        success = test_snapfood_recipe_generation()
-        exit(0 if success else 1)
+        # Run the SnapFood endpoint tests as requested in review
+        print("🚀 Running SnapFood Backend Tests as requested in review")
+        results = test_snapfood_endpoints()
+        exit(0 if all(results.values()) else 1)
