@@ -51,9 +51,18 @@ export default function RootLayout() {
     const initialize = async () => {
       try {
         await initI18n();
+        
+        // Configure Android navigation bar for immersive mode
+        if (Platform.OS === 'android') {
+          // Set navigation bar behavior - hide on swipe, show on gesture
+          await NavigationBar.setVisibilityAsync('hidden');
+          await NavigationBar.setBehaviorAsync('overlay-swipe');
+          await NavigationBar.setBackgroundColorAsync('#00000000'); // Transparent
+        }
+        
         setI18nReady(true);
       } catch (error) {
-        console.error('[RootLayout] i18n init error:', error);
+        console.error('[RootLayout] init error:', error);
         // Continue anyway with default language
         setI18nReady(true);
       }
