@@ -242,6 +242,12 @@ export default function CookingScreen() {
         }).catch(console.error);
       }
 
+      // Get user health restrictions
+      const healthConditionsStr = await AsyncStorage.getItem('user_health_conditions');
+      const foodAllergiesStr = await AsyncStorage.getItem('user_food_allergies');
+      const healthConditions = healthConditionsStr ? JSON.parse(healthConditionsStr) : ['none'];
+      const foodAllergies = foodAllergiesStr ? JSON.parse(foodAllergiesStr) : [];
+
       const response = await fetch(`${API_URL}/api/recipe-suggestions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -249,6 +255,8 @@ export default function CookingScreen() {
           userId,
           ingredients: selectedIngredients,
           language: currentLanguage,
+          healthConditions: healthConditions,
+          foodAllergies: foodAllergies,
         }),
       });
 
