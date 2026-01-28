@@ -1079,7 +1079,7 @@ export default function RecipeDetailScreen() {
                 <Text style={styles.shareCardTimeText}>  •  </Text>
                 <Ionicons name="people-outline" size={16} color="#fff" />
                 <Text style={styles.shareCardTimeText}>
-                  {selectedPortions} {i18n.language === 'es' ? 'porciones' : 'servings'}
+                  {portions} {i18n.language === 'es' ? 'porciones' : 'servings'}
                 </Text>
               </View>
             </View>
@@ -1090,7 +1090,7 @@ export default function RecipeDetailScreen() {
                 🥗 {i18n.language === 'es' ? 'Ingredientes' : 'Ingredients'}
               </Text>
               {(recipe?.ingredients || []).map((ing: any, index: number) => {
-                const scaledAmount = ing.amount ? (parseFloat(ing.amount) * selectedPortions / 4).toFixed(1).replace('.0', '') : '';
+                const scaledAmount = ing.amount ? (parseFloat(ing.amount) * portions / 4).toFixed(1).replace('.0', '') : '';
                 return (
                   <View key={index} style={styles.shareCardIngredient}>
                     <Text style={styles.shareCardBullet}>•</Text>
