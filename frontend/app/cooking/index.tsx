@@ -1736,7 +1736,7 @@ const styles = StyleSheet.create({
     color: '#4CAF50',
     fontSize: 13,
   },
-  searchResultsContainer: {
+  recipeSearchResultsContainer: {
     padding: 16,
     paddingTop: 0,
   },
