@@ -527,13 +527,19 @@ export default function RecipeDetailScreen() {
 
   return (
     <View style={styles.container}>
-      {/* Header with back button */}
+      {/* Header with back button and share */}
       <View style={styles.header}>
         <TouchableOpacity 
           style={styles.backButton} 
           onPress={handleBackWithPopup}
         >
           <Ionicons name="arrow-back" size={24} color="#fff" />
+        </TouchableOpacity>
+        <TouchableOpacity 
+          style={styles.shareButton} 
+          onPress={handleShareRecipe}
+        >
+          <Ionicons name="share-social-outline" size={24} color="#fff" />
         </TouchableOpacity>
       </View>
 
