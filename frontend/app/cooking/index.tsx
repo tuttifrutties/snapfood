@@ -53,6 +53,10 @@ export default function CookingScreen() {
   const [recipeSearchQuery, setRecipeSearchQuery] = useState('');
   const [searchedRecipes, setSearchedRecipes] = useState<any[]>([]);
   const [isSearchingRecipes, setIsSearchingRecipes] = useState(false);
+  
+  // Notification suggested recipes
+  const [notificationRecipes, setNotificationRecipes] = useState<string[]>([]);
+  const [notificationMealType, setNotificationMealType] = useState<string | null>(null);
 
   // Get ingredients by category based on current language
   const ingredientCategories = getIngredientsByCategory(i18n.language as 'en' | 'es');
