@@ -725,15 +725,40 @@ export default function RecipeDetailScreen() {
           </Modal>
 
           <View style={styles.ingredientsList}>
-            {getScaledIngredients().map((ingredient: string, index: number) => (
-              <View key={index} style={styles.ingredientItem}>
-                <View style={styles.ingredientBullet} />
-                <Text style={[
-                  styles.ingredientText,
-                  portions !== (recipe.servings || 4) && styles.ingredientTextScaled
-                ]}>{ingredient}</Text>
-              </View>
-            ))}
+            {getScaledIngredients().map((ingredient: string, index: number) => {
+              // Check if this ingredient is a cooking fat/oil
+              const ingredientLower = ingredient.toLowerCase();
+              const isCookingFat = 
+                ingredientLower.includes('aceite') || 
+                ingredientLower.includes('oil') ||
+                ingredientLower.includes('manteca') || 
+                ingredientLower.includes('butter') ||
+                ingredientLower.includes('mantequilla') ||
+                ingredientLower.includes('grasa') ||
+                ingredientLower.includes('lard') ||
+                ingredientLower.includes('ghee') ||
+                ingredientLower.includes('margarina') ||
+                ingredientLower.includes('margarine');
+              
+              return (
+                <View key={index} style={styles.ingredientItem}>
+                  <View style={styles.ingredientBullet} />
+                  <View style={styles.ingredientTextContainer}>
+                    <Text style={[
+                      styles.ingredientText,
+                      portions !== (recipe.servings || 4) && styles.ingredientTextScaled
+                    ]}>{ingredient}</Text>
+                    {isCookingFat && (
+                      <Text style={styles.ingredientFatReminder}>
+                        {i18n.language === 'es' 
+                          ? '(recuerda añadirlo en grasas ⬇️)' 
+                          : '(remember to add it in fats ⬇️)'}
+                      </Text>
+                    )}
+                  </View>
+                </View>
+              );
+            })}
           </View>
 
           {/* Confirm Button - shows before instructions */}
