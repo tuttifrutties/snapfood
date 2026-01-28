@@ -1309,21 +1309,21 @@ export default function PersonalProfileScreen() {
               </TouchableOpacity>
             </View>
             
-            <ScrollView style={{ maxHeight: 500 }}>
-              {/* Health Conditions */}
+            <ScrollView style={{ maxHeight: 500 }} showsVerticalScrollIndicator={false}>
+              {/* Health Conditions - Lista vertical */}
               <Text style={[styles.healthModalSubtitle, { color: theme.text }]}>
                 {i18n.language === 'es' ? 'Condiciones de salud' : 'Health conditions'}
               </Text>
-              <View style={styles.healthOptionsGrid}>
+              <View style={styles.healthListContainer}>
                 {HEALTH_CONDITIONS.map((condition) => {
                   const isSelected = editHealthConditions.includes(condition.id);
                   return (
                     <TouchableOpacity
                       key={condition.id}
                       style={[
-                        styles.healthModalOption,
+                        styles.healthListItem,
                         { borderColor: theme.border },
-                        isSelected && { backgroundColor: theme.primary + '20', borderColor: theme.primary },
+                        isSelected && { backgroundColor: theme.primary + '15', borderColor: theme.primary },
                       ]}
                       onPress={() => {
                         if (condition.id === 'none') {
@@ -1340,52 +1340,117 @@ export default function PersonalProfileScreen() {
                         }
                       }}
                     >
-                      <Text style={styles.healthModalOptionIcon}>{condition.icon}</Text>
+                      <Text style={styles.healthListIcon}>{condition.icon}</Text>
                       <Text style={[
-                        styles.healthModalOptionText,
-                        { color: isSelected ? theme.primary : theme.text }
-                      ]} numberOfLines={2}>
+                        styles.healthListText,
+                        { color: theme.text },
+                        isSelected && { color: theme.primary, fontWeight: '600' }
+                      ]}>
                         {i18n.language === 'es' ? condition.es : condition.en}
                       </Text>
+                      {isSelected && (
+                        <Ionicons name="checkmark-circle" size={22} color={theme.primary} />
+                      )}
                     </TouchableOpacity>
                   );
                 })}
               </View>
 
-              {/* Food Allergies */}
-              <Text style={[styles.healthModalSubtitle, { color: theme.text, marginTop: 20 }]}>
+              {/* Food Allergies - Con buscador */}
+              <Text style={[styles.healthModalSubtitle, { color: theme.text, marginTop: 24 }]}>
                 {i18n.language === 'es' ? 'Alergias / Intolerancias' : 'Allergies / Intolerances'}
               </Text>
-              <View style={styles.healthOptionsGrid}>
-                {FOOD_ALLERGIES.map((allergy) => {
-                  const isSelected = editFoodAllergies.includes(allergy.id);
-                  return (
-                    <TouchableOpacity
-                      key={allergy.id}
-                      style={[
-                        styles.healthModalOption,
-                        { borderColor: theme.border },
-                        isSelected && { backgroundColor: '#FFD70030', borderColor: '#FFD700' },
-                      ]}
-                      onPress={() => {
-                        if (isSelected) {
-                          setEditFoodAllergies(editFoodAllergies.filter(a => a !== allergy.id));
-                        } else {
-                          setEditFoodAllergies([...editFoodAllergies, allergy.id]);
-                        }
-                      }}
-                    >
-                      <Text style={styles.healthModalOptionIcon}>{allergy.icon}</Text>
-                      <Text style={[
-                        styles.healthModalOptionText,
-                        { color: isSelected ? '#FFD700' : theme.text }
-                      ]} numberOfLines={1}>
-                        {i18n.language === 'es' ? allergy.es : allergy.en}
-                      </Text>
-                    </TouchableOpacity>
-                  );
-                })}
+              
+              {/* Search bar for allergies */}
+              <View style={[styles.allergySearchBar, { backgroundColor: theme.surfaceVariant }]}>
+                <Ionicons name="search" size={18} color={theme.textMuted} />
+                <TextInput
+                  style={[styles.allergySearchInput, { color: theme.text }]}
+                  placeholder={i18n.language === 'es' ? 'Buscar alergia...' : 'Search allergy...'}
+                  placeholderTextColor={theme.textMuted}
+                  value={allergySearchQuery}
+                  onChangeText={setAllergySearchQuery}
+                />
+                {allergySearchQuery.length > 0 && (
+                  <TouchableOpacity onPress={() => setAllergySearchQuery('')}>
+                    <Ionicons name="close-circle" size={18} color={theme.textMuted} />
+                  </TouchableOpacity>
+                )}
               </View>
+              
+              {/* Selected allergies chips */}
+              {editFoodAllergies.length > 0 && (
+                <View style={styles.selectedAllergiesRow}>
+                  {editFoodAllergies.map(allergyId => {
+                    const allergy = FOOD_ALLERGIES.find(a => a.id === allergyId);
+                    if (!allergy) return null;
+                    return (
+                      <TouchableOpacity
+                        key={allergyId}
+                        style={styles.selectedAllergyChip}
+                        onPress={() => setEditFoodAllergies(editFoodAllergies.filter(a => a !== allergyId))}
+                      >
+                        <Text style={styles.selectedAllergyText}>
+                          {allergy.icon} {i18n.language === 'es' ? allergy.es : allergy.en}
+                        </Text>
+                        <Ionicons name="close" size={14} color="#fff" />
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
+              )}
+              
+              {/* Allergy list */}
+              <View style={styles.healthListContainer}>
+                {FOOD_ALLERGIES
+                  .filter(allergy => {
+                    if (!allergySearchQuery.trim()) return true;
+                    const searchLower = allergySearchQuery.toLowerCase();
+                    return (
+                      allergy.es.toLowerCase().includes(searchLower) ||
+                      allergy.en.toLowerCase().includes(searchLower)
+                    );
+                  })
+                  .map((allergy) => {
+                    const isSelected = editFoodAllergies.includes(allergy.id);
+                    return (
+                      <TouchableOpacity
+                        key={allergy.id}
+                        style={[
+                          styles.healthListItem,
+                          { borderColor: theme.border },
+                          isSelected && { backgroundColor: '#FFD70015', borderColor: '#FFD700' },
+                        ]}
+                        onPress={() => {
+                          if (isSelected) {
+                            setEditFoodAllergies(editFoodAllergies.filter(a => a !== allergy.id));
+                          } else {
+                            setEditFoodAllergies([...editFoodAllergies, allergy.id]);
+                          }
+                        }}
+                      >
+                        <Text style={styles.healthListIcon}>{allergy.icon}</Text>
+                        <Text style={[
+                          styles.healthListText,
+                          { color: theme.text },
+                          isSelected && { color: '#FFD700', fontWeight: '600' }
+                        ]}>
+                          {i18n.language === 'es' ? allergy.es : allergy.en}
+                        </Text>
+                        {isSelected && (
+                          <Ionicons name="checkmark-circle" size={22} color="#FFD700" />
+                        )}
+                      </TouchableOpacity>
+                    );
+                  })}
+              </View>
+              
+              {/* Hint for custom allergies */}
+              <Text style={[styles.allergyHint, { color: theme.textMuted }]}>
+                {i18n.language === 'es' 
+                  ? '💡 Usá el buscador para encontrar tu alergia específica'
+                  : '💡 Use the search to find your specific allergy'}
+              </Text>
             </ScrollView>
 
             <TouchableOpacity
