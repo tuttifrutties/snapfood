@@ -167,7 +167,7 @@ function getSnackSuggestions(region: string, language: string): string[] {
 async function getSmartNotificationContent(
   mealType: 'lunch' | 'dinner',
   language: string
-): Promise<{ title: string; body: string } | null> {
+): Promise<{ title: string; body: string; suggestedRecipes?: string[] } | null> {
   try {
     const userId = await AsyncStorage.getItem(USER_ID_KEY);
     if (!userId) return null;
@@ -197,7 +197,11 @@ async function getSmartNotificationContent(
           ? (language === 'es' ? '🍽️ ¡Hora del almuerzo!' : '🍽️ Lunch time!')
           : (language === 'es' ? '🌙 ¡Hora de la cena!' : '🌙 Dinner time!');
 
-        return { title, body: data.message };
+        return { 
+          title, 
+          body: data.message,
+          suggestedRecipes: data.suggestedRecipes || []
+        };
       }
     } catch (fetchError) {
       console.log('[Notifications] Server fetch failed, using cache');
@@ -211,7 +215,11 @@ async function getSmartNotificationContent(
         const title = mealType === 'lunch'
           ? (language === 'es' ? '🍽️ ¡Hora del almuerzo!' : '🍽️ Lunch time!')
           : (language === 'es' ? '🌙 ¡Hora de la cena!' : '🌙 Dinner time!');
-        return { title, body: data.message };
+        return { 
+          title, 
+          body: data.message,
+          suggestedRecipes: data.suggestedRecipes || []
+        };
       }
     }
 
