@@ -1016,14 +1016,17 @@ export default function RecipeDetailScreen() {
         animationType="fade"
         onRequestClose={() => !isSharing && setShowShareModal(false)}
       >
-        <View style={styles.shareModalOverlay}>
-          {/* This is the shareable card */}
+        <ScrollView 
+          style={styles.shareModalScrollView}
+          contentContainerStyle={styles.shareModalOverlay}
+        >
+          {/* This is the shareable card - Full Recipe */}
           <View 
             ref={shareCardRef}
             style={styles.shareCard}
             collapsable={false}
           >
-            {/* Gradient Background */}
+            {/* Header with gradient */}
             <View style={styles.shareCardGradient}>
               {/* Top section with emojis */}
               <View style={styles.shareCardTop}>
@@ -1067,18 +1070,59 @@ export default function RecipeDetailScreen() {
                 </View>
               </View>
               
-              {/* Cooking time */}
+              {/* Cooking time & portions */}
               <View style={styles.shareCardTime}>
                 <Ionicons name="time-outline" size={16} color="#fff" />
                 <Text style={styles.shareCardTimeText}>
                   {recipe?.cookingTime || 30} min
                 </Text>
+                <Text style={styles.shareCardTimeText}>  •  </Text>
+                <Ionicons name="people-outline" size={16} color="#fff" />
+                <Text style={styles.shareCardTimeText}>
+                  {selectedPortions} {i18n.language === 'es' ? 'porciones' : 'servings'}
+                </Text>
               </View>
-              
-              {/* Branding */}
-              <View style={styles.shareCardBranding}>
-                <Text style={styles.shareCardBrandingText}>📱 SnapFood</Text>
-              </View>
+            </View>
+            
+            {/* Ingredients Section */}
+            <View style={styles.shareCardSection}>
+              <Text style={styles.shareCardSectionTitle}>
+                🥗 {i18n.language === 'es' ? 'Ingredientes' : 'Ingredients'}
+              </Text>
+              {(recipe?.ingredients || []).map((ing: any, index: number) => {
+                const scaledAmount = ing.amount ? (parseFloat(ing.amount) * selectedPortions / 4).toFixed(1).replace('.0', '') : '';
+                return (
+                  <View key={index} style={styles.shareCardIngredient}>
+                    <Text style={styles.shareCardBullet}>•</Text>
+                    <Text style={styles.shareCardIngredientText}>
+                      {scaledAmount} {ing.unit || ''} {ing.name}
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
+            
+            {/* Instructions Section */}
+            <View style={styles.shareCardSection}>
+              <Text style={styles.shareCardSectionTitle}>
+                👨‍🍳 {i18n.language === 'es' ? 'Preparación' : 'Instructions'}
+              </Text>
+              {(recipe?.instructions || []).map((step: string, index: number) => (
+                <View key={index} style={styles.shareCardStep}>
+                  <View style={styles.shareCardStepNumber}>
+                    <Text style={styles.shareCardStepNumberText}>{index + 1}</Text>
+                  </View>
+                  <Text style={styles.shareCardStepText}>{step}</Text>
+                </View>
+              ))}
+            </View>
+            
+            {/* Branding Footer */}
+            <View style={styles.shareCardFooter}>
+              <Text style={styles.shareCardBrandingText}>📱 SnapFood</Text>
+              <Text style={styles.shareCardBrandingSubtext}>
+                {i18n.language === 'es' ? 'Tu asistente de nutrición con IA' : 'Your AI nutrition assistant'}
+              </Text>
             </View>
           </View>
           
@@ -1091,7 +1135,17 @@ export default function RecipeDetailScreen() {
               </Text>
             </View>
           )}
-        </View>
+          
+          {/* Close button */}
+          {!isSharing && (
+            <TouchableOpacity 
+              style={styles.shareCloseButton}
+              onPress={() => setShowShareModal(false)}
+            >
+              <Ionicons name="close-circle" size={40} color="rgba(255,255,255,0.7)" />
+            </TouchableOpacity>
+          )}
+        </ScrollView>
       </Modal>
     </View>
   );
