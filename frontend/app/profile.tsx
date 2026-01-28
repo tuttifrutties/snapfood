@@ -171,6 +171,9 @@ export default function PersonalProfileScreen() {
   const [editAge, setEditAge] = useState('');
   const [editGoal, setEditGoal] = useState<'lose' | 'maintain' | 'gain'>('maintain');
   const [editActivities, setEditActivities] = useState<PhysicalActivity[]>([]);
+  const [editHealthConditions, setEditHealthConditions] = useState<string[]>(['none']);
+  const [editFoodAllergies, setEditFoodAllergies] = useState<string[]>([]);
+  const [showHealthModal, setShowHealthModal] = useState(false);
   const [showActivityPicker, setShowActivityPicker] = useState(false);
   
   // Activity configuration state
