@@ -51,8 +51,7 @@ const NOTIFICATION_RECIPES_KEY = 'notification_suggested_recipes';
 export default function RootLayout() {
   const [i18nReady, setI18nReady] = useState(false);
   const [initError, setInitError] = useState<string | null>(null);
-  const notificationListener = useRef<Notifications.EventSubscription>();
-  const responseListener = useRef<Notifications.EventSubscription>();
+  const responseListener = useRef<Notifications.Subscription | null>(null);
 
   useEffect(() => {
     const initialize = async () => {
@@ -61,10 +60,14 @@ export default function RootLayout() {
         
         // Configure Android navigation bar for immersive mode
         if (Platform.OS === 'android') {
-          // Set navigation bar behavior - hide on swipe, show on gesture
-          await NavigationBar.setVisibilityAsync('hidden');
-          await NavigationBar.setBehaviorAsync('overlay-swipe');
-          await NavigationBar.setBackgroundColorAsync('#00000000'); // Transparent
+          try {
+            // Set navigation bar behavior - hide on swipe, show on gesture
+            await NavigationBar.setVisibilityAsync('hidden');
+            await NavigationBar.setBehaviorAsync('overlay-swipe');
+            await NavigationBar.setBackgroundColorAsync('#00000000'); // Transparent
+          } catch (navError) {
+            console.log('[RootLayout] Navigation bar config error:', navError);
+          }
         }
         
         setI18nReady(true);
@@ -97,11 +100,8 @@ export default function RootLayout() {
     });
 
     return () => {
-      if (notificationListener.current) {
-        Notifications.removeNotificationSubscription(notificationListener.current);
-      }
       if (responseListener.current) {
-        Notifications.removeNotificationSubscription(responseListener.current);
+        responseListener.current.remove();
       }
     };
   }, []);
