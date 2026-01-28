@@ -142,6 +142,11 @@ export default function RecipeDetailScreen() {
   const [showCustomPortions, setShowCustomPortions] = useState(false);
   const [customPortionsText, setCustomPortionsText] = useState('');
 
+  // Share recipe state
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [isSharing, setIsSharing] = useState(false);
+  const shareCardRef = useRef<View>(null);
+
   // Portions eaten popup state
   const [showPortionsEatenModal, setShowPortionsEatenModal] = useState(false);
   const [portionsEaten, setPortionsEaten] = useState(1);
