@@ -81,6 +81,46 @@ const DAYS_OF_WEEK = [
   { id: 6, short: 'S', label: 'Sábado' },
 ];
 
+// Health conditions that affect diet
+const HEALTH_CONDITIONS = [
+  { id: 'none', es: 'Sin restricciones', en: 'No restrictions', icon: '✅' },
+  { id: 'diabetes', es: 'Diabetes', en: 'Diabetes', icon: '💉' },
+  { id: 'celiac', es: 'Celiaquía (sin gluten)', en: 'Celiac (gluten-free)', icon: '🌾' },
+  { id: 'hypertension', es: 'Hipertensión', en: 'Hypertension', icon: '❤️' },
+  { id: 'cholesterol', es: 'Colesterol alto', en: 'High cholesterol', icon: '🫀' },
+  { id: 'lactose', es: 'Intolerancia a la lactosa', en: 'Lactose intolerance', icon: '🥛' },
+  { id: 'vegetarian', es: 'Vegetariano', en: 'Vegetarian', icon: '🥬' },
+  { id: 'vegan', es: 'Vegano', en: 'Vegan', icon: '🌱' },
+  { id: 'keto', es: 'Dieta cetogénica', en: 'Keto diet', icon: '🥑' },
+  { id: 'pregnant', es: 'Embarazo', en: 'Pregnancy', icon: '🤰' },
+  { id: 'gastritis', es: 'Gastritis', en: 'Gastritis', icon: '🔥' },
+  { id: 'ibs', es: 'Síndrome de intestino irritable', en: 'IBS', icon: '😣' },
+];
+
+// Common food allergies and intolerances
+const FOOD_ALLERGIES = [
+  { id: 'peanuts', es: 'Maní/Cacahuate', en: 'Peanuts', icon: '🥜' },
+  { id: 'tree_nuts', es: 'Frutos secos', en: 'Tree nuts', icon: '🌰' },
+  { id: 'milk', es: 'Leche', en: 'Milk', icon: '🥛' },
+  { id: 'eggs', es: 'Huevos', en: 'Eggs', icon: '🥚' },
+  { id: 'wheat', es: 'Trigo', en: 'Wheat', icon: '🌾' },
+  { id: 'soy', es: 'Soja', en: 'Soy', icon: '🫘' },
+  { id: 'fish', es: 'Pescado', en: 'Fish', icon: '🐟' },
+  { id: 'shellfish', es: 'Mariscos', en: 'Shellfish', icon: '🦐' },
+  { id: 'sesame', es: 'Sésamo', en: 'Sesame', icon: '🫘' },
+  { id: 'mustard', es: 'Mostaza', en: 'Mustard', icon: '🟡' },
+  { id: 'celery', es: 'Apio', en: 'Celery', icon: '🥬' },
+  { id: 'sulfites', es: 'Sulfitos', en: 'Sulfites', icon: '🍷' },
+  { id: 'banana', es: 'Banana/Plátano', en: 'Banana', icon: '🍌' },
+  { id: 'strawberry', es: 'Fresa/Frutilla', en: 'Strawberry', icon: '🍓' },
+  { id: 'kiwi', es: 'Kiwi', en: 'Kiwi', icon: '🥝' },
+  { id: 'avocado', es: 'Aguacate/Palta', en: 'Avocado', icon: '🥑' },
+  { id: 'tomato', es: 'Tomate', en: 'Tomato', icon: '🍅' },
+  { id: 'chocolate', es: 'Chocolate', en: 'Chocolate', icon: '🍫' },
+  { id: 'caffeine', es: 'Cafeína', en: 'Caffeine', icon: '☕' },
+  { id: 'alcohol', es: 'Alcohol', en: 'Alcohol', icon: '🍺' },
+];
+
 export default function OnboardingScreen() {
   const router = useRouter();
   const { userId, completeOnboarding } = useUser();
