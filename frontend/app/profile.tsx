@@ -766,6 +766,66 @@ export default function PersonalProfileScreen() {
           </View>
         )}
 
+        {/* Health & Restrictions Card */}
+        {profile && (
+          <View style={[styles.activitiesCard, { backgroundColor: theme.surface }]}>
+            <View style={styles.activitiesHeader}>
+              <Text style={[styles.sectionTitle, { color: theme.text }]}>
+                {i18n.language === 'es' ? '🏥 Salud y Restricciones' : '🏥 Health & Restrictions'}
+              </Text>
+              <TouchableOpacity 
+                style={[styles.editActivitiesButton, { borderColor: theme.primary }]}
+                onPress={() => setShowHealthModal(true)}
+              >
+                <Ionicons name="pencil" size={16} color={theme.primary} />
+                <Text style={[styles.editActivitiesText, { color: theme.primary }]}>
+                  {i18n.language === 'es' ? 'Editar' : 'Edit'}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            
+            {/* Health Conditions Display */}
+            <Text style={[styles.healthSubtitle, { color: theme.textMuted }]}>
+              {i18n.language === 'es' ? 'Condiciones:' : 'Conditions:'}
+            </Text>
+            <View style={styles.healthChipsContainer}>
+              {editHealthConditions.map(conditionId => {
+                const condition = HEALTH_CONDITIONS.find(c => c.id === conditionId);
+                if (!condition) return null;
+                return (
+                  <View key={conditionId} style={[styles.healthChip, { backgroundColor: theme.primary + '20' }]}>
+                    <Text style={styles.healthChipText}>
+                      {condition.icon} {i18n.language === 'es' ? condition.es : condition.en}
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
+            
+            {/* Food Allergies Display */}
+            {editFoodAllergies.length > 0 && (
+              <>
+                <Text style={[styles.healthSubtitle, { color: theme.textMuted, marginTop: 12 }]}>
+                  {i18n.language === 'es' ? 'Alergias/Intolerancias:' : 'Allergies/Intolerances:'}
+                </Text>
+                <View style={styles.healthChipsContainer}>
+                  {editFoodAllergies.map(allergyId => {
+                    const allergy = FOOD_ALLERGIES.find(a => a.id === allergyId);
+                    if (!allergy) return null;
+                    return (
+                      <View key={allergyId} style={[styles.healthChip, styles.allergyChipColor]}>
+                        <Text style={styles.healthChipText}>
+                          {allergy.icon} {i18n.language === 'es' ? allergy.es : allergy.en}
+                        </Text>
+                      </View>
+                    );
+                  })}
+                </View>
+              </>
+            )}
+          </View>
+        )}
+
         {/* Activity Picker Modal */}
         <Modal
           visible={showActivityPicker}
