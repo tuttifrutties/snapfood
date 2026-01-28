@@ -27,6 +27,8 @@ import { confirmRecipeAndUpdateMemory } from '../../../src/services/ingredients'
 import { useUser } from '../../../src/contexts/UserContext';
 import { updateDailyCalories } from '../../../src/services/nutritionCoach';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Sharing from 'expo-sharing';
+import { captureRef } from 'react-native-view-shot';
 
 const { width } = Dimensions.get('window');
 
