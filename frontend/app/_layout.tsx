@@ -112,17 +112,31 @@ export default function RootLayout() {
       console.log('[Notification] User tapped notification:', response);
       const data = response.notification.request.content.data;
       
-      if (data?.navigateTo === 'cooking' && data?.suggestedRecipes) {
+      if (data?.navigateTo === 'cooking') {
         // Store the suggested recipes so cooking screen can pick them up
-        await AsyncStorage.setItem(
-          NOTIFICATION_RECIPES_KEY,
-          JSON.stringify({
-            recipes: data.suggestedRecipes,
-            timestamp: Date.now(),
-            mealType: data.type === 'smart_lunch' ? 'lunch' : 'dinner'
-          })
-        );
-        console.log('[Notification] Stored suggested recipes for cooking screen');
+        if (data?.suggestedRecipes && Array.isArray(data.suggestedRecipes) && data.suggestedRecipes.length > 0) {
+          await AsyncStorage.setItem(
+            NOTIFICATION_RECIPES_KEY,
+            JSON.stringify({
+              recipes: data.suggestedRecipes,
+              timestamp: Date.now(),
+              mealType: data.type === 'smart_lunch' ? 'lunch' : 'dinner'
+            })
+          );
+          console.log('[Notification] Stored suggested recipes:', data.suggestedRecipes);
+        }
+        
+        // Navigate to cooking screen
+        // Using a small delay to ensure the app is fully loaded
+        setTimeout(() => {
+          try {
+            const router = require('expo-router').router;
+            router.push('/cooking');
+            console.log('[Notification] Navigated to /cooking');
+          } catch (navError) {
+            console.log('[Notification] Navigation error:', navError);
+          }
+        }, 500);
       }
     });
 
