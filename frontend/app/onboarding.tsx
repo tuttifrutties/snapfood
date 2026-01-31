@@ -312,21 +312,21 @@ export default function OnboardingScreen() {
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.content}>
-          <Ionicons name="restaurant" size={80} color='#FF6B6B' />
+          <Ionicons name="restaurant" size={80} color={theme.primary} />
           <Text style={styles.title}>{t('onboarding.welcome')}</Text>
           <Text style={styles.subtitle}>{t('onboarding.subtitle')}</Text>
 
           <View style={styles.featuresList}>
             <View style={styles.featureItem}>
-              <Ionicons name="camera" size={24} color='#FF6B6B' />
+              <Ionicons name="camera" size={24} color={theme.primary} />
               <Text style={styles.featureText}>{t('onboarding.feature1')}</Text>
             </View>
             <View style={styles.featureItem}>
-              <Ionicons name="analytics" size={24} color='#FF6B6B' />
+              <Ionicons name="analytics" size={24} color={theme.primary} />
               <Text style={styles.featureText}>{t('onboarding.feature2')}</Text>
             </View>
             <View style={styles.featureItem}>
-              <Ionicons name="trending-up" size={24} color='#FF6B6B' />
+              <Ionicons name="trending-up" size={24} color={theme.primary} />
               <Text style={styles.featureText}>{t('onboarding.feature3')}</Text>
             </View>
           </View>
@@ -375,7 +375,7 @@ export default function OnboardingScreen() {
                   {item.name}
                 </Text>
                 {country === item.code && (
-                  <Ionicons name="checkmark-circle" size={24} color='#FF6B6B' />
+                  <Ionicons name="checkmark-circle" size={24} color={theme.primary} />
                 )}
               </TouchableOpacity>
             )}
@@ -548,7 +548,7 @@ export default function OnboardingScreen() {
                 <Ionicons 
                   name={PHYSICAL_ACTIVITIES.find(a => a.id === editingActivity)?.icon as any || 'fitness'} 
                   size={24} 
-                  color='#FF6B6B' 
+                  color={theme.primary} 
                 />
                 <Text style={styles.activityEditorTitle}>
                   {getActivityLabel(editingActivity, i18n.language)}
