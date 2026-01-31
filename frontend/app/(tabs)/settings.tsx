@@ -475,7 +475,7 @@ export default function SettingsScreen() {
                   {lang.name}
                 </Text>
                 {i18n.language === lang.code && (
-                  <Ionicons name="checkmark" size={24} color="#FF6B6B" />
+                  <Ionicons name="checkmark" size={24} color="theme.primary" />
                 )}
               </TouchableOpacity>
             ))}
@@ -627,7 +627,7 @@ export default function SettingsScreen() {
                   {editingReminderType && 
                    reminderTimes[editingReminderType].hour === t.hour && 
                    reminderTimes[editingReminderType].minute === t.minute && (
-                    <Ionicons name="checkmark" size={24} color="#FF6B6B" />
+                    <Ionicons name="checkmark" size={24} color="theme.primary" />
                   )}
                 </TouchableOpacity>
               ))}
@@ -817,9 +817,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#2a2a2a',
   },
   languageOptionSelected: {
-    backgroundColor: '#FF6B6B20',
+    backgroundColor: 'theme.primary20',
     borderWidth: 1,
-    borderColor: '#FF6B6B',
+    borderColor: 'theme.primary',
   },
   languageFlag: {
     fontSize: 24,
@@ -831,7 +831,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   languageTextSelected: {
-    color: '#FF6B6B',
+    color: 'theme.primary',
     fontWeight: '600',
   },
   modalCloseButton: {
@@ -876,8 +876,8 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
   },
   themeModeButtonSelected: {
-    borderColor: '#FF6B6B',
-    backgroundColor: '#FF6B6B10',
+    borderColor: 'theme.primary',
+    backgroundColor: 'theme.primary10',
   },
   themeModeText: {
     fontSize: 16,

@@ -139,7 +139,7 @@ export default function HelpScreen() {
         {content.faqs.map((faq, index) => (
           <View key={index} style={styles.faqItem}>
             <View style={styles.questionContainer}>
-              <Ionicons name="help-circle" size={24} color="#FF6B6B" />
+              <Ionicons name="help-circle" size={24} color="theme.primary" />
               <Text style={styles.question}>{faq.question}</Text>
             </View>
             <Text style={styles.answer}>{faq.answer}</Text>
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   contactCard: {
-    backgroundColor: '#FF6B6B20',
+    backgroundColor: 'theme.primary20',
     padding: 24,
     borderRadius: 12,
     marginTop: 16,
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
   emailButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FF6B6B',
+    backgroundColor: 'theme.primary',
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 8,

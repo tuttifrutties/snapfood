@@ -1554,7 +1554,7 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#FF6B6B',
+    color: 'theme.primary',
   },
   statLabel: {
     fontSize: 12,
@@ -1661,7 +1661,7 @@ const styles = StyleSheet.create({
   },
   dataValueHighlight: {
     fontSize: 14,
-    color: '#FF6B6B',
+    color: 'theme.primary',
     fontWeight: 'bold',
   },
   // Edit Form
@@ -1696,7 +1696,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   goalButtonSelected: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: 'theme.primary',
   },
   goalButtonText: {
     fontSize: 12,
@@ -1787,7 +1787,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 10,
-    backgroundColor: '#FF6B6B',
+    backgroundColor: 'theme.primary',
     padding: 16,
     borderRadius: 16,
     marginTop: 8,

@@ -151,7 +151,7 @@ export default function RootLayout() {
   if (!i18nReady) {
     return (
       <View style={styles.loading}>
-        <ActivityIndicator size="large" color="#FF6B6B" />
+        <ActivityIndicator size="large" color="theme.primary" />
       </View>
     );
   }
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
   errorTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#FF6B6B',
+    color: 'theme.primary',
     marginBottom: 16,
   },
   errorMessage: {

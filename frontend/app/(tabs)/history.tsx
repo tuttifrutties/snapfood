@@ -1376,7 +1376,7 @@ const styles = StyleSheet.create({
     width: 90,
     height: 90,
     borderRadius: 45,
-    backgroundColor: '#FF6B6B20',
+    backgroundColor: 'theme.primary20',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
