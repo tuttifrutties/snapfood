@@ -528,7 +528,7 @@ export default function CookingScreen() {
           {notificationRecipes.length > 0 && (
             <View style={styles.notificationBanner}>
               <View style={styles.notificationBannerHeader}>
-                <Ionicons name="restaurant" size={20} color="theme.primary" />
+                <Ionicons name="restaurant" size={20} color={theme.primary} />
                 <Text style={styles.notificationBannerTitle}>
                   {i18n.language === 'es' 
                     ? `🔔 Sugerencias para tu ${notificationMealType === 'lunch' ? 'almuerzo' : 'cena'}`
@@ -553,7 +553,7 @@ export default function CookingScreen() {
                     <Text style={styles.notificationRecipeText}>
                       👨‍🍳 {recipe}
                     </Text>
-                    <Ionicons name="chevron-forward" size={16} color="theme.primary" />
+                    <Ionicons name="chevron-forward" size={16} color={theme.primary} />
                   </TouchableOpacity>
                 ))}
               </View>

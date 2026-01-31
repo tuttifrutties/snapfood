@@ -141,7 +141,7 @@ export default function HelpScreen() {
         {content.faqs.map((faq, index) => (
           <View key={index} style={styles.faqItem}>
             <View style={styles.questionContainer}>
-              <Ionicons name="help-circle" size={24} color="theme.primary" />
+              <Ionicons name="help-circle" size={24} color={theme.primary} />
               <Text style={styles.question}>{faq.question}</Text>
             </View>
             <Text style={styles.answer}>{faq.answer}</Text>

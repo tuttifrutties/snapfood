@@ -518,7 +518,7 @@ export default function RecipeDetailScreen() {
   if (!recipe) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="theme.primary" />
+        <ActivityIndicator size="large" color={theme.primary} />
       </View>
     );
   }
@@ -551,7 +551,7 @@ export default function RecipeDetailScreen() {
         {/* Recipe Header - No Image */}
         <View style={styles.recipeHeaderSection}>
           <View style={styles.recipeIconContainer}>
-            <Ionicons name="restaurant" size={60} color="theme.primary" />
+            <Ionicons name="restaurant" size={60} color={theme.primary} />
           </View>
           {countryFlag && (
             <View style={styles.flagBadgeTop}>
@@ -570,12 +570,12 @@ export default function RecipeDetailScreen() {
           {/* Meta info row */}
           <View style={styles.metaRow}>
             <View style={styles.metaItem}>
-              <Ionicons name="time-outline" size={18} color="theme.primary" />
+              <Ionicons name="time-outline" size={18} color={theme.primary} />
               <Text style={styles.metaText}>{recipe.cookingTime} min</Text>
             </View>
             
             <View style={styles.metaItem}>
-              <Ionicons name="flame-outline" size={18} color="theme.primary" />
+              <Ionicons name="flame-outline" size={18} color={theme.primary} />
               <Text style={styles.metaText}>{recipe.calories} cal</Text>
             </View>
             
@@ -615,7 +615,7 @@ export default function RecipeDetailScreen() {
           <View style={styles.ingredientsTitleRow}>
             <Text style={styles.sectionTitle}>{t('recipe.ingredients')}</Text>
             <View style={styles.servingsBadge}>
-              <Ionicons name="people-outline" size={16} color="theme.primary" />
+              <Ionicons name="people-outline" size={16} color={theme.primary} />
               <Text style={styles.servingsText}>
                 {i18n.language === 'es' ? 'Base:' : 'Base:'} {recipe.servings || 4}
               </Text>
@@ -981,7 +981,7 @@ export default function RecipeDetailScreen() {
       >
         <View style={styles.portionsEatenOverlay}>
           <View style={styles.portionsEatenModal}>
-            <Ionicons name="restaurant" size={40} color="theme.primary" />
+            <Ionicons name="restaurant" size={40} color={theme.primary} />
             <Text style={styles.portionsEatenTitle}>
               {i18n.language === 'es' 
                 ? '🍽️ ¿Cuántas porciones comiste?' 
@@ -1164,7 +1164,7 @@ export default function RecipeDetailScreen() {
           {/* Loading indicator */}
           {isSharing && (
             <View style={styles.shareLoadingContainer}>
-              <ActivityIndicator size="large" color="theme.primary" />
+              <ActivityIndicator size="large" color={theme.primary} />
               <Text style={styles.shareLoadingText}>
                 {i18n.language === 'es' ? 'Preparando imagen...' : 'Preparing image...'}
               </Text>

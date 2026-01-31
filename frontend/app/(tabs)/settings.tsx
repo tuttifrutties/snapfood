@@ -475,7 +475,7 @@ export default function SettingsScreen() {
                   {lang.name}
                 </Text>
                 {i18n.language === lang.code && (
-                  <Ionicons name="checkmark" size={24} color="theme.primary" />
+                  <Ionicons name="checkmark" size={24} color={theme.primary} />
                 )}
               </TouchableOpacity>
             ))}
@@ -627,7 +627,7 @@ export default function SettingsScreen() {
                   {editingReminderType && 
                    reminderTimes[editingReminderType].hour === t.hour && 
                    reminderTimes[editingReminderType].minute === t.minute && (
-                    <Ionicons name="checkmark" size={24} color="theme.primary" />
+                    <Ionicons name="checkmark" size={24} color={theme.primary} />
                   )}
                 </TouchableOpacity>
               ))}

@@ -151,7 +151,7 @@ export default function RootLayout() {
   if (!i18nReady) {
     return (
       <View style={styles.loading}>
-        <ActivityIndicator size="large" color="theme.primary" />
+        <ActivityIndicator size="large" color={theme.primary} />
       </View>
     );
   }
