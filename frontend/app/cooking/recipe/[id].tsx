@@ -129,6 +129,7 @@ export default function RecipeDetailScreen() {
   const { t, i18n } = useTranslation();
   const params = useLocalSearchParams();
   const { userId } = useUser();
+  const { theme } = useTheme();
   
   const [recipe, setRecipe] = useState<any>(null);
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>([]);
