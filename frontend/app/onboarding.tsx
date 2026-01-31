@@ -312,21 +312,21 @@ export default function OnboardingScreen() {
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.content}>
-          <Ionicons name="restaurant" size={80} color={theme.primary} />
+          <Ionicons name="restaurant" size={80} color='#FF6B6B' />
           <Text style={styles.title}>{t('onboarding.welcome')}</Text>
           <Text style={styles.subtitle}>{t('onboarding.subtitle')}</Text>
 
           <View style={styles.featuresList}>
             <View style={styles.featureItem}>
-              <Ionicons name="camera" size={24} color={theme.primary} />
+              <Ionicons name="camera" size={24} color='#FF6B6B' />
               <Text style={styles.featureText}>{t('onboarding.feature1')}</Text>
             </View>
             <View style={styles.featureItem}>
-              <Ionicons name="analytics" size={24} color={theme.primary} />
+              <Ionicons name="analytics" size={24} color='#FF6B6B' />
               <Text style={styles.featureText}>{t('onboarding.feature2')}</Text>
             </View>
             <View style={styles.featureItem}>
-              <Ionicons name="trending-up" size={24} color={theme.primary} />
+              <Ionicons name="trending-up" size={24} color='#FF6B6B' />
               <Text style={styles.featureText}>{t('onboarding.feature3')}</Text>
             </View>
           </View>
@@ -375,7 +375,7 @@ export default function OnboardingScreen() {
                   {item.name}
                 </Text>
                 {country === item.code && (
-                  <Ionicons name="checkmark-circle" size={24} color={theme.primary} />
+                  <Ionicons name="checkmark-circle" size={24} color='#FF6B6B' />
                 )}
               </TouchableOpacity>
             )}
@@ -408,7 +408,7 @@ export default function OnboardingScreen() {
             <Ionicons
               name="male"
               size={48}
-              color={gender === 'male' ? {theme.primary} : '#aaa'}
+              color={gender === 'male' ? '#FF6B6B' : '#aaa'}
             />
             <Text style={[styles.genderTitle, gender === 'male' && styles.genderTitleSelected]}>
               {t('onboarding.male')}
@@ -422,7 +422,7 @@ export default function OnboardingScreen() {
             <Ionicons
               name="female"
               size={48}
-              color={gender === 'female' ? {theme.primary} : '#aaa'}
+              color={gender === 'female' ? '#FF6B6B' : '#aaa'}
             />
             <Text style={[styles.genderTitle, gender === 'female' && styles.genderTitleSelected]}>
               {t('onboarding.female')}
@@ -452,7 +452,7 @@ export default function OnboardingScreen() {
             <Ionicons
               name="trending-down"
               size={32}
-              color={goal === 'lose' ? {theme.primary} : '#aaa'}
+              color={goal === 'lose' ? '#FF6B6B' : '#aaa'}
             />
             <Text style={[styles.goalTitle, goal === 'lose' && styles.goalTitleSelected]}>
               {t('onboarding.loseWeight')}
@@ -467,7 +467,7 @@ export default function OnboardingScreen() {
             <Ionicons
               name="remove"
               size={32}
-              color={goal === 'maintain' ? {theme.primary} : '#aaa'}
+              color={goal === 'maintain' ? '#FF6B6B' : '#aaa'}
             />
             <Text style={[styles.goalTitle, goal === 'maintain' && styles.goalTitleSelected]}>
               {t('onboarding.maintainWeight')}
@@ -482,7 +482,7 @@ export default function OnboardingScreen() {
             <Ionicons
               name="trending-up"
               size={32}
-              color={goal === 'gain' ? {theme.primary} : '#aaa'}
+              color={goal === 'gain' ? '#FF6B6B' : '#aaa'}
             />
             <Text style={[styles.goalTitle, goal === 'gain' && styles.goalTitleSelected]}>
               {t('onboarding.gainMuscle')}
@@ -548,7 +548,7 @@ export default function OnboardingScreen() {
                 <Ionicons 
                   name={PHYSICAL_ACTIVITIES.find(a => a.id === editingActivity)?.icon as any || 'fitness'} 
                   size={24} 
-                  color={theme.primary} 
+                  color='#FF6B6B' 
                 />
                 <Text style={styles.activityEditorTitle}>
                   {getActivityLabel(editingActivity, i18n.language)}
@@ -627,7 +627,7 @@ export default function OnboardingScreen() {
                     <Ionicons
                       name={activity.icon as any}
                       size={28}
-                      color={isSelected ? {theme.primary} : '#aaa'}
+                      color={isSelected ? '#FF6B6B' : '#aaa'}
                     />
                     <Text style={[
                       styles.activityName,
@@ -923,7 +923,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   button: {
-    backgroundColor: {theme.primary},
+    backgroundColor: '#FF6B6B',
     padding: 16,
     borderRadius: 12,
     alignItems: 'center',
@@ -961,8 +961,8 @@ const styles = StyleSheet.create({
   },
   countryItemSelected: {
     borderWidth: 2,
-    borderColor: {theme.primary},
-    backgroundColor: 'theme.primary10',
+    borderColor: '#FF6B6B',
+    backgroundColor: 'rgba(255,107,107,0.1)',
   },
   countryFlag: {
     fontSize: 28,
@@ -973,7 +973,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   countryNameSelected: {
-    color: {theme.primary},
+    color: '#FF6B6B',
     fontWeight: 'bold',
   },
   // Gender selection
@@ -987,8 +987,8 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
   },
   genderCardSelected: {
-    borderColor: {theme.primary},
-    backgroundColor: 'theme.primary10',
+    borderColor: '#FF6B6B',
+    backgroundColor: 'rgba(255,107,107,0.1)',
   },
   genderTitle: {
     fontSize: 20,
@@ -997,7 +997,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   genderTitleSelected: {
-    color: {theme.primary},
+    color: '#FF6B6B',
   },
   // Goal selection
   goalCard: {
@@ -1010,8 +1010,8 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
   },
   goalCardSelected: {
-    borderColor: {theme.primary},
-    backgroundColor: 'theme.primary10',
+    borderColor: '#FF6B6B',
+    backgroundColor: 'rgba(255,107,107,0.1)',
   },
   goalTitle: {
     fontSize: 20,
@@ -1021,7 +1021,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   goalTitleSelected: {
-    color: {theme.primary},
+    color: '#FF6B6B',
   },
   goalDescription: {
     fontSize: 14,
@@ -1116,8 +1116,8 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   activityCardSelected: {
-    borderColor: {theme.primary},
-    backgroundColor: 'theme.primary10',
+    borderColor: '#FF6B6B',
+    backgroundColor: 'rgba(255,107,107,0.1)',
   },
   activityName: {
     fontSize: 13,
@@ -1126,7 +1126,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   activityNameSelected: {
-    color: {theme.primary},
+    color: '#FF6B6B',
     fontWeight: '600',
   },
   activityDetails: {
@@ -1152,7 +1152,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     marginBottom: 20,
     borderWidth: 2,
-    borderColor: {theme.primary},
+    borderColor: '#FF6B6B',
   },
   activityEditorHeader: {
     flexDirection: 'row',
@@ -1163,7 +1163,7 @@ const styles = StyleSheet.create({
   activityEditorTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: {theme.primary},
+    color: '#FF6B6B',
   },
   editorLabel: {
     fontSize: 14,
@@ -1183,7 +1183,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   durationButtonSelected: {
-    backgroundColor: {theme.primary},
+    backgroundColor: '#FF6B6B',
   },
   durationText: {
     color: '#aaa',
@@ -1283,8 +1283,8 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   healthOptionSelected: {
-    backgroundColor: 'theme.primary20',
-    borderColor: {theme.primary},
+    backgroundColor: 'rgba(255,107,107,0.2)',
+    borderColor: '#FF6B6B',
   },
   healthOptionIcon: {
     fontSize: 18,
@@ -1294,11 +1294,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   healthOptionTextSelected: {
-    color: {theme.primary},
+    color: '#FF6B6B',
     fontWeight: '600',
   },
   checkBadgeSmall: {
-    backgroundColor: {theme.primary},
+    backgroundColor: '#FF6B6B',
     width: 18,
     height: 18,
     borderRadius: 9,
@@ -1329,7 +1329,7 @@ const styles = StyleSheet.create({
   selectedAllergyChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: {theme.primary},
+    backgroundColor: '#FF6B6B',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 20,
@@ -1359,8 +1359,8 @@ const styles = StyleSheet.create({
     minWidth: 100,
   },
   allergyOptionSelected: {
-    backgroundColor: 'theme.primary20',
-    borderColor: {theme.primary},
+    backgroundColor: 'rgba(255,107,107,0.2)',
+    borderColor: '#FF6B6B',
   },
   allergyOptionIcon: {
     fontSize: 16,
@@ -1370,7 +1370,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   allergyOptionTextSelected: {
-    color: {theme.primary},
+    color: '#FF6B6B',
     fontWeight: '500',
   },
 });
