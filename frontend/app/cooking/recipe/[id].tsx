@@ -518,7 +518,7 @@ export default function RecipeDetailScreen() {
   if (!recipe) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#FF6B6B" />
+        <ActivityIndicator size="large" color="theme.primary" />
       </View>
     );
   }
@@ -551,7 +551,7 @@ export default function RecipeDetailScreen() {
         {/* Recipe Header - No Image */}
         <View style={styles.recipeHeaderSection}>
           <View style={styles.recipeIconContainer}>
-            <Ionicons name="restaurant" size={60} color="#FF6B6B" />
+            <Ionicons name="restaurant" size={60} color="theme.primary" />
           </View>
           {countryFlag && (
             <View style={styles.flagBadgeTop}>
@@ -570,12 +570,12 @@ export default function RecipeDetailScreen() {
           {/* Meta info row */}
           <View style={styles.metaRow}>
             <View style={styles.metaItem}>
-              <Ionicons name="time-outline" size={18} color="#FF6B6B" />
+              <Ionicons name="time-outline" size={18} color="theme.primary" />
               <Text style={styles.metaText}>{recipe.cookingTime} min</Text>
             </View>
             
             <View style={styles.metaItem}>
-              <Ionicons name="flame-outline" size={18} color="#FF6B6B" />
+              <Ionicons name="flame-outline" size={18} color="theme.primary" />
               <Text style={styles.metaText}>{recipe.calories} cal</Text>
             </View>
             
@@ -615,7 +615,7 @@ export default function RecipeDetailScreen() {
           <View style={styles.ingredientsTitleRow}>
             <Text style={styles.sectionTitle}>{t('recipe.ingredients')}</Text>
             <View style={styles.servingsBadge}>
-              <Ionicons name="people-outline" size={16} color="#FF6B6B" />
+              <Ionicons name="people-outline" size={16} color="theme.primary" />
               <Text style={styles.servingsText}>
                 {i18n.language === 'es' ? 'Base:' : 'Base:'} {recipe.servings || 4}
               </Text>
@@ -981,7 +981,7 @@ export default function RecipeDetailScreen() {
       >
         <View style={styles.portionsEatenOverlay}>
           <View style={styles.portionsEatenModal}>
-            <Ionicons name="restaurant" size={40} color="#FF6B6B" />
+            <Ionicons name="restaurant" size={40} color="theme.primary" />
             <Text style={styles.portionsEatenTitle}>
               {i18n.language === 'es' 
                 ? '🍽️ ¿Cuántas porciones comiste?' 
@@ -1164,7 +1164,7 @@ export default function RecipeDetailScreen() {
           {/* Loading indicator */}
           {isSharing && (
             <View style={styles.shareLoadingContainer}>
-              <ActivityIndicator size="large" color="#FF6B6B" />
+              <ActivityIndicator size="large" color="theme.primary" />
               <Text style={styles.shareLoadingText}>
                 {i18n.language === 'es' ? 'Preparando imagen...' : 'Preparing image...'}
               </Text>
@@ -1239,13 +1239,13 @@ const styles = StyleSheet.create({
     paddingVertical: 30,
     backgroundColor: '#1a1a1a',
     borderBottomWidth: 2,
-    borderBottomColor: '#FF6B6B',
+    borderBottomColor: 'theme.primary',
   },
   recipeIconContainer: {
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: '#FF6B6B20',
+    backgroundColor: 'theme.primary20',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
@@ -1312,7 +1312,7 @@ const styles = StyleSheet.create({
   macroValue: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#FF6B6B',
+    color: 'theme.primary',
   },
   macroLabel: {
     fontSize: 12,
@@ -1353,7 +1353,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#FF6B6B',
+    backgroundColor: 'theme.primary',
     marginTop: 6,
     marginRight: 12,
   },
@@ -1384,7 +1384,7 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#FF6B6B',
+    backgroundColor: 'theme.primary',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
@@ -1515,7 +1515,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   portionButtonActive: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: 'theme.primary',
   },
   portionButtonText: {
     color: '#aaa',
@@ -1652,7 +1652,7 @@ const styles = StyleSheet.create({
   },
   servingsText: {
     fontSize: 13,
-    color: '#FF6B6B',
+    color: 'theme.primary',
     fontWeight: '500',
   },
   portionsSelector: {
@@ -1683,7 +1683,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   portionBtnActive: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: 'theme.primary',
   },
   portionBtnCustom: {
     paddingHorizontal: 14,
@@ -1757,7 +1757,7 @@ const styles = StyleSheet.create({
   },
   customPortionsConfirmBtn: {
     flex: 1,
-    backgroundColor: '#FF6B6B',
+    backgroundColor: 'theme.primary',
     paddingVertical: 14,
     borderRadius: 10,
     alignItems: 'center',
@@ -1857,7 +1857,7 @@ const styles = StyleSheet.create({
     maxWidth: 350,
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#FF6B6B',
+    borderColor: 'theme.primary',
   },
   portionsEatenTitle: {
     fontSize: 20,
@@ -1889,7 +1889,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   portionsEatenBtnActive: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: 'theme.primary',
   },
   portionsEatenBtnText: {
     color: '#aaa',
@@ -1950,7 +1950,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1a1a2e',
   },
   shareCardGradient: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: 'theme.primary',
     padding: 24,
     alignItems: 'center',
   },
@@ -2022,7 +2022,7 @@ const styles = StyleSheet.create({
   shareCardSectionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#FF6B6B',
+    color: 'theme.primary',
     marginBottom: 12,
   },
   shareCardIngredient: {
@@ -2031,7 +2031,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   shareCardBullet: {
-    color: '#FF6B6B',
+    color: 'theme.primary',
     fontSize: 14,
     marginRight: 8,
     marginTop: 1,
@@ -2051,7 +2051,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: '#FF6B6B',
+    backgroundColor: 'theme.primary',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,

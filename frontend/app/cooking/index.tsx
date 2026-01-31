@@ -528,7 +528,7 @@ export default function CookingScreen() {
           {notificationRecipes.length > 0 && (
             <View style={styles.notificationBanner}>
               <View style={styles.notificationBannerHeader}>
-                <Ionicons name="restaurant" size={20} color="#FF6B6B" />
+                <Ionicons name="restaurant" size={20} color="theme.primary" />
                 <Text style={styles.notificationBannerTitle}>
                   {i18n.language === 'es' 
                     ? `🔔 Sugerencias para tu ${notificationMealType === 'lunch' ? 'almuerzo' : 'cena'}`
@@ -553,7 +553,7 @@ export default function CookingScreen() {
                     <Text style={styles.notificationRecipeText}>
                       👨‍🍳 {recipe}
                     </Text>
-                    <Ionicons name="chevron-forward" size={16} color="#FF6B6B" />
+                    <Ionicons name="chevron-forward" size={16} color="theme.primary" />
                   </TouchableOpacity>
                 ))}
               </View>
@@ -1513,7 +1513,7 @@ const styles = StyleSheet.create({
   cuisineBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FF6B6B20',
+    backgroundColor: 'theme.primary20',
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 12,
@@ -1522,7 +1522,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   cuisineText: {
-    color: '#FF6B6B',
+    color: 'theme.primary',
     fontSize: 12,
     fontWeight: '500',
   },
@@ -1629,7 +1629,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#333',
   },
   confirmButtonPrimary: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: 'theme.primary',
   },
   confirmButtonSecondaryText: {
     color: '#fff',
@@ -1667,7 +1667,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 35,
-    backgroundColor: '#FF6B6B20',
+    backgroundColor: 'theme.primary20',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 12,
@@ -1680,7 +1680,7 @@ const styles = StyleSheet.create({
   menuDivider: {
     width: 60,
     height: 2,
-    backgroundColor: '#FF6B6B',
+    backgroundColor: 'theme.primary',
     marginTop: 12,
   },
   menuTitle: {
@@ -1711,7 +1711,7 @@ const styles = StyleSheet.create({
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#FF6B6B',
+    backgroundColor: 'theme.primary',
     marginRight: 10,
   },
   menuIngredientText: {
@@ -1746,12 +1746,12 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     paddingBottom: 20,
     borderBottomWidth: 2,
-    borderBottomColor: '#FF6B6B',
+    borderBottomColor: 'theme.primary',
   },
   chefTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#FF6B6B',
+    color: 'theme.primary',
     textAlign: 'center',
   },
   chefSubtitle: {
@@ -1793,7 +1793,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   searchButton: {
-    backgroundColor: '#FF6B6B',
+    backgroundColor: 'theme.primary',
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 12,
@@ -1864,7 +1864,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFC10730',
   },
   matchBadgeLow: {
-    backgroundColor: '#FF6B6B30',
+    backgroundColor: 'theme.primary30',
   },
   matchBadgeText: {
     color: '#fff',
@@ -1886,7 +1886,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   missingIngredientsLabel: {
-    color: '#FF6B6B',
+    color: 'theme.primary',
     fontSize: 13,
     fontWeight: '600',
   },
@@ -1903,7 +1903,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   viewRecipeText: {
-    color: '#FF6B6B',
+    color: 'theme.primary',
     fontSize: 14,
     fontWeight: '500',
   },
@@ -1950,7 +1950,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: '#FF6B6B',
+    borderColor: 'theme.primary',
   },
   notificationBannerHeader: {
     flexDirection: 'row',
