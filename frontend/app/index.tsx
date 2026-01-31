@@ -2,10 +2,12 @@ import { useEffect } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useUser } from '../src/contexts/UserContext';
+import { useTheme } from '../src/contexts/ThemeContext';
 
 export default function Index() {
   const router = useRouter();
   const { userId, isLoading, hasCompletedOnboarding } = useUser();
+  const { theme } = useTheme();
 
   useEffect(() => {
     if (!isLoading) {
