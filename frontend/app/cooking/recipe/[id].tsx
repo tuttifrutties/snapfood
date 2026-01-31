@@ -25,6 +25,7 @@ import { useTranslation } from 'react-i18next';
 import { getCountryFlag } from '../../../src/services/recipeImage';
 import { confirmRecipeAndUpdateMemory } from '../../../src/services/ingredients';
 import { useUser } from '../../../src/contexts/UserContext';
+import { useTheme } from '../../../src/contexts/ThemeContext';
 import { updateDailyCalories } from '../../../src/services/nutritionCoach';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Sharing from 'expo-sharing';
