@@ -259,6 +259,19 @@ export default function TrackFoodScreen() {
   };
 
   const pickFromGallery = async () => {
+    // Request media library permission
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    
+    if (permissionResult.granted === false) {
+      Alert.alert(
+        i18n.language === 'es' ? 'Permiso requerido' : 'Permission required',
+        i18n.language === 'es' 
+          ? 'Necesitamos acceso a tu galería para seleccionar fotos de comida.'
+          : 'We need access to your gallery to select food photos.'
+      );
+      return;
+    }
+    
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: 'images',
       allowsEditing: true,
