@@ -18,11 +18,13 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { usePremium } from '../src/contexts/PremiumContext';
+import { useTheme } from '../src/contexts/ThemeContext';
 import type { PurchasesPackage } from 'react-native-purchases';
 
 export default function PaywallScreen() {
   const router = useRouter();
   const { t } = useTranslation();
+  const { theme } = useTheme();
   const {
     isPremium,
     monthlyPackage,
