@@ -9,10 +9,12 @@ import {
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '../../src/contexts/ThemeContext';
 
 export default function PrivacyPolicyScreen() {
   const router = useRouter();
   const { t, i18n } = useTranslation();
+  const { theme } = useTheme();
 
   const content = i18n.language === 'es' ? {
     title: 'Política de Privacidad',
