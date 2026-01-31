@@ -408,7 +408,7 @@ export default function OnboardingScreen() {
             <Ionicons
               name="male"
               size={48}
-              color={gender === 'male' ? '#FF6B6B' : '#aaa'}
+              color={gender === 'male' ? theme.primary : '#aaa'}
             />
             <Text style={[styles.genderTitle, gender === 'male' && styles.genderTitleSelected]}>
               {t('onboarding.male')}
@@ -422,7 +422,7 @@ export default function OnboardingScreen() {
             <Ionicons
               name="female"
               size={48}
-              color={gender === 'female' ? '#FF6B6B' : '#aaa'}
+              color={gender === 'female' ? theme.primary : '#aaa'}
             />
             <Text style={[styles.genderTitle, gender === 'female' && styles.genderTitleSelected]}>
               {t('onboarding.female')}
@@ -452,7 +452,7 @@ export default function OnboardingScreen() {
             <Ionicons
               name="trending-down"
               size={32}
-              color={goal === 'lose' ? '#FF6B6B' : '#aaa'}
+              color={goal === 'lose' ? theme.primary : '#aaa'}
             />
             <Text style={[styles.goalTitle, goal === 'lose' && styles.goalTitleSelected]}>
               {t('onboarding.loseWeight')}
@@ -467,7 +467,7 @@ export default function OnboardingScreen() {
             <Ionicons
               name="remove"
               size={32}
-              color={goal === 'maintain' ? '#FF6B6B' : '#aaa'}
+              color={goal === 'maintain' ? theme.primary : '#aaa'}
             />
             <Text style={[styles.goalTitle, goal === 'maintain' && styles.goalTitleSelected]}>
               {t('onboarding.maintainWeight')}
@@ -482,7 +482,7 @@ export default function OnboardingScreen() {
             <Ionicons
               name="trending-up"
               size={32}
-              color={goal === 'gain' ? '#FF6B6B' : '#aaa'}
+              color={goal === 'gain' ? theme.primary : '#aaa'}
             />
             <Text style={[styles.goalTitle, goal === 'gain' && styles.goalTitleSelected]}>
               {t('onboarding.gainMuscle')}
@@ -627,7 +627,7 @@ export default function OnboardingScreen() {
                     <Ionicons
                       name={activity.icon as any}
                       size={28}
-                      color={isSelected ? '#FF6B6B' : '#aaa'}
+                      color={isSelected ? theme.primary : '#aaa'}
                     />
                     <Text style={[
                       styles.activityName,
