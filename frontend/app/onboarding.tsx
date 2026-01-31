@@ -125,6 +125,7 @@ const FOOD_ALLERGIES = [
 export default function OnboardingScreen() {
   const router = useRouter();
   const { userId, completeOnboarding } = useUser();
+  const { theme } = useTheme();
   const { t, i18n } = useTranslation();
   const [step, setStep] = useState(1);
 
