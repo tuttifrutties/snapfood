@@ -408,7 +408,7 @@ export default function OnboardingScreen() {
             <Ionicons
               name="male"
               size={48}
-              color={gender === 'male' ? 'theme.primary' : '#aaa'}
+              color={gender === 'male' ? {theme.primary} : '#aaa'}
             />
             <Text style={[styles.genderTitle, gender === 'male' && styles.genderTitleSelected]}>
               {t('onboarding.male')}
@@ -422,7 +422,7 @@ export default function OnboardingScreen() {
             <Ionicons
               name="female"
               size={48}
-              color={gender === 'female' ? 'theme.primary' : '#aaa'}
+              color={gender === 'female' ? {theme.primary} : '#aaa'}
             />
             <Text style={[styles.genderTitle, gender === 'female' && styles.genderTitleSelected]}>
               {t('onboarding.female')}
@@ -452,7 +452,7 @@ export default function OnboardingScreen() {
             <Ionicons
               name="trending-down"
               size={32}
-              color={goal === 'lose' ? 'theme.primary' : '#aaa'}
+              color={goal === 'lose' ? {theme.primary} : '#aaa'}
             />
             <Text style={[styles.goalTitle, goal === 'lose' && styles.goalTitleSelected]}>
               {t('onboarding.loseWeight')}
@@ -467,7 +467,7 @@ export default function OnboardingScreen() {
             <Ionicons
               name="remove"
               size={32}
-              color={goal === 'maintain' ? 'theme.primary' : '#aaa'}
+              color={goal === 'maintain' ? {theme.primary} : '#aaa'}
             />
             <Text style={[styles.goalTitle, goal === 'maintain' && styles.goalTitleSelected]}>
               {t('onboarding.maintainWeight')}
@@ -482,7 +482,7 @@ export default function OnboardingScreen() {
             <Ionicons
               name="trending-up"
               size={32}
-              color={goal === 'gain' ? 'theme.primary' : '#aaa'}
+              color={goal === 'gain' ? {theme.primary} : '#aaa'}
             />
             <Text style={[styles.goalTitle, goal === 'gain' && styles.goalTitleSelected]}>
               {t('onboarding.gainMuscle')}
@@ -627,7 +627,7 @@ export default function OnboardingScreen() {
                     <Ionicons
                       name={activity.icon as any}
                       size={28}
-                      color={isSelected ? 'theme.primary' : '#aaa'}
+                      color={isSelected ? {theme.primary} : '#aaa'}
                     />
                     <Text style={[
                       styles.activityName,
@@ -923,7 +923,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   button: {
-    backgroundColor: 'theme.primary',
+    backgroundColor: {theme.primary},
     padding: 16,
     borderRadius: 12,
     alignItems: 'center',
@@ -961,7 +961,7 @@ const styles = StyleSheet.create({
   },
   countryItemSelected: {
     borderWidth: 2,
-    borderColor: 'theme.primary',
+    borderColor: {theme.primary},
     backgroundColor: 'theme.primary10',
   },
   countryFlag: {
@@ -973,7 +973,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   countryNameSelected: {
-    color: 'theme.primary',
+    color: {theme.primary},
     fontWeight: 'bold',
   },
   // Gender selection
@@ -987,7 +987,7 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
   },
   genderCardSelected: {
-    borderColor: 'theme.primary',
+    borderColor: {theme.primary},
     backgroundColor: 'theme.primary10',
   },
   genderTitle: {
@@ -997,7 +997,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   genderTitleSelected: {
-    color: 'theme.primary',
+    color: {theme.primary},
   },
   // Goal selection
   goalCard: {
@@ -1010,7 +1010,7 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
   },
   goalCardSelected: {
-    borderColor: 'theme.primary',
+    borderColor: {theme.primary},
     backgroundColor: 'theme.primary10',
   },
   goalTitle: {
@@ -1021,7 +1021,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   goalTitleSelected: {
-    color: 'theme.primary',
+    color: {theme.primary},
   },
   goalDescription: {
     fontSize: 14,
@@ -1116,7 +1116,7 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   activityCardSelected: {
-    borderColor: 'theme.primary',
+    borderColor: {theme.primary},
     backgroundColor: 'theme.primary10',
   },
   activityName: {
@@ -1126,7 +1126,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   activityNameSelected: {
-    color: 'theme.primary',
+    color: {theme.primary},
     fontWeight: '600',
   },
   activityDetails: {
@@ -1152,7 +1152,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     marginBottom: 20,
     borderWidth: 2,
-    borderColor: 'theme.primary',
+    borderColor: {theme.primary},
   },
   activityEditorHeader: {
     flexDirection: 'row',
@@ -1163,7 +1163,7 @@ const styles = StyleSheet.create({
   activityEditorTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: 'theme.primary',
+    color: {theme.primary},
   },
   editorLabel: {
     fontSize: 14,
@@ -1183,7 +1183,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   durationButtonSelected: {
-    backgroundColor: 'theme.primary',
+    backgroundColor: {theme.primary},
   },
   durationText: {
     color: '#aaa',
@@ -1284,7 +1284,7 @@ const styles = StyleSheet.create({
   },
   healthOptionSelected: {
     backgroundColor: 'theme.primary20',
-    borderColor: 'theme.primary',
+    borderColor: {theme.primary},
   },
   healthOptionIcon: {
     fontSize: 18,
@@ -1294,11 +1294,11 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   healthOptionTextSelected: {
-    color: 'theme.primary',
+    color: {theme.primary},
     fontWeight: '600',
   },
   checkBadgeSmall: {
-    backgroundColor: 'theme.primary',
+    backgroundColor: {theme.primary},
     width: 18,
     height: 18,
     borderRadius: 9,
@@ -1329,7 +1329,7 @@ const styles = StyleSheet.create({
   selectedAllergyChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'theme.primary',
+    backgroundColor: {theme.primary},
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 20,
@@ -1360,7 +1360,7 @@ const styles = StyleSheet.create({
   },
   allergyOptionSelected: {
     backgroundColor: 'theme.primary20',
-    borderColor: 'theme.primary',
+    borderColor: {theme.primary},
   },
   allergyOptionIcon: {
     fontSize: 16,
@@ -1370,7 +1370,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   allergyOptionTextSelected: {
-    color: 'theme.primary',
+    color: {theme.primary},
     fontWeight: '500',
   },
 });
