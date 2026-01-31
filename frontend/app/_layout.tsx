@@ -54,6 +54,7 @@ export default function RootLayout() {
   const [i18nReady, setI18nReady] = useState(false);
   const [initError, setInitError] = useState<string | null>(null);
   const responseListener = useRef<Notifications.Subscription | null>(null);
+  const appState = useRef(AppState.currentState);
 
   useEffect(() => {
     const initialize = async () => {
@@ -72,6 +73,16 @@ export default function RootLayout() {
           }
         }
         
+        // Register for push notifications and refresh scheduled notifications
+        try {
+          await registerForPushNotificationsAsync();
+          const language = i18n.language || 'es';
+          await refreshSmartNotifications(language);
+          console.log('[RootLayout] Notifications refreshed on app start');
+        } catch (notifError) {
+          console.log('[RootLayout] Notification setup error:', notifError);
+        }
+        
         setI18nReady(true);
       } catch (error) {
         console.error('[RootLayout] init error:', error);
@@ -81,6 +92,20 @@ export default function RootLayout() {
     };
 
     initialize();
+    
+    // Also refresh notifications when app comes back to foreground
+    const subscription = AppState.addEventListener('change', async (nextAppState) => {
+      if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+        console.log('[RootLayout] App came to foreground, refreshing notifications');
+        try {
+          const language = i18n.language || 'es';
+          await refreshSmartNotifications(language);
+        } catch (e) {
+          console.log('[RootLayout] Error refreshing notifications:', e);
+        }
+      }
+      appState.current = nextAppState;
+    });
     
     // Handle notification tap - this fires when user taps a notification
     responseListener.current = Notifications.addNotificationResponseReceivedListener(async (response) => {
@@ -102,6 +127,7 @@ export default function RootLayout() {
     });
 
     return () => {
+      subscription.remove();
       if (responseListener.current) {
         responseListener.current.remove();
       }
