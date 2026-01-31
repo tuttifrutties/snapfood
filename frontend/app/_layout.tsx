@@ -4,11 +4,13 @@ import { UserProvider } from '../src/contexts/UserContext';
 import { PremiumProvider } from '../src/contexts/PremiumContext';
 import { ThemeProvider, useTheme } from '../src/contexts/ThemeContext';
 import React, { useEffect, useState, useRef } from 'react';
-import { View, ActivityIndicator, StyleSheet, Text, Platform } from 'react-native';
+import { View, ActivityIndicator, StyleSheet, Text, Platform, AppState } from 'react-native';
 import initI18n from '../src/i18n';
 import * as NavigationBar from 'expo-navigation-bar';
 import * as Notifications from 'expo-notifications';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { refreshSmartNotifications, registerForPushNotificationsAsync } from '../src/services/notifications';
+import i18n from 'i18next';
 
 // Error boundary component to catch crashes
 class ErrorBoundary extends React.Component<
