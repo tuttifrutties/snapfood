@@ -817,7 +817,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#2a2a2a',
   },
   languageOptionSelected: {
-    backgroundColor: 'theme.primary20',
+    backgroundColor: 'rgba(255,107,107,0.2)',
     borderWidth: 1,
     borderColor: 'theme.primary',
   },

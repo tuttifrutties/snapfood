@@ -1513,7 +1513,7 @@ const styles = StyleSheet.create({
   cuisineBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'theme.primary20',
+    backgroundColor: 'rgba(255,107,107,0.2)',
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 12,
@@ -1667,7 +1667,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 35,
-    backgroundColor: 'theme.primary20',
+    backgroundColor: 'rgba(255,107,107,0.2)',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 12,
