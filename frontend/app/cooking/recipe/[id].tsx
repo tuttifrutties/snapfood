@@ -1724,7 +1724,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   customPortionsModal: {
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
     borderRadius: 20,
     padding: 24,
     width: '80%',
@@ -1734,16 +1734,16 @@ const styles = StyleSheet.create({
   customPortionsTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#fff',
+    // color applied inline with theme.text
     marginBottom: 20,
   },
   customPortionsInput: {
-    backgroundColor: '#333',
+    // backgroundColor applied inline with theme.surfaceVariant
     borderRadius: 12,
     paddingHorizontal: 20,
     paddingVertical: 14,
     fontSize: 24,
-    color: '#fff',
+    // color applied inline with theme.text
     textAlign: 'center',
     width: '100%',
     marginBottom: 20,
@@ -1755,19 +1755,19 @@ const styles = StyleSheet.create({
   },
   customPortionsCancelBtn: {
     flex: 1,
-    backgroundColor: '#333',
+    // backgroundColor applied inline with theme.surfaceVariant
     paddingVertical: 14,
     borderRadius: 10,
     alignItems: 'center',
   },
   customPortionsCancelText: {
-    color: '#aaa',
+    // color applied inline with theme.textMuted
     fontSize: 16,
     fontWeight: '600',
   },
   customPortionsConfirmBtn: {
     flex: 1,
-    backgroundColor: '#FF6B6B',
+    // backgroundColor applied inline with theme.primary
     paddingVertical: 14,
     borderRadius: 10,
     alignItems: 'center',
@@ -1779,7 +1779,7 @@ const styles = StyleSheet.create({
   },
   tablespoonHint: {
     fontSize: 12,
-    color: '#888',
+    // color applied inline with theme.textMuted
     marginBottom: 8,
     fontStyle: 'italic',
   },
@@ -1793,7 +1793,7 @@ const styles = StyleSheet.create({
   macrosPerPortion: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
     borderRadius: 12,
     padding: 12,
     marginBottom: 12,
@@ -1804,11 +1804,11 @@ const styles = StyleSheet.create({
   macroPerPortionValue: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#fff',
+    // color applied inline with theme.text
   },
   macroPerPortionLabel: {
     fontSize: 11,
-    color: '#888',
+    // color applied inline with theme.textMuted
     marginTop: 2,
   },
   fatPerPortionRow: {
@@ -1817,7 +1817,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 8,
     borderBottomWidth: 1,
-    borderBottomColor: '#333',
+    // borderBottomColor applied inline with theme.border
   },
   fatPerPortionLabel: {
     fontSize: 13,
@@ -1838,7 +1838,7 @@ const styles = StyleSheet.create({
   totalPerPortionLabel: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#fff',
+    // color applied inline with theme.text
   },
   totalPerPortionValue: {
     fontSize: 20,
@@ -1847,7 +1847,7 @@ const styles = StyleSheet.create({
   },
   totalCookingNote: {
     fontSize: 12,
-    color: '#666',
+    // color applied inline with theme.textMuted
     textAlign: 'center',
     marginTop: 10,
     fontStyle: 'italic',
