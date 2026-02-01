@@ -519,7 +519,7 @@ export default function RecipeDetailScreen() {
 
   if (!recipe) {
     return (
-      <View style={styles.loadingContainer}>
+      <View style={[styles.loadingContainer, { backgroundColor: theme.background }]}>
         <ActivityIndicator size="large" color={theme.primary} />
       </View>
     );
@@ -528,7 +528,7 @@ export default function RecipeDetailScreen() {
   const countryFlag = getCountryFlag(recipe.countryOfOrigin || recipe.cuisine || '');
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       {/* Header with back button and share */}
       <View style={styles.header}>
         <TouchableOpacity 
@@ -551,14 +551,14 @@ export default function RecipeDetailScreen() {
         showsVerticalScrollIndicator={false}
       >
         {/* Recipe Header - No Image */}
-        <View style={styles.recipeHeaderSection}>
-          <View style={styles.recipeIconContainer}>
+        <View style={[styles.recipeHeaderSection, { backgroundColor: theme.surface, borderBottomColor: theme.primary }]}>
+          <View style={[styles.recipeIconContainer, { backgroundColor: theme.primary + '30' }]}>
             <Ionicons name="restaurant" size={60} color={theme.primary} />
           </View>
           {countryFlag && (
             <View style={styles.flagBadgeTop}>
               <Text style={styles.flagEmojiTop}>{countryFlag}</Text>
-              <Text style={styles.cuisineNameTop}>
+              <Text style={[styles.cuisineNameTop, { color: theme.text }]}>
                 {recipe.countryOfOrigin || recipe.cuisine}
               </Text>
             </View>
