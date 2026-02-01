@@ -1238,7 +1238,7 @@ export default function TrackFoodScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0c0c0c',
+    // backgroundColor applied inline with theme.background
   },
   header: {
     flexDirection: 'row',
@@ -1246,12 +1246,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 20,
     paddingTop: 60,
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
+    // color applied inline with theme.text
   },
   content: {
     flex: 1,
@@ -1261,12 +1261,12 @@ const styles = StyleSheet.create({
   },
   portionContainer: {
     marginBottom: 20,
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
     padding: 16,
     borderRadius: 12,
   },
   portionLabel: {
-    color: '#fff',
+    // color applied inline with theme.text
     fontSize: 16,
     fontWeight: '600',
     marginBottom: 4,
@@ -1285,16 +1285,16 @@ const styles = StyleSheet.create({
   },
   portionButton: {
     flex: 1,
-    backgroundColor: '#333',
+    // backgroundColor applied inline with theme.surfaceVariant
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: 'center',
   },
   portionButtonActive: {
-    backgroundColor: '#FF6B6B',
+    // backgroundColor applied inline with theme.primary
   },
   portionButtonText: {
-    color: '#aaa',
+    // color applied inline with theme.textMuted
     fontSize: 14,
     fontWeight: '600',
   },
@@ -1319,7 +1319,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   instructionText: {
-    color: '#aaa',
+    // color applied inline with theme.textSecondary
     fontSize: 16,
     textAlign: 'center',
     marginTop: 20,
@@ -1328,7 +1328,7 @@ const styles = StyleSheet.create({
   primaryButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FF6B6B',
+    // backgroundColor applied inline with theme.primary
     paddingHorizontal: 32,
     paddingVertical: 16,
     borderRadius: 12,
@@ -1345,21 +1345,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: '#FF6B6B',
+    // borderColor applied inline with theme.primary
     paddingHorizontal: 32,
     paddingVertical: 16,
     borderRadius: 12,
     gap: 8,
   },
   secondaryButtonText: {
-    color: '#FF6B6B',
+    // color applied inline with theme.primary
     fontSize: 18,
     fontWeight: '600',
   },
   imageContainer: {
     width: '100%',
     height: 300,
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
   },
   image: {
     width: '100%',
@@ -1371,7 +1371,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   loadingText: {
-    color: '#fff',
+    // color applied inline with theme.text
     marginTop: 16,
     fontSize: 16,
   },
