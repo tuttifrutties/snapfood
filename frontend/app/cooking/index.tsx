@@ -659,27 +659,27 @@ export default function CookingScreen() {
   // Mode: Manual selection
   if (mode === 'manual') {
     return (
-      <View style={styles.container}>
-        <View style={styles.header}>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
+        <View style={[styles.header, { backgroundColor: theme.surface }]}>
           <TouchableOpacity onPress={() => setMode('select')}>
-            <Ionicons name="arrow-back" size={24} color="#fff" />
+            <Ionicons name="arrow-back" size={24} color={theme.text} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>{t('cooking.selectIngredients')}</Text>
+          <Text style={[styles.headerTitle, { color: theme.text }]}>{t('cooking.selectIngredients')}</Text>
           <View style={{ width: 24 }} />
         </View>
 
-        <View style={styles.searchContainer}>
-          <Ionicons name="search" size={20} color="#aaa" style={styles.searchIcon} />
+        <View style={[styles.searchContainer, { backgroundColor: theme.surface }]}>
+          <Ionicons name="search" size={20} color={theme.textMuted} style={styles.searchIcon} />
           <TextInput
-            style={styles.searchInput}
+            style={[styles.searchInput, { color: theme.text }]}
             placeholder={`${t('cooking.searchIngredients')} (${totalIngredients}+)`}
-            placeholderTextColor="#555"
+            placeholderTextColor={theme.textMuted}
             value={searchQuery}
             onChangeText={setSearchQuery}
           />
           {searchQuery.length > 0 && (
             <TouchableOpacity onPress={() => setSearchQuery('')}>
-              <Ionicons name="close-circle" size={20} color="#aaa" />
+              <Ionicons name="close-circle" size={20} color={theme.textMuted} />
             </TouchableOpacity>
           )}
         </View>
@@ -698,9 +698,9 @@ export default function CookingScreen() {
         <ScrollView style={styles.ingredientListContainer}>
           {/* Selected Ingredients Accordion - Always first */}
           {selectedIngredients.length > 0 && !searchQuery.trim() && (
-            <View style={styles.categoryContainer}>
+            <View style={[styles.categoryContainer, { backgroundColor: theme.surface }]}>
               <TouchableOpacity
-                style={[styles.categoryHeader, styles.selectedCategoryHeader]}
+                style={[styles.categoryHeader, styles.selectedCategoryHeader, { backgroundColor: theme.surfaceVariant }]}
                 onPress={() => toggleCategory('_selected_')}
               >
                 <View style={styles.categoryTitleRow}>
@@ -724,7 +724,7 @@ export default function CookingScreen() {
                   {selectedIngredients.map((item) => (
                     <TouchableOpacity
                       key={item}
-                      style={[styles.ingredientItem, { borderColor: theme.primary, backgroundColor: theme.primary + '20' }]}
+                      style={[styles.ingredientItem, { backgroundColor: theme.surfaceVariant, borderColor: theme.primary }, { backgroundColor: theme.primary + '20' }]}
                       onPress={() => toggleIngredient(item)}
                     >
                       <Text style={[styles.ingredientText, styles.ingredientTextSelected, { color: theme.primary }]} numberOfLines={2}>
@@ -741,7 +741,7 @@ export default function CookingScreen() {
           {/* Search results */}
           {searchQuery.trim() && searchResults.length > 0 ? (
             <View style={styles.searchResultsContainer}>
-              <Text style={styles.searchResultsTitle}>
+              <Text style={[styles.searchResultsTitle, { color: theme.textSecondary }]}>
                 {i18n.language === 'es' ? 'Resultados de búsqueda' : 'Search Results'} ({searchResults.length})
               </Text>
               <View style={styles.ingredientGrid}>
@@ -752,6 +752,7 @@ export default function CookingScreen() {
                       key={item}
                       style={[
                         styles.ingredientItem,
+                        { backgroundColor: theme.surfaceVariant, borderColor: theme.border },
                         isSelected && { borderColor: theme.primary, backgroundColor: theme.primary + '20' },
                       ]}
                       onPress={() => toggleIngredient(item)}
@@ -759,6 +760,7 @@ export default function CookingScreen() {
                       <Text
                         style={[
                           styles.ingredientText,
+                          { color: theme.textSecondary },
                           isSelected && [styles.ingredientTextSelected, { color: theme.primary }],
                         ]}
                         numberOfLines={2}
@@ -775,8 +777,8 @@ export default function CookingScreen() {
             </View>
           ) : searchQuery.trim() && searchResults.length === 0 ? (
             <View style={styles.noResults}>
-              <Ionicons name="search" size={48} color="#555" />
-              <Text style={styles.noResultsText}>
+              <Ionicons name="search" size={48} color={theme.textMuted} />
+              <Text style={[styles.noResultsText, { color: theme.textMuted }]}>
                 {i18n.language === 'es' ? 'No se encontraron ingredientes' : 'No ingredients found'}
               </Text>
             </View>
@@ -789,13 +791,13 @@ export default function CookingScreen() {
               ).length;
               
               return (
-                <View key={category.id} style={styles.categoryContainer}>
+                <View key={category.id} style={[styles.categoryContainer, { backgroundColor: theme.surface }]}>
                   <TouchableOpacity
-                    style={styles.categoryHeader}
+                    style={[styles.categoryHeader, { backgroundColor: theme.surfaceVariant }]}
                     onPress={() => toggleCategory(category.id)}
                   >
                     <View style={styles.categoryTitleRow}>
-                      <Text style={styles.categoryTitle}>{category.name}</Text>
+                      <Text style={[styles.categoryTitle, { color: theme.text }]}>{category.name}</Text>
                       {selectedInCategory > 0 && (
                         <View style={[styles.categoryBadge, { backgroundColor: theme.primary }]}>
                           <Text style={styles.categoryBadgeText}>{selectedInCategory}</Text>
@@ -805,7 +807,7 @@ export default function CookingScreen() {
                     <Ionicons 
                       name={isExpanded ? "chevron-up" : "chevron-down"} 
                       size={20} 
-                      color="#aaa" 
+                      color={theme.textMuted} 
                     />
                   </TouchableOpacity>
                   
@@ -818,6 +820,7 @@ export default function CookingScreen() {
                             key={item}
                             style={[
                               styles.ingredientItem,
+                              { backgroundColor: theme.surfaceVariant, borderColor: theme.border },
                               isSelected && { borderColor: theme.primary, backgroundColor: theme.primary + '20' },
                             ]}
                             onPress={() => toggleIngredient(item)}
@@ -825,6 +828,7 @@ export default function CookingScreen() {
                             <Text
                               style={[
                                 styles.ingredientText,
+                                { color: theme.textSecondary },
                                 isSelected && [styles.ingredientTextSelected, { color: theme.primary }],
                               ]}
                               numberOfLines={2}
@@ -846,7 +850,7 @@ export default function CookingScreen() {
           <View style={{ height: 100 }} />
         </ScrollView>
 
-        <View style={styles.bottomButton}>
+        <View style={[styles.bottomButton, { backgroundColor: theme.surface, borderTopColor: theme.border }]}>
           <TouchableOpacity
             style={[
               styles.getSuggestionsButton,
