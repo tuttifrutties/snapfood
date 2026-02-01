@@ -1156,64 +1156,121 @@ export default function TrackFoodScreen() {
               </TouchableOpacity>
             </View>
 
-            {/* Edit Ingredient Modal */}
+            {/* Edit Ingredient Modal with Search */}
             <Modal
               visible={editingIngredientIndex !== null}
-              animationType="fade"
+              animationType="slide"
               transparent={true}
-              onRequestClose={() => setEditingIngredientIndex(null)}
+              onRequestClose={() => {
+                setEditingIngredientIndex(null);
+                setEditIngredientSearch('');
+                setEditSearchResults([]);
+              }}
             >
               <View style={styles.editIngredientModalOverlay}>
-                <View style={[styles.editIngredientModal, { backgroundColor: theme.surface }]}>
-                  <Text style={[styles.editIngredientTitle, { color: theme.text }]}>
-                    {i18n.language === 'es' ? 'Editar ingrediente' : 'Edit ingredient'}
-                  </Text>
-                  <Text style={[styles.editIngredientHint, { color: theme.textMuted }]}>
-                    {i18n.language === 'es' 
-                      ? '¿La IA se equivocó? Corregí el nombre:' 
-                      : 'Did the AI make a mistake? Fix the name:'}
-                  </Text>
-                  <TextInput
-                    style={[styles.editIngredientInput, { backgroundColor: theme.surfaceVariant, color: theme.text }]}
-                    value={editIngredientText}
-                    onChangeText={setEditIngredientText}
-                    placeholder={i18n.language === 'es' ? 'Nombre del ingrediente' : 'Ingredient name'}
-                    placeholderTextColor={theme.textMuted}
-                    autoFocus
-                  />
-                  <View style={styles.editIngredientButtons}>
-                    <TouchableOpacity 
-                      style={[styles.editIngredientCancelBtn, { backgroundColor: theme.surfaceVariant }]}
-                      onPress={() => {
-                        setEditingIngredientIndex(null);
-                        setEditIngredientText('');
-                      }}
-                    >
-                      <Text style={[styles.editIngredientCancelText, { color: theme.textMuted }]}>
-                        {i18n.language === 'es' ? 'Cancelar' : 'Cancel'}
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity 
-                      style={[styles.editIngredientSaveBtn, { backgroundColor: theme.primary }]}
-                      onPress={() => {
-                        if (editingIngredientIndex !== null && editIngredientText.trim()) {
-                          // Update the ingredient in analysisResult
-                          const newIngredients = [...analysisResult.ingredients];
-                          newIngredients[editingIngredientIndex] = editIngredientText.trim();
-                          setAnalysisResult({
-                            ...analysisResult,
-                            ingredients: newIngredients
-                          });
-                        }
-                        setEditingIngredientIndex(null);
-                        setEditIngredientText('');
-                      }}
-                    >
-                      <Text style={styles.editIngredientSaveText}>
-                        {i18n.language === 'es' ? 'Guardar' : 'Save'}
-                      </Text>
+                <View style={[styles.editIngredientModalLarge, { backgroundColor: theme.surface }]}>
+                  <View style={styles.editIngredientHeader}>
+                    <Text style={[styles.editIngredientTitle, { color: theme.text }]}>
+                      {i18n.language === 'es' ? '✏️ Corregir ingrediente' : '✏️ Fix ingredient'}
+                    </Text>
+                    <TouchableOpacity onPress={() => {
+                      setEditingIngredientIndex(null);
+                      setEditIngredientSearch('');
+                      setEditSearchResults([]);
+                    }}>
+                      <Ionicons name="close" size={24} color={theme.textMuted} />
                     </TouchableOpacity>
                   </View>
+                  
+                  {editingIngredientIndex !== null && analysisResult && (
+                    <View style={[styles.editIngredientCurrentBox, { backgroundColor: theme.surfaceVariant }]}>
+                      <Text style={[styles.editIngredientCurrentLabel, { color: theme.textMuted }]}>
+                        {i18n.language === 'es' ? 'La IA detectó:' : 'AI detected:'}
+                      </Text>
+                      <Text style={[styles.editIngredientCurrentText, { color: theme.primary }]}>
+                        "{analysisResult.ingredients[editingIngredientIndex]}"
+                      </Text>
+                    </View>
+                  )}
+                  
+                  <Text style={[styles.editIngredientHint, { color: theme.textMuted }]}>
+                    {i18n.language === 'es' 
+                      ? 'Buscá el ingrediente correcto y las calorías se recalcularán:' 
+                      : 'Search for the correct ingredient and calories will recalculate:'}
+                  </Text>
+                  
+                  <View style={[styles.editIngredientSearchBox, { backgroundColor: theme.surfaceVariant }]}>
+                    <Ionicons name="search" size={20} color={theme.textMuted} />
+                    <TextInput
+                      style={[styles.editIngredientSearchInput, { color: theme.text }]}
+                      value={editIngredientSearch}
+                      onChangeText={handleEditIngredientSearch}
+                      placeholder={i18n.language === 'es' ? 'Ej: dulce de leche, morrón...' : 'E.g: caramel, bell pepper...'}
+                      placeholderTextColor={theme.textMuted}
+                      autoFocus
+                    />
+                    {editIngredientSearch.length > 0 && (
+                      <TouchableOpacity onPress={() => {
+                        setEditIngredientSearch('');
+                        setEditSearchResults([]);
+                      }}>
+                        <Ionicons name="close-circle" size={20} color={theme.textMuted} />
+                      </TouchableOpacity>
+                    )}
+                  </View>
+                  
+                  {/* Loading indicator */}
+                  {isSearchingEditIngredient && (
+                    <View style={styles.editIngredientLoading}>
+                      <ActivityIndicator size="small" color={theme.primary} />
+                      <Text style={[styles.editIngredientLoadingText, { color: theme.textMuted }]}>
+                        {i18n.language === 'es' ? 'Buscando...' : 'Searching...'}
+                      </Text>
+                    </View>
+                  )}
+                  
+                  {/* Recalculating indicator */}
+                  {isRecalculatingNutrition && (
+                    <View style={styles.editIngredientLoading}>
+                      <ActivityIndicator size="small" color={theme.primary} />
+                      <Text style={[styles.editIngredientLoadingText, { color: theme.primary }]}>
+                        {i18n.language === 'es' ? 'Recalculando calorías...' : 'Recalculating calories...'}
+                      </Text>
+                    </View>
+                  )}
+                  
+                  {/* Search results */}
+                  {editSearchResults.length > 0 && !isRecalculatingNutrition && (
+                    <ScrollView style={styles.editIngredientResults} showsVerticalScrollIndicator={false}>
+                      {editSearchResults.map((food, index) => (
+                        <TouchableOpacity
+                          key={index}
+                          style={[styles.editIngredientResultItem, { backgroundColor: theme.surfaceVariant }]}
+                          onPress={() => handleSelectNewIngredient(food)}
+                        >
+                          <View style={styles.editIngredientResultInfo}>
+                            <Text style={[styles.editIngredientResultName, { color: theme.text }]}>
+                              {food.icon} {food.name}
+                            </Text>
+                            <Text style={[styles.editIngredientResultMeta, { color: theme.textMuted }]}>
+                              {food.calories} cal | P:{food.protein}g C:{food.carbs}g F:{food.fats}g
+                            </Text>
+                          </View>
+                          <Ionicons name="chevron-forward" size={20} color={theme.primary} />
+                        </TouchableOpacity>
+                      ))}
+                    </ScrollView>
+                  )}
+                  
+                  {/* Empty state */}
+                  {editIngredientSearch.length >= 2 && editSearchResults.length === 0 && !isSearchingEditIngredient && (
+                    <View style={styles.editIngredientEmpty}>
+                      <Ionicons name="search-outline" size={40} color={theme.textMuted} />
+                      <Text style={[styles.editIngredientEmptyText, { color: theme.textMuted }]}>
+                        {i18n.language === 'es' ? 'No se encontraron resultados' : 'No results found'}
+                      </Text>
+                    </View>
+                  )}
                 </View>
               </View>
             </Modal>
