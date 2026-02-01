@@ -1161,7 +1161,7 @@ export default function CookingScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0c0c0c',
+    // backgroundColor applied inline with theme.background
   },
   header: {
     flexDirection: 'row',
@@ -1169,12 +1169,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 20,
     paddingTop: 60,
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
+    // color applied inline with theme.text
   },
   content: {
     flex: 1,
@@ -1184,30 +1184,30 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
-    color: '#aaa',
+    // color applied inline with theme.textSecondary
     textAlign: 'center',
     marginBottom: 40,
   },
   methodCard: {
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
     padding: 24,
     borderRadius: 16,
     alignItems: 'center',
     marginBottom: 20,
     width: '100%',
     borderWidth: 2,
-    borderColor: '#333',
+    // borderColor applied inline with theme.border
   },
   methodTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#fff',
+    // color applied inline with theme.text
     marginTop: 16,
     marginBottom: 8,
   },
   methodDescription: {
     fontSize: 14,
-    color: '#aaa',
+    // color applied inline with theme.textSecondary
     textAlign: 'center',
   },
   loadingContainer: {
@@ -1216,7 +1216,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   loadingText: {
-    color: '#fff',
+    // color applied inline with theme.text
     marginTop: 16,
     fontSize: 16,
   },
@@ -1229,7 +1229,7 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   instructionText: {
-    color: '#aaa',
+    // color applied inline with theme.textSecondary
     fontSize: 16,
     textAlign: 'center',
     marginTop: 20,
@@ -1266,7 +1266,7 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
     margin: 16,
     borderRadius: 12,
     paddingHorizontal: 16,
@@ -1276,7 +1276,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     flex: 1,
-    color: '#fff',
+    // color applied inline with theme.text
     fontSize: 16,
     paddingVertical: 12,
   },
@@ -1297,13 +1297,13 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   ingredientItem: {
-    backgroundColor: '#252525',
+    // backgroundColor applied inline with theme.surfaceVariant
     margin: 4,
     paddingHorizontal: 14,
     paddingVertical: 12,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#333',
+    // borderColor applied inline with theme.border
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -1313,7 +1313,7 @@ const styles = StyleSheet.create({
     // Colors applied inline with theme.primary
   },
   ingredientText: {
-    color: '#ccc',
+    // color applied inline with theme.textSecondary
     fontSize: 13,
     flex: 1,
   },
@@ -1322,9 +1322,9 @@ const styles = StyleSheet.create({
   },
   bottomButton: {
     padding: 16,
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
     borderTopWidth: 1,
-    borderTopColor: '#333',
+    // borderTopColor applied inline with theme.border
   },
   getSuggestionsButton: {
     padding: 16,
@@ -1345,12 +1345,12 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
+    // color applied inline with theme.text
     marginTop: 20,
   },
   emptySubtext: {
     fontSize: 14,
-    color: '#aaa',
+    // color applied inline with theme.textSecondary
     textAlign: 'center',
     marginTop: 8,
   },
@@ -1358,7 +1358,7 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   recipeCard: {
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
     padding: 20,
     borderRadius: 16,
     marginBottom: 16,
@@ -1372,7 +1372,7 @@ const styles = StyleSheet.create({
   recipeName: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#fff',
+    // color applied inline with theme.text
     flex: 1,
   },
   recipeTimeContainer: {
@@ -1382,11 +1382,11 @@ const styles = StyleSheet.create({
   },
   recipeTime: {
     fontSize: 12,
-    color: '#aaa',
+    // color applied inline with theme.textMuted
   },
   recipeDescription: {
     fontSize: 14,
-    color: '#aaa',
+    // color applied inline with theme.textSecondary
     marginBottom: 12,
   },
   recipeMacros: {
@@ -1404,7 +1404,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: '#333',
+    // borderTopColor applied inline with theme.border
   },
   viewRecipeButtonText: {
     // Color applied inline with theme.primary
@@ -1417,7 +1417,7 @@ const styles = StyleSheet.create({
   },
   categoryContainer: {
     marginBottom: 8,
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
     marginHorizontal: 16,
     borderRadius: 12,
     overflow: 'hidden',
@@ -1427,7 +1427,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: 16,
-    backgroundColor: '#222',
+    // backgroundColor applied inline with theme.surfaceVariant
   },
   categoryTitleRow: {
     flexDirection: 'row',
@@ -1444,7 +1444,7 @@ const styles = StyleSheet.create({
   categoryTitle: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#fff',
+    // color applied inline with theme.text
   },
   categoryBadge: {
     // Background applied inline with theme.primary
@@ -1493,7 +1493,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   searchResultsTitle: {
-    color: '#aaa',
+    // color applied inline with theme.textSecondary
     fontSize: 14,
     marginBottom: 12,
   },
@@ -1503,7 +1503,7 @@ const styles = StyleSheet.create({
     padding: 40,
   },
   noResultsText: {
-    color: '#555',
+    // color applied inline with theme.textMuted
     fontSize: 16,
     marginTop: 12,
   },
@@ -1513,7 +1513,7 @@ const styles = StyleSheet.create({
   cuisineBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255,107,107,0.2)',
+    // backgroundColor applied inline with theme.primary + '20'
     paddingHorizontal: 10,
     paddingVertical: 4,
     borderRadius: 12,
@@ -1522,7 +1522,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   cuisineText: {
-    color: '#FF6B6B',
+    // color applied inline with theme.textSecondary
     fontSize: 12,
     fontWeight: '500',
   },
@@ -1667,7 +1667,7 @@ const styles = StyleSheet.create({
     width: 70,
     height: 70,
     borderRadius: 35,
-    backgroundColor: 'rgba(255,107,107,0.2)',
+    // backgroundColor applied inline with theme.primary + '30'
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 12,
@@ -1680,7 +1680,7 @@ const styles = StyleSheet.create({
   menuDivider: {
     width: 60,
     height: 2,
-    backgroundColor: '#FF6B6B',
+    // backgroundColor applied inline with theme.primary
     marginTop: 12,
   },
   menuTitle: {
@@ -1711,7 +1711,7 @@ const styles = StyleSheet.create({
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#FF6B6B',
+    // backgroundColor applied inline with theme.primary
     marginRight: 10,
   },
   menuIngredientText: {
@@ -1746,28 +1746,28 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     paddingBottom: 20,
     borderBottomWidth: 2,
-    borderBottomColor: '#FF6B6B',
+    // borderBottomColor applied inline with theme.primary
   },
   chefTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#FF6B6B',
+    // color applied inline with theme.text
     textAlign: 'center',
   },
   chefSubtitle: {
     fontSize: 16,
-    color: '#aaa',
+    // color applied inline with theme.textSecondary
     marginTop: 4,
   },
   chefDate: {
     fontSize: 14,
-    color: '#888',
+    // color applied inline with theme.textMuted
     marginTop: 8,
     fontStyle: 'italic',
   },
   chefHint: {
     fontSize: 14,
-    color: '#4CAF50',
+    // color applied inline with theme.primary
     marginTop: 12,
     fontWeight: '600',
   },
@@ -1781,19 +1781,19 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1a1a2e',
+    // backgroundColor applied inline with theme.surface
     borderRadius: 12,
     paddingHorizontal: 12,
     gap: 8,
   },
   recipeSearchInput: {
     flex: 1,
-    color: '#fff',
+    // color applied inline with theme.text
     fontSize: 16,
     paddingVertical: 12,
   },
   searchButton: {
-    backgroundColor: '#FF6B6B',
+    // backgroundColor applied inline with theme.primary
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 12,
@@ -1823,7 +1823,7 @@ const styles = StyleSheet.create({
     paddingTop: 0,
   },
   searchedRecipeCard: {
-    backgroundColor: '#1a1a2e',
+    // backgroundColor applied inline with theme.surface
     borderRadius: 12,
     padding: 16,
     marginBottom: 12,
@@ -1837,7 +1837,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   searchedRecipeName: {
-    color: '#fff',
+    // color applied inline with theme.text
     fontSize: 18,
     fontWeight: '600',
   },
@@ -1848,7 +1848,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   searchedRecipeMetaText: {
-    color: '#888',
+    // color applied inline with theme.textMuted
     fontSize: 13,
   },
   matchBadge: {
@@ -1872,7 +1872,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   searchedRecipeDescription: {
-    color: '#aaa',
+    // color applied inline with theme.textSecondary
     fontSize: 14,
     marginTop: 10,
     lineHeight: 20,
@@ -1886,12 +1886,12 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   missingIngredientsLabel: {
-    color: '#FF6B6B',
+    // color applied inline with theme.primary
     fontSize: 13,
     fontWeight: '600',
   },
   missingIngredientsList: {
-    color: '#888',
+    // color applied inline with theme.textMuted
     fontSize: 13,
     flex: 1,
   },
@@ -1903,7 +1903,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   viewRecipeText: {
-    color: '#FF6B6B',
+    // color applied inline with theme.primary
     fontSize: 14,
     fontWeight: '500',
   },
@@ -1914,7 +1914,7 @@ const styles = StyleSheet.create({
     paddingTop: 60,
   },
   emptySearchText: {
-    color: '#888',
+    // color applied inline with theme.textMuted
     marginTop: 16,
     fontSize: 16,
   },
@@ -1925,19 +1925,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
   },
   searchHintTitle: {
-    color: '#fff',
+    // color applied inline with theme.text
     fontSize: 20,
     fontWeight: '600',
     marginTop: 20,
   },
   searchHintText: {
-    color: '#888',
+    // color applied inline with theme.textMuted
     fontSize: 14,
     textAlign: 'center',
     marginTop: 10,
   },
   searchHintIngredients: {
-    color: '#4CAF50',
+    // color applied inline with theme.success
     fontSize: 13,
     textAlign: 'center',
     marginTop: 16,
@@ -1945,12 +1945,12 @@ const styles = StyleSheet.create({
   },
   // Notification Banner Styles
   notificationBanner: {
-    backgroundColor: '#1a1a2e',
+    // backgroundColor applied inline with theme.surface
     borderRadius: 16,
     padding: 16,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: '#FF6B6B',
+    // borderColor applied inline with theme.primary
   },
   notificationBannerHeader: {
     flexDirection: 'row',
@@ -1961,11 +1961,11 @@ const styles = StyleSheet.create({
   notificationBannerTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#fff',
+    // color applied inline with theme.text
   },
   notificationBannerSubtitle: {
     fontSize: 13,
-    color: '#aaa',
+    // color applied inline with theme.textSecondary
     marginBottom: 12,
   },
   notificationRecipesList: {
@@ -1975,13 +1975,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: 'rgba(255,107,107,0.1)',
+    // backgroundColor applied inline with theme.primary + '15'
     paddingHorizontal: 14,
     paddingVertical: 12,
     borderRadius: 10,
   },
   notificationRecipeText: {
-    color: '#fff',
+    // color applied inline with theme.text
     fontSize: 15,
     flex: 1,
   },
@@ -1991,7 +1991,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   notificationDismissText: {
-    color: '#888',
+    // color applied inline with theme.textMuted
     fontSize: 13,
   },
 });
