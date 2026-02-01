@@ -359,24 +359,24 @@ export default function CookingScreen() {
   // Mode: Recipe Search
   if (mode === 'searchRecipe') {
     return (
-      <View style={styles.container}>
-        <View style={styles.header}>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
+        <View style={[styles.header, { backgroundColor: theme.surface }]}>
           <TouchableOpacity onPress={() => { setMode('select'); setSearchedRecipes([]); setRecipeSearchQuery(''); }}>
-            <Ionicons name="arrow-back" size={24} color="#fff" />
+            <Ionicons name="arrow-back" size={24} color={theme.text} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>
+          <Text style={[styles.headerTitle, { color: theme.text }]}>
             {i18n.language === 'es' ? 'Buscar Recetas' : 'Search Recipes'}
           </Text>
           <View style={{ width: 24 }} />
         </View>
 
         <View style={styles.recipeSearchContainer}>
-          <View style={styles.recipeSearchInputContainer}>
-            <Ionicons name="search" size={20} color="#888" />
+          <View style={[styles.recipeSearchInputContainer, { backgroundColor: theme.surface }]}>
+            <Ionicons name="search" size={20} color={theme.textMuted} />
             <TextInput
-              style={styles.recipeSearchInput}
+              style={[styles.recipeSearchInput, { color: theme.text }]}
               placeholder={i18n.language === 'es' ? 'Ej: pollo, pasta, ensalada...' : 'E.g: chicken, pasta, salad...'}
-              placeholderTextColor="#666"
+              placeholderTextColor={theme.textMuted}
               value={recipeSearchQuery}
               onChangeText={setRecipeSearchQuery}
               onSubmitEditing={searchRecipesAPI}
@@ -384,12 +384,12 @@ export default function CookingScreen() {
             />
             {recipeSearchQuery.length > 0 && (
               <TouchableOpacity onPress={() => { setRecipeSearchQuery(''); setSearchedRecipes([]); }}>
-                <Ionicons name="close-circle" size={20} color="#888" />
+                <Ionicons name="close-circle" size={20} color={theme.textMuted} />
               </TouchableOpacity>
             )}
           </View>
           <TouchableOpacity
-            style={[styles.searchButton, !recipeSearchQuery.trim() && styles.searchButtonDisabled]}
+            style={[styles.searchButton, { backgroundColor: theme.primary }, !recipeSearchQuery.trim() && styles.searchButtonDisabled]}
             onPress={searchRecipesAPI}
             disabled={!recipeSearchQuery.trim() || isSearchingRecipes}
           >
@@ -406,8 +406,8 @@ export default function CookingScreen() {
         {/* Info about ingredient matching */}
         {selectedIngredients.length > 0 && (
           <View style={styles.ingredientMatchInfo}>
-            <Ionicons name="information-circle" size={18} color="#4CAF50" />
-            <Text style={styles.ingredientMatchText}>
+            <Ionicons name="information-circle" size={18} color={theme.success} />
+            <Text style={[styles.ingredientMatchText, { color: theme.success }]}>
               {i18n.language === 'es' 
                 ? `Ordenado por coincidencia con tus ${selectedIngredients.length} ingredientes`
                 : `Sorted by match with your ${selectedIngredients.length} ingredients`}
@@ -418,7 +418,7 @@ export default function CookingScreen() {
         {isSearchingRecipes ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={theme.primary} />
-            <Text style={styles.loadingText}>
+            <Text style={[styles.loadingText, { color: theme.text }]}>
               {i18n.language === 'es' ? 'Buscando recetas...' : 'Searching recipes...'}
             </Text>
           </View>
@@ -427,17 +427,17 @@ export default function CookingScreen() {
             {searchedRecipes.map((recipe, index) => (
               <TouchableOpacity
                 key={recipe.id || index}
-                style={styles.searchedRecipeCard}
+                style={[styles.searchedRecipeCard, { backgroundColor: theme.surface }]}
                 onPress={() => viewRecipe(recipe)}
               >
                 <View style={styles.searchedRecipeHeader}>
                   <View style={styles.searchedRecipeInfo}>
-                    <Text style={styles.searchedRecipeName}>{recipe.name}</Text>
+                    <Text style={[styles.searchedRecipeName, { color: theme.text }]}>{recipe.name}</Text>
                     <View style={styles.searchedRecipeMeta}>
-                      <Ionicons name="time-outline" size={14} color="#888" />
-                      <Text style={styles.searchedRecipeMetaText}>{recipe.cookingTime} min</Text>
-                      <Text style={styles.searchedRecipeMetaText}>•</Text>
-                      <Text style={styles.searchedRecipeMetaText}>{recipe.calories} cal</Text>
+                      <Ionicons name="time-outline" size={14} color={theme.textMuted} />
+                      <Text style={[styles.searchedRecipeMetaText, { color: theme.textMuted }]}>{recipe.cookingTime} min</Text>
+                      <Text style={[styles.searchedRecipeMetaText, { color: theme.textMuted }]}>•</Text>
+                      <Text style={[styles.searchedRecipeMetaText, { color: theme.textMuted }]}>{recipe.calories} cal</Text>
                     </View>
                   </View>
                   
@@ -454,17 +454,17 @@ export default function CookingScreen() {
                   )}
                 </View>
 
-                <Text style={styles.searchedRecipeDescription} numberOfLines={2}>
+                <Text style={[styles.searchedRecipeDescription, { color: theme.textSecondary }]} numberOfLines={2}>
                   {recipe.description}
                 </Text>
 
                 {/* Missing ingredients */}
                 {recipe.missingIngredients && recipe.missingIngredients.length > 0 && (
-                  <View style={styles.missingIngredientsContainer}>
-                    <Text style={styles.missingIngredientsLabel}>
+                  <View style={[styles.missingIngredientsContainer, { borderTopColor: theme.border }]}>
+                    <Text style={[styles.missingIngredientsLabel, { color: theme.primary }]}>
                       {i18n.language === 'es' ? 'Te falta:' : 'Missing:'}
                     </Text>
-                    <Text style={styles.missingIngredientsList} numberOfLines={1}>
+                    <Text style={[styles.missingIngredientsList, { color: theme.textMuted }]} numberOfLines={1}>
                       {recipe.missingIngredients.slice(0, 3).join(', ')}
                       {recipe.missingIngredients.length > 3 && '...'}
                     </Text>
@@ -472,7 +472,7 @@ export default function CookingScreen() {
                 )}
 
                 <View style={styles.searchedRecipeFooter}>
-                  <Text style={styles.viewRecipeText}>
+                  <Text style={[styles.viewRecipeText, { color: theme.primary }]}>
                     {i18n.language === 'es' ? 'Ver receta' : 'View recipe'}
                   </Text>
                   <Ionicons name="chevron-forward" size={18} color={theme.primary} />
@@ -482,24 +482,24 @@ export default function CookingScreen() {
           </ScrollView>
         ) : recipeSearchQuery.length > 0 && !isSearchingRecipes ? (
           <View style={styles.emptySearchState}>
-            <Ionicons name="restaurant-outline" size={60} color="#555" />
-            <Text style={styles.emptySearchText}>
+            <Ionicons name="restaurant-outline" size={60} color={theme.textMuted} />
+            <Text style={[styles.emptySearchText, { color: theme.textMuted }]}>
               {i18n.language === 'es' ? 'Presiona buscar para encontrar recetas' : 'Press search to find recipes'}
             </Text>
           </View>
         ) : (
           <View style={styles.searchHintState}>
-            <Ionicons name="search" size={60} color="#555" />
-            <Text style={styles.searchHintTitle}>
+            <Ionicons name="search" size={60} color={theme.textMuted} />
+            <Text style={[styles.searchHintTitle, { color: theme.text }]}>
               {i18n.language === 'es' ? '¿Qué quieres cocinar?' : 'What do you want to cook?'}
             </Text>
-            <Text style={styles.searchHintText}>
+            <Text style={[styles.searchHintText, { color: theme.textMuted }]}>
               {i18n.language === 'es' 
                 ? 'Busca cualquier plato: pollo, pasta, ensalada, tacos...'
                 : 'Search any dish: chicken, pasta, salad, tacos...'}
             </Text>
             {selectedIngredients.length > 0 && (
-              <Text style={styles.searchHintIngredients}>
+              <Text style={[styles.searchHintIngredients, { color: theme.success }]}>
                 {i18n.language === 'es' 
                   ? `Las recetas se ordenarán por coincidencia con tus ${selectedIngredients.length} ingredientes seleccionados`
                   : `Recipes will be sorted by match with your ${selectedIngredients.length} selected ingredients`}
