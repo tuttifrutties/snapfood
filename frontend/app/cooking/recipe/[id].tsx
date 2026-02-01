@@ -768,21 +768,21 @@ export default function RecipeDetailScreen() {
           {!isConfirmed && (
             <>
               {/* FAT SELECTOR - VERY IMPORTANT */}
-              <View style={styles.fatSelectorContainer}>
+              <View style={[styles.fatSelectorContainer, { backgroundColor: theme.surfaceVariant }]}>
                 <View style={styles.fatSelectorHeader}>
-                  <Ionicons name="warning" size={24} color="#FFD700" />
-                  <Text style={styles.fatSelectorTitle}>
+                  <Ionicons name="warning" size={24} color={theme.warning} />
+                  <Text style={[styles.fatSelectorTitle, { color: theme.text }]}>
                     {i18n.language === 'es' ? '⚠️ ¡IMPORTANTE! ¿Usaste grasa?' : '⚠️ IMPORTANT! Did you use fat?'}
                   </Text>
                 </View>
-                <Text style={styles.fatSelectorSubtitle}>
+                <Text style={[styles.fatSelectorSubtitle, { color: theme.textSecondary }]}>
                   {i18n.language === 'es' 
                     ? 'Las grasas suman muchas calorías. Selecciona el tipo y cuántas cucharadas usaste:'
                     : 'Fats add many calories. Select the type and how many tablespoons you used:'}
                 </Text>
 
                 {/* Fat Type Selector */}
-                <Text style={styles.fatTypeLabel}>
+                <Text style={[styles.fatTypeLabel, { color: theme.text }]}>
                   {i18n.language === 'es' ? 'Tipo de grasa:' : 'Fat type:'}
                 </Text>
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.fatTypeScroll}>
@@ -791,7 +791,8 @@ export default function RecipeDetailScreen() {
                       key={fat.id}
                       style={[
                         styles.fatTypeButton,
-                        selectedFatType === fat.id && styles.fatTypeButtonActive,
+                        { borderColor: theme.border },
+                        selectedFatType === fat.id && [styles.fatTypeButtonActive, { borderColor: theme.primary, backgroundColor: theme.primary + '20' }],
                       ]}
                       onPress={() => {
                         setSelectedFatType(fat.id);
@@ -801,12 +802,13 @@ export default function RecipeDetailScreen() {
                       <Text style={styles.fatTypeIcon}>{fat.icon}</Text>
                       <Text style={[
                         styles.fatTypeName,
-                        selectedFatType === fat.id && styles.fatTypeNameActive,
+                        { color: theme.textSecondary },
+                        selectedFatType === fat.id && { color: theme.primary },
                       ]}>
                         {i18n.language === 'es' ? fat.es : fat.en}
                       </Text>
                       {fat.caloriesPerTbsp > 0 && (
-                        <Text style={styles.fatTypeCalories}>
+                        <Text style={[styles.fatTypeCalories, { color: theme.textMuted }]}>
                           {fat.caloriesPerTbsp} cal/cda
                         </Text>
                       )}
@@ -817,7 +819,7 @@ export default function RecipeDetailScreen() {
                 {/* Tablespoons Selector - only show if fat type selected */}
                 {selectedFatType !== 'none' && (
                   <View style={styles.tablespoonRow}>
-                    <Text style={styles.tablespoonLabel}>
+                    <Text style={[styles.tablespoonLabel, { color: theme.text }]}>
                       {i18n.language === 'es' ? 'Cucharadas (cda):' : 'Tablespoons (tbsp):'}
                     </Text>
                     <Text style={styles.tablespoonHint}>
