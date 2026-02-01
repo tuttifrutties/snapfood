@@ -1533,20 +1533,20 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     flex: 1,
-    backgroundColor: '#333',
+    // backgroundColor applied inline with theme.surfaceVariant
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
   },
   cancelButtonText: {
-    color: '#fff',
+    // color applied inline with theme.text
     fontSize: 16,
     fontWeight: '600',
   },
   saveButton: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: '#FF6B6B',
+    // backgroundColor applied inline with theme.primary
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
