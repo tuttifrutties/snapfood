@@ -608,19 +608,21 @@ export default function OnboardingScreen() {
                 ))}
               </View>
 
-              <Text style={styles.editorLabel}>{texts.days}</Text>
+              <Text style={[styles.editorLabel, { color: theme.textMuted }]}>{texts.days}</Text>
               <View style={styles.daysRow}>
                 {DAYS_OF_WEEK.map(day => (
                   <TouchableOpacity
                     key={day.id}
                     style={[
                       styles.dayButton,
+                      { backgroundColor: theme.surfaceVariant },
                       activityDays.includes(day.id) && styles.dayButtonSelected,
                     ]}
                     onPress={() => toggleDay(day.id)}
                   >
                     <Text style={[
                       styles.dayText,
+                      { color: theme.textMuted },
                       activityDays.includes(day.id) && styles.dayTextSelected,
                     ]}>
                       {day.short}
@@ -630,8 +632,8 @@ export default function OnboardingScreen() {
               </View>
 
               <View style={styles.editorButtons}>
-                <TouchableOpacity style={styles.cancelButton} onPress={cancelActivityEdit}>
-                  <Text style={styles.cancelButtonText}>{texts.cancel}</Text>
+                <TouchableOpacity style={[styles.cancelButton, { backgroundColor: theme.surfaceVariant }]} onPress={cancelActivityEdit}>
+                  <Text style={[styles.cancelButtonText, { color: theme.textMuted }]}>{texts.cancel}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.addButton} onPress={confirmActivity}>
                   <Text style={styles.addButtonText}>{texts.add}</Text>
@@ -652,18 +654,20 @@ export default function OnboardingScreen() {
                     key={activity.id}
                     style={[
                       styles.activityCard,
-                      isSelected && styles.activityCardSelected,
+                      { backgroundColor: theme.surface },
+                      isSelected && [styles.activityCardSelected, { borderColor: theme.primary, backgroundColor: theme.primary + '15' }],
                     ]}
                     onPress={() => toggleActivitySelection(activity.id)}
                   >
                     <Ionicons
                       name={activity.icon as any}
                       size={28}
-                      color={isSelected ? theme.primary : '#aaa'}
+                      color={isSelected ? theme.primary : theme.textMuted}
                     />
                     <Text style={[
                       styles.activityName,
-                      isSelected && styles.activityNameSelected,
+                      { color: theme.textMuted },
+                      isSelected && [styles.activityNameSelected, { color: theme.primary }],
                     ]}>
                       {getActivityLabel(activity.id, i18n.language)}
                     </Text>
@@ -683,12 +687,12 @@ export default function OnboardingScreen() {
             </View>
           )}
 
-          <TouchableOpacity style={styles.button} onPress={() => setStep(6)}>
+          <TouchableOpacity style={[styles.button, { backgroundColor: theme.primary }]} onPress={() => setStep(6)}>
             <Text style={styles.buttonText}>{t('common.continue')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.skipButton} onPress={() => setStep(6)}>
-            <Text style={styles.skipButtonText}>{texts.skip}</Text>
+            <Text style={[styles.skipButtonText, { color: theme.textMuted }]}>{texts.skip}</Text>
           </TouchableOpacity>
         </ScrollView>
       </View>
@@ -698,19 +702,19 @@ export default function OnboardingScreen() {
   // Step 6: Health & Restrictions
   if (step === 6) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
         <ScrollView contentContainerStyle={styles.content}>
-          <Text style={styles.title}>
+          <Text style={[styles.title, { color: theme.text }]}>
             {i18n.language === 'es' ? '🏥 Salud y Restricciones' : '🏥 Health & Restrictions'}
           </Text>
-          <Text style={styles.subtitle}>
+          <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
             {i18n.language === 'es' 
               ? 'Esto nos ayuda a personalizar mejor tus recomendaciones' 
               : 'This helps us personalize your recommendations'}
           </Text>
 
           {/* Health Conditions */}
-          <Text style={styles.sectionTitle}>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>
             {i18n.language === 'es' ? 'Condiciones de salud' : 'Health conditions'}
           </Text>
           <View style={styles.optionsGrid}>
@@ -719,14 +723,16 @@ export default function OnboardingScreen() {
                 key={condition.id}
                 style={[
                   styles.healthOption,
-                  healthConditions.includes(condition.id) && styles.healthOptionSelected,
+                  { backgroundColor: theme.surface },
+                  healthConditions.includes(condition.id) && [styles.healthOptionSelected, { borderColor: theme.primary, backgroundColor: theme.primary + '15' }],
                 ]}
                 onPress={() => toggleHealthCondition(condition.id)}
               >
                 <Text style={styles.healthOptionIcon}>{condition.icon}</Text>
                 <Text style={[
                   styles.healthOptionText,
-                  healthConditions.includes(condition.id) && styles.healthOptionTextSelected,
+                  { color: theme.textMuted },
+                  healthConditions.includes(condition.id) && [styles.healthOptionTextSelected, { color: theme.primary }],
                 ]}>
                   {i18n.language === 'es' ? condition.es : condition.en}
                 </Text>
