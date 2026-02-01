@@ -1409,6 +1409,120 @@ async def search_food(request: FoodSearchRequest):
         logger.error(f"Error searching food: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to search food: {str(e)}")
 
+
+class RecalculateNutritionRequest(BaseModel):
+    originalAnalysis: dict
+    oldIngredient: str
+    newIngredient: str
+    newIngredientCaloriesPer100g: float
+    newIngredientProteinPer100g: float
+    newIngredientCarbsPer100g: float
+    newIngredientFatsPer100g: float
+    language: Optional[str] = "es"
+
+
+@api_router.post("/recalculate-nutrition")
+async def recalculate_nutrition(request: RecalculateNutritionRequest):
+    """
+    Recalculate nutrition when user corrects an ingredient detected by AI.
+    Uses the same portion/amount but with the new ingredient's nutritional values.
+    """
+    try:
+        logger.info(f"Recalculating nutrition: {request.oldIngredient} -> {request.newIngredient}")
+        
+        api_key = os.environ.get('EMERGENT_LLM_KEY')
+        if not api_key:
+            raise HTTPException(status_code=500, detail="API key not configured")
+        
+        lang = request.language or "es"
+        lang_instruction = "Respond ONLY in Spanish." if lang == "es" else "Respond ONLY in English."
+        
+        original = request.originalAnalysis
+        
+        chat = LlmChat(
+            api_key=api_key,
+            session_id=f"recalc_{request.oldIngredient[:10]}_{request.newIngredient[:10]}",
+            system_message=f"""{lang_instruction}
+            
+            You are a nutrition expert. The AI previously analyzed a food photo and detected an ingredient incorrectly.
+            The user is correcting the ingredient.
+            
+            Your job is to recalculate the total nutritional values for the dish, considering:
+            1. Keep the same estimated AMOUNT/PORTION of the ingredient that was detected
+            2. But use the nutritional values of the NEW (correct) ingredient
+            
+            For example: If AI detected "100g of chocolate" but user says it's actually "dulce de leche (caramel)",
+            keep the ~100g portion but use dulce de leche's nutritional values instead.
+            
+            Return ONLY a JSON object with:
+            {{
+                "ingredients": [list of all ingredients with the corrected one],
+                "calories": total calories (integer),
+                "protein": total protein in grams (float),
+                "carbs": total carbs in grams (float),
+                "fats": total fats in grams (float),
+                "explanation": brief explanation of the adjustment (1 sentence)
+            }}
+            
+            Be reasonable with the recalculation. The difference should make sense proportionally.
+            """
+        ).with_model("openai", "gpt-4o")
+        
+        user_message = UserMessage(
+            text=f"""
+            ORIGINAL DISH ANALYSIS:
+            - Dish name: {original.get('dishName', 'Unknown')}
+            - Total calories: {original.get('calories', 0)}
+            - Total protein: {original.get('protein', 0)}g
+            - Total carbs: {original.get('carbs', 0)}g
+            - Total fats: {original.get('fats', 0)}g
+            - Ingredients detected: {', '.join(original.get('ingredients', []))}
+            
+            CORRECTION REQUEST:
+            - Old ingredient (incorrect): {request.oldIngredient}
+            - New ingredient (correct): {request.newIngredient}
+            - New ingredient nutrition per 100g: {request.newIngredientCaloriesPer100g} cal, {request.newIngredientProteinPer100g}g protein, {request.newIngredientCarbsPer100g}g carbs, {request.newIngredientFatsPer100g}g fats
+            
+            Recalculate the total nutrition considering this correction. Return JSON only.
+            """
+        )
+        
+        response = await chat.send_message(user_message)
+        
+        import json
+        try:
+            response_text = response.strip()
+            if "```json" in response_text:
+                response_text = response_text.split("```json")[1].split("```")[0].strip()
+            elif "```" in response_text:
+                response_text = response_text.split("```")[1].split("```")[0].strip()
+            
+            result = json.loads(response_text)
+            
+            logger.info(f"Recalculation successful: {result.get('explanation', 'No explanation')}")
+            
+            return result
+            
+        except Exception as e:
+            logger.error(f"Failed to parse recalculation: {e}")
+            # Fallback: just update ingredient name
+            new_ingredients = [
+                request.newIngredient if ing == request.oldIngredient else ing
+                for ing in original.get('ingredients', [])
+            ]
+            return {
+                "ingredients": new_ingredients,
+                "calories": original.get('calories', 0),
+                "protein": original.get('protein', 0),
+                "carbs": original.get('carbs', 0),
+                "fats": original.get('fats', 0),
+            }
+            
+    except Exception as e:
+        logger.error(f"Error recalculating nutrition: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to recalculate: {str(e)}")
+
+
 # Include the router in the main app
 app.include_router(api_router)
 
