@@ -1011,7 +1011,18 @@ export default function TrackFoodScreen() {
             <View style={styles.ingredientsContainer}>
               <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('trackFood.ingredients')}</Text>
               {analysisResult.ingredients.map((ingredient: string, index: number) => (
-                <Text key={index} style={[styles.ingredientText, { color: theme.textSecondary }]}>• {ingredient}</Text>
+                <View key={index} style={styles.ingredientEditRow}>
+                  <Text style={[styles.ingredientText, { color: theme.textSecondary, flex: 1 }]}>• {ingredient}</Text>
+                  <TouchableOpacity 
+                    onPress={() => {
+                      setEditingIngredientIndex(index);
+                      setEditIngredientText(ingredient);
+                    }}
+                    style={styles.editIngredientButton}
+                  >
+                    <Ionicons name="pencil" size={16} color={theme.primary} />
+                  </TouchableOpacity>
+                </View>
               ))}
               
               {/* Added ingredients */}
@@ -1037,6 +1048,68 @@ export default function TrackFoodScreen() {
                 </Text>
               </TouchableOpacity>
             </View>
+
+            {/* Edit Ingredient Modal */}
+            <Modal
+              visible={editingIngredientIndex !== null}
+              animationType="fade"
+              transparent={true}
+              onRequestClose={() => setEditingIngredientIndex(null)}
+            >
+              <View style={styles.editIngredientModalOverlay}>
+                <View style={[styles.editIngredientModal, { backgroundColor: theme.surface }]}>
+                  <Text style={[styles.editIngredientTitle, { color: theme.text }]}>
+                    {i18n.language === 'es' ? 'Editar ingrediente' : 'Edit ingredient'}
+                  </Text>
+                  <Text style={[styles.editIngredientHint, { color: theme.textMuted }]}>
+                    {i18n.language === 'es' 
+                      ? '¿La IA se equivocó? Corregí el nombre:' 
+                      : 'Did the AI make a mistake? Fix the name:'}
+                  </Text>
+                  <TextInput
+                    style={[styles.editIngredientInput, { backgroundColor: theme.surfaceVariant, color: theme.text }]}
+                    value={editIngredientText}
+                    onChangeText={setEditIngredientText}
+                    placeholder={i18n.language === 'es' ? 'Nombre del ingrediente' : 'Ingredient name'}
+                    placeholderTextColor={theme.textMuted}
+                    autoFocus
+                  />
+                  <View style={styles.editIngredientButtons}>
+                    <TouchableOpacity 
+                      style={[styles.editIngredientCancelBtn, { backgroundColor: theme.surfaceVariant }]}
+                      onPress={() => {
+                        setEditingIngredientIndex(null);
+                        setEditIngredientText('');
+                      }}
+                    >
+                      <Text style={[styles.editIngredientCancelText, { color: theme.textMuted }]}>
+                        {i18n.language === 'es' ? 'Cancelar' : 'Cancel'}
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity 
+                      style={[styles.editIngredientSaveBtn, { backgroundColor: theme.primary }]}
+                      onPress={() => {
+                        if (editingIngredientIndex !== null && editIngredientText.trim()) {
+                          // Update the ingredient in analysisResult
+                          const newIngredients = [...analysisResult.ingredients];
+                          newIngredients[editingIngredientIndex] = editIngredientText.trim();
+                          setAnalysisResult({
+                            ...analysisResult,
+                            ingredients: newIngredients
+                          });
+                        }
+                        setEditingIngredientIndex(null);
+                        setEditIngredientText('');
+                      }}
+                    >
+                      <Text style={styles.editIngredientSaveText}>
+                        {i18n.language === 'es' ? 'Guardar' : 'Save'}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </Modal>
 
             {/* Add Ingredient Modal */}
             <Modal
