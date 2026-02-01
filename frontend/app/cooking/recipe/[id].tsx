@@ -567,24 +567,24 @@ export default function RecipeDetailScreen() {
 
         {/* Recipe Info */}
         <View style={styles.recipeInfo}>
-          <Text style={styles.recipeName}>{recipe.name}</Text>
+          <Text style={[styles.recipeName, { color: theme.text }]}>{recipe.name}</Text>
           
           {/* Meta info row */}
           <View style={styles.metaRow}>
             <View style={styles.metaItem}>
               <Ionicons name="time-outline" size={18} color={theme.primary} />
-              <Text style={styles.metaText}>{recipe.cookingTime} min</Text>
+              <Text style={[styles.metaText, { color: theme.textSecondary }]}>{recipe.cookingTime} min</Text>
             </View>
             
             <View style={styles.metaItem}>
               <Ionicons name="flame-outline" size={18} color={theme.primary} />
-              <Text style={styles.metaText}>{recipe.calories} cal</Text>
+              <Text style={[styles.metaText, { color: theme.textSecondary }]}>{recipe.calories} cal</Text>
             </View>
             
             {(recipe.countryOfOrigin || recipe.cuisine) && (
               <View style={styles.metaItem}>
                 <Text style={styles.metaFlag}>{countryFlag}</Text>
-                <Text style={styles.metaText}>
+                <Text style={[styles.metaText, { color: theme.textSecondary }]}>
                   {recipe.cuisine || recipe.countryOfOrigin}
                 </Text>
               </View>
@@ -592,20 +592,20 @@ export default function RecipeDetailScreen() {
           </View>
 
           {/* Macros */}
-          <View style={styles.macrosContainer}>
+          <View style={[styles.macrosContainer, { backgroundColor: theme.surfaceVariant }]}>
             <View style={styles.macroItem}>
-              <Text style={styles.macroValue}>{recipe.protein}g</Text>
-              <Text style={styles.macroLabel}>{t('recipe.protein')}</Text>
+              <Text style={[styles.macroValue, { color: theme.text }]}>{recipe.protein}g</Text>
+              <Text style={[styles.macroLabel, { color: theme.textMuted }]}>{t('recipe.protein')}</Text>
             </View>
-            <View style={styles.macroDivider} />
+            <View style={[styles.macroDivider, { backgroundColor: theme.border }]} />
             <View style={styles.macroItem}>
-              <Text style={styles.macroValue}>{recipe.carbs}g</Text>
-              <Text style={styles.macroLabel}>{t('recipe.carbs')}</Text>
+              <Text style={[styles.macroValue, { color: theme.text }]}>{recipe.carbs}g</Text>
+              <Text style={[styles.macroLabel, { color: theme.textMuted }]}>{t('recipe.carbs')}</Text>
             </View>
-            <View style={styles.macroDivider} />
+            <View style={[styles.macroDivider, { backgroundColor: theme.border }]} />
             <View style={styles.macroItem}>
-              <Text style={styles.macroValue}>{recipe.fats}g</Text>
-              <Text style={styles.macroLabel}>{t('recipe.fats')}</Text>
+              <Text style={[styles.macroValue, { color: theme.text }]}>{recipe.fats}g</Text>
+              <Text style={[styles.macroLabel, { color: theme.textMuted }]}>{t('recipe.fats')}</Text>
             </View>
           </View>
 
