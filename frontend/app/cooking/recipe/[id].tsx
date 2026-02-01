@@ -967,11 +967,11 @@ export default function RecipeDetailScreen() {
           {recipe.tips && recipe.tips.length > 0 && (
             <>
               <Text style={styles.sectionTitle}>{t('recipe.tips')}</Text>
-              <View style={styles.tipsContainer}>
-                <Ionicons name="bulb-outline" size={20} color="#FFD700" />
+              <View style={[styles.tipsContainer, { backgroundColor: theme.surface }]}>
+                <Ionicons name="bulb-outline" size={20} color={theme.warning} />
                 <View style={styles.tipsList}>
                   {recipe.tips.map((tip: string, index: number) => (
-                    <Text key={index} style={styles.tipText}>• {tip}</Text>
+                    <Text key={index} style={[styles.tipText, { color: theme.textMuted }]}>• {tip}</Text>
                   ))}
                 </View>
               </View>
@@ -991,14 +991,14 @@ export default function RecipeDetailScreen() {
         onRequestClose={() => {}} // Prevent closing without answering
       >
         <View style={styles.portionsEatenOverlay}>
-          <View style={styles.portionsEatenModal}>
+          <View style={[styles.portionsEatenModal, { backgroundColor: theme.surface }]}>
             <Ionicons name="restaurant" size={40} color={theme.primary} />
-            <Text style={styles.portionsEatenTitle}>
+            <Text style={[styles.portionsEatenTitle, { color: theme.text }]}>
               {i18n.language === 'es' 
                 ? '🍽️ ¿Cuántas porciones comiste?' 
                 : '🍽️ How many portions did you eat?'}
             </Text>
-            <Text style={styles.portionsEatenSubtitle}>
+            <Text style={[styles.portionsEatenSubtitle, { color: theme.textSecondary }]}>
               {i18n.language === 'es' 
                 ? `Cada porción tiene ${caloriesPerPortion} calorías` 
                 : `Each portion has ${caloriesPerPortion} calories`}
@@ -1010,12 +1010,14 @@ export default function RecipeDetailScreen() {
                   key={p}
                   style={[
                     styles.portionsEatenBtn,
-                    portionsEaten === p && styles.portionsEatenBtnActive,
+                    { backgroundColor: theme.surfaceVariant },
+                    portionsEaten === p && [styles.portionsEatenBtnActive, { backgroundColor: theme.primary }],
                   ]}
                   onPress={() => setPortionsEaten(p)}
                 >
                   <Text style={[
                     styles.portionsEatenBtnText,
+                    { color: theme.textMuted },
                     portionsEaten === p && styles.portionsEatenBtnTextActive,
                   ]}>
                     {p}
@@ -1024,8 +1026,8 @@ export default function RecipeDetailScreen() {
               ))}
             </View>
 
-            <View style={styles.portionsEatenCaloriesPreview}>
-              <Text style={styles.portionsEatenCaloriesLabel}>
+            <View style={[styles.portionsEatenCaloriesPreview, { backgroundColor: theme.surfaceVariant }]}>
+              <Text style={[styles.portionsEatenCaloriesLabel, { color: theme.textSecondary }]}>
                 {i18n.language === 'es' ? 'Total consumido:' : 'Total consumed:'}
               </Text>
               <Text style={styles.portionsEatenCaloriesValue}>
