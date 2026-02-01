@@ -1169,9 +1169,10 @@ export default function RecipeDetailScreen() {
             {/* Branding Footer with Logo */}
             <View style={styles.shareCardFooter}>
               <View style={styles.shareCardLogoContainer}>
-                <View style={styles.shareCardLogo}>
-                  <Text style={styles.shareCardLogoText}>S</Text>
-                </View>
+                <Image 
+                  source={require('../../../assets/images/icon.png')} 
+                  style={styles.shareCardLogoImage}
+                />
                 <Text style={styles.shareCardBrandingText}>SnapFood</Text>
               </View>
               <Text style={styles.shareCardBrandingSubtext}>
