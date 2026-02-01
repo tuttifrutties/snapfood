@@ -474,45 +474,53 @@ export default function OnboardingScreen() {
             <Ionicons
               name="trending-down"
               size={32}
-              color={goal === 'lose' ? theme.primary : '#aaa'}
+              color={goal === 'lose' ? theme.primary : theme.textMuted}
             />
-            <Text style={[styles.goalTitle, goal === 'lose' && styles.goalTitleSelected]}>
+            <Text style={[styles.goalTitle, { color: theme.textMuted }, goal === 'lose' && [styles.goalTitleSelected, { color: theme.primary }]]}>
               {t('onboarding.loseWeight')}
             </Text>
-            <Text style={styles.goalDescription}>{t('onboarding.loseWeightDesc')}</Text>
+            <Text style={[styles.goalDescription, { color: theme.textMuted }]}>{t('onboarding.loseWeightDesc')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.goalCard, goal === 'maintain' && styles.goalCardSelected]}
+            style={[
+              styles.goalCard, 
+              { backgroundColor: theme.surface },
+              goal === 'maintain' && [styles.goalCardSelected, { borderColor: theme.primary, backgroundColor: theme.primary + '15' }]
+            ]}
             onPress={() => setGoal('maintain')}
           >
             <Ionicons
               name="remove"
               size={32}
-              color={goal === 'maintain' ? theme.primary : '#aaa'}
+              color={goal === 'maintain' ? theme.primary : theme.textMuted}
             />
-            <Text style={[styles.goalTitle, goal === 'maintain' && styles.goalTitleSelected]}>
+            <Text style={[styles.goalTitle, { color: theme.textMuted }, goal === 'maintain' && [styles.goalTitleSelected, { color: theme.primary }]]}>
               {t('onboarding.maintainWeight')}
             </Text>
-            <Text style={styles.goalDescription}>{t('onboarding.maintainWeightDesc')}</Text>
+            <Text style={[styles.goalDescription, { color: theme.textMuted }]}>{t('onboarding.maintainWeightDesc')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.goalCard, goal === 'gain' && styles.goalCardSelected]}
+            style={[
+              styles.goalCard,
+              { backgroundColor: theme.surface },
+              goal === 'gain' && [styles.goalCardSelected, { borderColor: theme.primary, backgroundColor: theme.primary + '15' }]
+            ]}
             onPress={() => setGoal('gain')}
           >
             <Ionicons
               name="trending-up"
               size={32}
-              color={goal === 'gain' ? theme.primary : '#aaa'}
+              color={goal === 'gain' ? theme.primary : theme.textMuted}
             />
-            <Text style={[styles.goalTitle, goal === 'gain' && styles.goalTitleSelected]}>
+            <Text style={[styles.goalTitle, { color: theme.textMuted }, goal === 'gain' && [styles.goalTitleSelected, { color: theme.primary }]]}>
               {t('onboarding.gainMuscle')}
             </Text>
-            <Text style={styles.goalDescription}>{t('onboarding.gainMuscleDesc')}</Text>
+            <Text style={[styles.goalDescription, { color: theme.textMuted }]}>{t('onboarding.gainMuscleDesc')}</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button} onPress={() => setStep(5)}>
+          <TouchableOpacity style={[styles.button, { backgroundColor: theme.primary }]} onPress={() => setStep(5)}>
             <Text style={styles.buttonText}>{t('common.continue')}</Text>
           </TouchableOpacity>
         </ScrollView>
@@ -549,10 +557,10 @@ export default function OnboardingScreen() {
     const texts = activityTexts[i18n.language as keyof typeof activityTexts] || activityTexts.en;
 
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
         <ScrollView contentContainerStyle={styles.content}>
-          <Text style={styles.title}>{texts.title}</Text>
-          <Text style={styles.subtitle}>{texts.subtitle}</Text>
+          <Text style={[styles.title, { color: theme.text }]}>{texts.title}</Text>
+          <Text style={[styles.subtitle, { color: theme.textSecondary }]}>{texts.subtitle}</Text>
 
           {selectedActivities.length > 0 && (
             <View style={styles.selectedActivitiesBadge}>
@@ -565,31 +573,33 @@ export default function OnboardingScreen() {
 
           {/* Activity being edited */}
           {editingActivity && (
-            <View style={styles.activityEditor}>
+            <View style={[styles.activityEditor, { backgroundColor: theme.surface, borderColor: theme.primary }]}>
               <View style={styles.activityEditorHeader}>
                 <Ionicons 
                   name={PHYSICAL_ACTIVITIES.find(a => a.id === editingActivity)?.icon as any || 'fitness'} 
                   size={24} 
                   color={theme.primary} 
                 />
-                <Text style={styles.activityEditorTitle}>
+                <Text style={[styles.activityEditorTitle, { color: theme.primary }]}>
                   {getActivityLabel(editingActivity, i18n.language)}
                 </Text>
               </View>
 
-              <Text style={styles.editorLabel}>{texts.duration}</Text>
+              <Text style={[styles.editorLabel, { color: theme.textMuted }]}>{texts.duration}</Text>
               <View style={styles.durationRow}>
                 {['15', '30', '45', '60', '90'].map(dur => (
                   <TouchableOpacity
                     key={dur}
                     style={[
                       styles.durationButton,
-                      activityDuration === dur && styles.durationButtonSelected,
+                      { backgroundColor: theme.surfaceVariant },
+                      activityDuration === dur && [styles.durationButtonSelected, { backgroundColor: theme.primary }],
                     ]}
                     onPress={() => setActivityDuration(dur)}
                   >
                     <Text style={[
                       styles.durationText,
+                      { color: theme.textMuted },
                       activityDuration === dur && styles.durationTextSelected,
                     ]}>
                       {dur}'
