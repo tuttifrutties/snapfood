@@ -610,23 +610,23 @@ export default function RecipeDetailScreen() {
           </View>
 
           {/* Description */}
-          <Text style={styles.sectionTitle}>{t('recipe.description')}</Text>
-          <Text style={styles.description}>{recipe.description}</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('recipe.description')}</Text>
+          <Text style={[styles.description, { color: theme.textSecondary }]}>{recipe.description}</Text>
 
           {/* Ingredients */}
           <View style={styles.ingredientsTitleRow}>
-            <Text style={styles.sectionTitle}>{t('recipe.ingredients')}</Text>
-            <View style={styles.servingsBadge}>
+            <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('recipe.ingredients')}</Text>
+            <View style={[styles.servingsBadge, { backgroundColor: theme.primary + '15' }]}>
               <Ionicons name="people-outline" size={16} color={theme.primary} />
-              <Text style={styles.servingsText}>
+              <Text style={[styles.servingsText, { color: theme.primary }]}>
                 {i18n.language === 'es' ? 'Base:' : 'Base:'} {recipe.servings || 4}
               </Text>
             </View>
           </View>
           
           {/* Portions Selector - Clear question */}
-          <View style={styles.portionsSelector}>
-            <Text style={styles.portionsSelectorLabel}>
+          <View style={[styles.portionsSelector, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+            <Text style={[styles.portionsSelectorLabel, { color: theme.text }]}>
               {i18n.language === 'es' 
                 ? '🍽️ ¿Para cuántas porciones vas a cocinar?' 
                 : '🍽️ How many portions will you cook?'}
@@ -637,12 +637,14 @@ export default function RecipeDetailScreen() {
                   key={p}
                   style={[
                     styles.portionBtn,
-                    portions === p && styles.portionBtnActive,
+                    { backgroundColor: theme.surfaceVariant },
+                    portions === p && [styles.portionBtnActive, { backgroundColor: theme.primary }],
                   ]}
                   onPress={() => setPortions(p)}
                 >
                   <Text style={[
                     styles.portionBtnText,
+                    { color: theme.textMuted },
                     portions === p && styles.portionBtnTextActive,
                   ]}>
                     {p}
@@ -654,7 +656,8 @@ export default function RecipeDetailScreen() {
                 style={[
                   styles.portionBtn,
                   styles.portionBtnCustom,
-                  !getPortionOptions().includes(portions) && styles.portionBtnActive,
+                  { backgroundColor: theme.surfaceVariant },
+                  !getPortionOptions().includes(portions) && [styles.portionBtnActive, { backgroundColor: theme.primary }],
                 ]}
                 onPress={() => {
                   setCustomPortionsText(portions.toString());
@@ -663,6 +666,7 @@ export default function RecipeDetailScreen() {
               >
                 <Text style={[
                   styles.portionBtnText,
+                  { color: theme.textMuted },
                   !getPortionOptions().includes(portions) && styles.portionBtnTextActive,
                 ]}>
                   {!getPortionOptions().includes(portions) ? portions : '...'}
@@ -690,31 +694,31 @@ export default function RecipeDetailScreen() {
               activeOpacity={1}
               onPress={() => setShowCustomPortions(false)}
             >
-              <View style={styles.customPortionsModal}>
-                <Text style={styles.customPortionsTitle}>
+              <View style={[styles.customPortionsModal, { backgroundColor: theme.surface }]}>
+                <Text style={[styles.customPortionsTitle, { color: theme.text }]}>
                   {i18n.language === 'es' ? '¿Cuántas porciones?' : 'How many portions?'}
                 </Text>
                 <TextInput
-                  style={styles.customPortionsInput}
+                  style={[styles.customPortionsInput, { backgroundColor: theme.surfaceVariant, color: theme.text }]}
                   keyboardType="number-pad"
                   value={customPortionsText}
                   onChangeText={setCustomPortionsText}
                   placeholder="Ej: 5"
-                  placeholderTextColor="#666"
+                  placeholderTextColor={theme.textMuted}
                   autoFocus
                   maxLength={2}
                 />
                 <View style={styles.customPortionsButtons}>
                   <TouchableOpacity 
-                    style={styles.customPortionsCancelBtn}
+                    style={[styles.customPortionsCancelBtn, { backgroundColor: theme.surfaceVariant }]}
                     onPress={() => setShowCustomPortions(false)}
                   >
-                    <Text style={styles.customPortionsCancelText}>
+                    <Text style={[styles.customPortionsCancelText, { color: theme.textMuted }]}>
                       {i18n.language === 'es' ? 'Cancelar' : 'Cancel'}
                     </Text>
                   </TouchableOpacity>
                   <TouchableOpacity 
-                    style={styles.customPortionsConfirmBtn}
+                    style={[styles.customPortionsConfirmBtn, { backgroundColor: theme.primary }]}
                     onPress={handleCustomPortionsSubmit}
                   >
                     <Text style={styles.customPortionsConfirmText}>
