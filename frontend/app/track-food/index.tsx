@@ -1711,9 +1711,20 @@ const styles = StyleSheet.create({
   editIngredientModalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.7)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  editIngredientModalLarge: {
+    width: '100%',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
     padding: 20,
+    maxHeight: '85%',
+  },
+  editIngredientHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
   },
   editIngredientModal: {
     width: '100%',
@@ -1724,13 +1735,77 @@ const styles = StyleSheet.create({
   editIngredientTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 8,
+  },
+  editIngredientCurrentBox: {
+    padding: 12,
+    borderRadius: 10,
+    marginBottom: 16,
+  },
+  editIngredientCurrentLabel: {
+    fontSize: 12,
+    marginBottom: 4,
+  },
+  editIngredientCurrentText: {
+    fontSize: 16,
+    fontWeight: '600',
   },
   editIngredientHint: {
     fontSize: 14,
-    textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 12,
+  },
+  editIngredientSearchBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 12,
+    gap: 10,
+    marginBottom: 16,
+  },
+  editIngredientSearchInput: {
+    flex: 1,
+    fontSize: 16,
+    paddingVertical: 4,
+  },
+  editIngredientLoading: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    paddingVertical: 20,
+  },
+  editIngredientLoadingText: {
+    fontSize: 14,
+  },
+  editIngredientResults: {
+    maxHeight: 300,
+  },
+  editIngredientResultItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 14,
+    borderRadius: 12,
+    marginBottom: 8,
+  },
+  editIngredientResultInfo: {
+    flex: 1,
+  },
+  editIngredientResultName: {
+    fontSize: 16,
+    fontWeight: '500',
+    marginBottom: 4,
+  },
+  editIngredientResultMeta: {
+    fontSize: 12,
+  },
+  editIngredientEmpty: {
+    alignItems: 'center',
+    paddingVertical: 30,
+  },
+  editIngredientEmptyText: {
+    fontSize: 14,
+    marginTop: 10,
   },
   editIngredientInput: {
     borderRadius: 12,
