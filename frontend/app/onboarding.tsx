@@ -885,7 +885,7 @@ export default function OnboardingScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0c0c0c',
+    // backgroundColor applied inline with theme.background
   },
   content: {
     padding: 24,
@@ -895,13 +895,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#fff',
+    // color applied inline with theme.text
     textAlign: 'center',
     marginBottom: 12,
   },
   subtitle: {
     fontSize: 16,
-    color: '#aaa',
+    // color applied inline with theme.textSecondary
     textAlign: 'center',
     marginBottom: 24,
   },
@@ -911,7 +911,7 @@ const styles = StyleSheet.create({
   featureItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
     padding: 20,
     borderRadius: 12,
     marginBottom: 12,
@@ -919,11 +919,11 @@ const styles = StyleSheet.create({
   },
   featureText: {
     fontSize: 16,
-    color: '#fff',
+    // color applied inline with theme.text
     flex: 1,
   },
   button: {
-    backgroundColor: '#FF6B6B',
+    // backgroundColor applied inline with theme.primary
     padding: 16,
     borderRadius: 12,
     alignItems: 'center',
@@ -939,8 +939,8 @@ const styles = StyleSheet.create({
   },
   // Country selection
   searchInput: {
-    backgroundColor: '#1a1a1a',
-    color: '#fff',
+    // backgroundColor applied inline with theme.surface
+    // color applied inline with theme.text
     padding: 16,
     borderRadius: 12,
     fontSize: 16,
@@ -953,7 +953,7 @@ const styles = StyleSheet.create({
   countryItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
     padding: 16,
     borderRadius: 12,
     marginBottom: 8,
@@ -961,24 +961,24 @@ const styles = StyleSheet.create({
   },
   countryItemSelected: {
     borderWidth: 2,
-    borderColor: '#FF6B6B',
-    backgroundColor: 'rgba(255,107,107,0.1)',
+    // borderColor applied inline with theme.primary
+    // backgroundColor applied inline with theme.primary + '15'
   },
   countryFlag: {
     fontSize: 28,
   },
   countryName: {
     fontSize: 16,
-    color: '#fff',
+    // color applied inline with theme.text
     flex: 1,
   },
   countryNameSelected: {
-    color: '#FF6B6B',
+    // color applied inline with theme.primary
     fontWeight: 'bold',
   },
   // Gender selection
   genderCard: {
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
     padding: 32,
     borderRadius: 16,
     marginBottom: 16,
@@ -987,21 +987,21 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
   },
   genderCardSelected: {
-    borderColor: '#FF6B6B',
-    backgroundColor: 'rgba(255,107,107,0.1)',
+    // borderColor applied inline with theme.primary
+    // backgroundColor applied inline with theme.primary + '15'
   },
   genderTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#aaa',
+    // color applied inline with theme.textMuted
     marginTop: 12,
   },
   genderTitleSelected: {
-    color: '#FF6B6B',
+    // color applied inline with theme.primary
   },
   // Goal selection
   goalCard: {
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
     padding: 24,
     borderRadius: 12,
     marginBottom: 16,
