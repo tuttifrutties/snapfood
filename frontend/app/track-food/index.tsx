@@ -90,7 +90,10 @@ export default function TrackFoodScreen() {
   
   // Edit ingredient state
   const [editingIngredientIndex, setEditingIngredientIndex] = useState<number | null>(null);
-  const [editIngredientText, setEditIngredientText] = useState('');
+  const [editIngredientSearch, setEditIngredientSearch] = useState('');
+  const [editSearchResults, setEditSearchResults] = useState<ApiFoodItem[]>([]);
+  const [isSearchingEditIngredient, setIsSearchingEditIngredient] = useState(false);
+  const [isRecalculatingNutrition, setIsRecalculatingNutrition] = useState(false);
 
   const PORTION_OPTIONS = [0.5, 1, 1.5, 2, 2.5, 3];
 
