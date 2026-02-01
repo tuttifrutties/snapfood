@@ -342,15 +342,15 @@ export default function OnboardingScreen() {
   // Step 2: Country selection
   if (step === 2) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
         <View style={styles.content}>
-          <Text style={styles.title}>{t('onboarding.whereAreYouFrom')}</Text>
-          <Text style={styles.subtitle}>{t('onboarding.countryHelps')}</Text>
+          <Text style={[styles.title, { color: theme.text }]}>{t('onboarding.whereAreYouFrom')}</Text>
+          <Text style={[styles.subtitle, { color: theme.textSecondary }]}>{t('onboarding.countryHelps')}</Text>
 
           <TextInput
-            style={styles.searchInput}
+            style={[styles.searchInput, { backgroundColor: theme.surface, color: theme.text }]}
             placeholder={t('onboarding.searchCountry')}
-            placeholderTextColor="#555"
+            placeholderTextColor={theme.textMuted}
             value={countrySearch}
             onChangeText={setCountrySearch}
           />
@@ -363,14 +363,16 @@ export default function OnboardingScreen() {
               <TouchableOpacity
                 style={[
                   styles.countryItem,
-                  country === item.code && styles.countryItemSelected,
+                  { backgroundColor: theme.surface },
+                  country === item.code && [styles.countryItemSelected, { borderColor: theme.primary, backgroundColor: theme.primary + '15' }],
                 ]}
                 onPress={() => setCountry(item.code)}
               >
                 <Text style={styles.countryFlag}>{item.flag}</Text>
                 <Text style={[
                   styles.countryName,
-                  country === item.code && styles.countryNameSelected,
+                  { color: theme.text },
+                  country === item.code && [styles.countryNameSelected, { color: theme.primary }],
                 ]}>
                   {item.name}
                 </Text>
@@ -382,7 +384,7 @@ export default function OnboardingScreen() {
           />
 
           <TouchableOpacity 
-            style={[styles.button, !country && styles.buttonDisabled]} 
+            style={[styles.button, { backgroundColor: theme.primary }, !country && styles.buttonDisabled]} 
             onPress={() => country && setStep(3)}
             disabled={!country}
           >
@@ -396,40 +398,56 @@ export default function OnboardingScreen() {
   // Step 3: Gender selection
   if (step === 3) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
         <ScrollView contentContainerStyle={styles.content}>
-          <Text style={styles.title}>{t('onboarding.yourGender')}</Text>
-          <Text style={styles.subtitle}>{t('onboarding.genderHelps')}</Text>
+          <Text style={[styles.title, { color: theme.text }]}>{t('onboarding.yourGender')}</Text>
+          <Text style={[styles.subtitle, { color: theme.textSecondary }]}>{t('onboarding.genderHelps')}</Text>
 
           <TouchableOpacity
-            style={[styles.genderCard, gender === 'male' && styles.genderCardSelected]}
+            style={[
+              styles.genderCard, 
+              { backgroundColor: theme.surface },
+              gender === 'male' && [styles.genderCardSelected, { borderColor: theme.primary, backgroundColor: theme.primary + '15' }]
+            ]}
             onPress={() => setGender('male')}
           >
             <Ionicons
               name="male"
               size={48}
-              color={gender === 'male' ? theme.primary : '#aaa'}
+              color={gender === 'male' ? theme.primary : theme.textMuted}
             />
-            <Text style={[styles.genderTitle, gender === 'male' && styles.genderTitleSelected]}>
+            <Text style={[
+              styles.genderTitle, 
+              { color: theme.textMuted },
+              gender === 'male' && [styles.genderTitleSelected, { color: theme.primary }]
+            ]}>
               {t('onboarding.male')}
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[styles.genderCard, gender === 'female' && styles.genderCardSelected]}
+            style={[
+              styles.genderCard,
+              { backgroundColor: theme.surface },
+              gender === 'female' && [styles.genderCardSelected, { borderColor: theme.primary, backgroundColor: theme.primary + '15' }]
+            ]}
             onPress={() => setGender('female')}
           >
             <Ionicons
               name="female"
               size={48}
-              color={gender === 'female' ? theme.primary : '#aaa'}
+              color={gender === 'female' ? theme.primary : theme.textMuted}
             />
-            <Text style={[styles.genderTitle, gender === 'female' && styles.genderTitleSelected]}>
+            <Text style={[
+              styles.genderTitle,
+              { color: theme.textMuted },
+              gender === 'female' && [styles.genderTitleSelected, { color: theme.primary }]
+            ]}>
               {t('onboarding.female')}
             </Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.button} onPress={() => setStep(4)}>
+          <TouchableOpacity style={[styles.button, { backgroundColor: theme.primary }]} onPress={() => setStep(4)}>
             <Text style={styles.buttonText}>{t('common.continue')}</Text>
           </TouchableOpacity>
         </ScrollView>
@@ -440,13 +458,17 @@ export default function OnboardingScreen() {
   // Step 4: Goal selection
   if (step === 4) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
         <ScrollView contentContainerStyle={styles.content}>
-          <Text style={styles.title}>{t('onboarding.goal')}</Text>
-          <Text style={styles.subtitle}>{t('onboarding.goalSubtitle')}</Text>
+          <Text style={[styles.title, { color: theme.text }]}>{t('onboarding.goal')}</Text>
+          <Text style={[styles.subtitle, { color: theme.textSecondary }]}>{t('onboarding.goalSubtitle')}</Text>
 
           <TouchableOpacity
-            style={[styles.goalCard, goal === 'lose' && styles.goalCardSelected]}
+            style={[
+              styles.goalCard,
+              { backgroundColor: theme.surface },
+              goal === 'lose' && [styles.goalCardSelected, { borderColor: theme.primary, backgroundColor: theme.primary + '15' }]
+            ]}
             onPress={() => setGoal('lose')}
           >
             <Ionicons
