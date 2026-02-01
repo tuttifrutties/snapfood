@@ -161,6 +161,110 @@ export default function TrackFoodScreen() {
     setSearchTimeout(timeout);
   };
 
+  // Search for edit ingredient replacement
+  const handleEditIngredientSearch = async (query: string) => {
+    setEditIngredientSearch(query);
+    
+    if (query.length < 2) {
+      setEditSearchResults([]);
+      return;
+    }
+
+    setIsSearchingEditIngredient(true);
+    try {
+      const response = await fetch(`${API_URL}/api/search-food`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: query,
+          language: i18n.language,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Search failed');
+      }
+
+      const data = await response.json();
+      setEditSearchResults(data.foods || []);
+    } catch (error) {
+      console.error('Edit ingredient search error:', error);
+      setEditSearchResults([]);
+    } finally {
+      setIsSearchingEditIngredient(false);
+    }
+  };
+
+  // Handle selecting a new ingredient to replace the old one
+  const handleSelectNewIngredient = async (newFood: ApiFoodItem) => {
+    if (editingIngredientIndex === null || !analysisResult) return;
+    
+    setIsRecalculatingNutrition(true);
+    
+    try {
+      const oldIngredient = analysisResult.ingredients[editingIngredientIndex];
+      
+      // Call API to recalculate nutrition with the new ingredient
+      const response = await fetch(`${API_URL}/api/recalculate-nutrition`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          originalAnalysis: analysisResult,
+          oldIngredient: oldIngredient,
+          newIngredient: newFood.name,
+          newIngredientCaloriesPer100g: newFood.calories,
+          newIngredientProteinPer100g: newFood.protein,
+          newIngredientCarbsPer100g: newFood.carbs,
+          newIngredientFatsPer100g: newFood.fats,
+          language: i18n.language,
+        }),
+      });
+
+      if (!response.ok) {
+        // If API fails, just update the ingredient name
+        const newIngredients = [...analysisResult.ingredients];
+        newIngredients[editingIngredientIndex] = newFood.name;
+        setAnalysisResult({
+          ...analysisResult,
+          ingredients: newIngredients
+        });
+      } else {
+        const data = await response.json();
+        // Update the analysis result with recalculated nutrition
+        setAnalysisResult({
+          ...analysisResult,
+          ingredients: data.ingredients || analysisResult.ingredients.map((ing: string, i: number) => 
+            i === editingIngredientIndex ? newFood.name : ing
+          ),
+          calories: data.calories || analysisResult.calories,
+          protein: data.protein || analysisResult.protein,
+          carbs: data.carbs || analysisResult.carbs,
+          fats: data.fats || analysisResult.fats,
+        });
+      }
+      
+      // Reset edit state
+      setEditingIngredientIndex(null);
+      setEditIngredientSearch('');
+      setEditSearchResults([]);
+      
+    } catch (error) {
+      console.error('Error recalculating nutrition:', error);
+      // Fallback: just update the name
+      const newIngredients = [...analysisResult.ingredients];
+      newIngredients[editingIngredientIndex] = newFood.name;
+      setAnalysisResult({
+        ...analysisResult,
+        ingredients: newIngredients
+      });
+      setEditingIngredientIndex(null);
+      setEditIngredientSearch('');
+      setEditSearchResults([]);
+    } finally {
+      setIsRecalculatingNutrition(false);
+    }
+  };
+
   const selectFoodFromSearch = (food: ApiFoodItem) => {
     setSelectedFood(food);
     setFoodPortions(1);
