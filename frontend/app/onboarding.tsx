@@ -907,14 +907,14 @@ export default function OnboardingScreen() {
           <TextInput
             style={styles.input}
             placeholder="70"
-            placeholderTextColor="#555"
+            placeholderTextColor={theme.textMuted}
             keyboardType="decimal-pad"
             value={weight}
             onChangeText={setWeight}
           />
         </View>
 
-        <TouchableOpacity style={styles.button} onPress={handleFinish}>
+        <TouchableOpacity style={[styles.button, { backgroundColor: theme.primary }]} onPress={handleFinish}>
           <Text style={styles.buttonText}>{t('onboarding.finishSetup')}</Text>
         </TouchableOpacity>
       </ScrollView>
