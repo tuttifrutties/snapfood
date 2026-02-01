@@ -1099,14 +1099,14 @@ export default function CookingScreen() {
                 {bonusRecipes.map((recipe) => (
                   <TouchableOpacity
                     key={recipe.id}
-                    style={[styles.recipeCard, styles.bonusRecipeCard]}
+                    style={[styles.recipeCard, styles.bonusRecipeCard, { backgroundColor: theme.surface }]}
                     onPress={() => viewRecipe(recipe)}
                   >
                     <View style={styles.recipeHeader}>
-                      <Text style={styles.recipeName}>{recipe.name}</Text>
+                      <Text style={[styles.recipeName, { color: theme.text }]}>{recipe.name}</Text>
                       <View style={styles.recipeTimeContainer}>
-                        <Ionicons name="time" size={16} color="#aaa" />
-                        <Text style={styles.recipeTime}>
+                        <Ionicons name="time" size={16} color={theme.textMuted} />
+                        <Text style={[styles.recipeTime, { color: theme.textMuted }]}>
                           {t('cooking.cookingTime', { time: recipe.cookingTime })}
                         </Text>
                       </View>
@@ -1116,7 +1116,7 @@ export default function CookingScreen() {
                     {recipe.extraIngredientsNeeded && recipe.extraIngredientsNeeded.length > 0 && (
                       <View style={styles.extraIngredientsBadge}>
                         <Ionicons name="cart-outline" size={14} color="#FFD700" />
-                        <Text style={styles.extraIngredientsText}>
+                        <Text style={[styles.extraIngredientsText, { color: '#FFD700' }]}>
                           {i18n.language === 'es' ? 'Necesitas: ' : 'You need: '}
                           {recipe.extraIngredientsNeeded.join(', ')}
                         </Text>
@@ -1127,22 +1127,22 @@ export default function CookingScreen() {
                     {(recipe.countryOfOrigin || recipe.cuisine) && (
                       <View style={styles.cuisineBadge}>
                         <Ionicons name="globe-outline" size={14} color={theme.primary} />
-                        <Text style={styles.cuisineText}>
+                        <Text style={[styles.cuisineText, { color: theme.textSecondary }]}>
                           {recipe.cuisine || recipe.countryOfOrigin}
                           {recipe.countryOfOrigin && recipe.cuisine ? ` • ${recipe.countryOfOrigin}` : ''}
                         </Text>
                       </View>
                     )}
                     
-                    <Text style={styles.recipeDescription}>{recipe.description}</Text>
+                    <Text style={[styles.recipeDescription, { color: theme.textSecondary }]}>{recipe.description}</Text>
                     <View style={styles.recipeMacros}>
-                      <Text style={styles.recipeMacroText}>{recipe.calories} cal</Text>
-                      <Text style={styles.recipeMacroText}>P: {recipe.protein}g</Text>
-                      <Text style={styles.recipeMacroText}>C: {recipe.carbs}g</Text>
-                      <Text style={styles.recipeMacroText}>F: {recipe.fats}g</Text>
+                      <Text style={[styles.recipeMacroText, { color: theme.primary }]}>{recipe.calories} cal</Text>
+                      <Text style={[styles.recipeMacroText, { color: theme.textSecondary }]}>P: {recipe.protein}g</Text>
+                      <Text style={[styles.recipeMacroText, { color: theme.textSecondary }]}>C: {recipe.carbs}g</Text>
+                      <Text style={[styles.recipeMacroText, { color: theme.textSecondary }]}>F: {recipe.fats}g</Text>
                     </View>
-                    <TouchableOpacity style={styles.viewRecipeButton}>
-                      <Text style={styles.viewRecipeButtonText}>{t('cooking.viewRecipe')}</Text>
+                    <TouchableOpacity style={[styles.viewRecipeButton, { borderTopColor: theme.border }]}>
+                      <Text style={[styles.viewRecipeButtonText, { color: theme.primary }]}>{t('cooking.viewRecipe')}</Text>
                       <Ionicons name="chevron-forward" size={20} color={theme.primary} />
                     </TouchableOpacity>
                   </TouchableOpacity>
