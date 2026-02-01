@@ -2083,6 +2083,25 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.3)',
   },
+  shareCardLogoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 8,
+  },
+  shareCardLogo: {
+    width: 36,
+    height: 36,
+    borderRadius: 10,
+    backgroundColor: '#FF6B6B',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  shareCardLogoText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
   shareCardBranding: {
     paddingTop: 16,
     borderTopWidth: 1,
@@ -2091,7 +2110,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   shareCardBrandingText: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#fff',
     fontWeight: 'bold',
   },
