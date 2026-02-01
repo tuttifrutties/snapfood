@@ -310,28 +310,28 @@ export default function OnboardingScreen() {
   // Step 1: Welcome
   if (step === 1) {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
         <ScrollView contentContainerStyle={styles.content}>
           <Ionicons name="restaurant" size={80} color={theme.primary} />
-          <Text style={styles.title}>{t('onboarding.welcome')}</Text>
-          <Text style={styles.subtitle}>{t('onboarding.subtitle')}</Text>
+          <Text style={[styles.title, { color: theme.text }]}>{t('onboarding.welcome')}</Text>
+          <Text style={[styles.subtitle, { color: theme.textSecondary }]}>{t('onboarding.subtitle')}</Text>
 
           <View style={styles.featuresList}>
-            <View style={styles.featureItem}>
+            <View style={[styles.featureItem, { backgroundColor: theme.surface }]}>
               <Ionicons name="camera" size={24} color={theme.primary} />
-              <Text style={styles.featureText}>{t('onboarding.feature1')}</Text>
+              <Text style={[styles.featureText, { color: theme.text }]}>{t('onboarding.feature1')}</Text>
             </View>
-            <View style={styles.featureItem}>
+            <View style={[styles.featureItem, { backgroundColor: theme.surface }]}>
               <Ionicons name="analytics" size={24} color={theme.primary} />
-              <Text style={styles.featureText}>{t('onboarding.feature2')}</Text>
+              <Text style={[styles.featureText, { color: theme.text }]}>{t('onboarding.feature2')}</Text>
             </View>
-            <View style={styles.featureItem}>
+            <View style={[styles.featureItem, { backgroundColor: theme.surface }]}>
               <Ionicons name="trending-up" size={24} color={theme.primary} />
-              <Text style={styles.featureText}>{t('onboarding.feature3')}</Text>
+              <Text style={[styles.featureText, { color: theme.text }]}>{t('onboarding.feature3')}</Text>
             </View>
           </View>
 
-          <TouchableOpacity style={styles.button} onPress={() => setStep(2)}>
+          <TouchableOpacity style={[styles.button, { backgroundColor: theme.primary }]} onPress={() => setStep(2)}>
             <Text style={styles.buttonText}>{t('onboarding.getStarted')}</Text>
           </TouchableOpacity>
         </ScrollView>
