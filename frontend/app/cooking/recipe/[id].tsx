@@ -1116,7 +1116,7 @@ export default function RecipeDetailScreen() {
             
             {/* Ingredients Section */}
             <View style={styles.shareCardSection}>
-              <Text style={styles.shareCardSectionTitle}>
+              <Text style={[styles.shareCardSectionTitle, { color: '#fff' }]}>
                 🥗 {i18n.language === 'es' ? 'Ingredientes' : 'Ingredients'}
               </Text>
               {(recipe?.ingredients || []).map((ing: any, index: number) => {
@@ -1144,7 +1144,7 @@ export default function RecipeDetailScreen() {
             
             {/* Instructions Section */}
             <View style={styles.shareCardSection}>
-              <Text style={styles.shareCardSectionTitle}>
+              <Text style={[styles.shareCardSectionTitle, { color: '#fff' }]}>
                 👨‍🍳 {i18n.language === 'es' ? 'Preparación' : 'Instructions'}
               </Text>
               {(recipe?.instructions || []).map((step: string, index: number) => (
@@ -1157,9 +1157,14 @@ export default function RecipeDetailScreen() {
               ))}
             </View>
             
-            {/* Branding Footer */}
+            {/* Branding Footer with Logo */}
             <View style={styles.shareCardFooter}>
-              <Text style={styles.shareCardBrandingText}>📱 SnapFood</Text>
+              <View style={styles.shareCardLogoContainer}>
+                <View style={styles.shareCardLogo}>
+                  <Text style={styles.shareCardLogoText}>S</Text>
+                </View>
+                <Text style={styles.shareCardBrandingText}>SnapFood</Text>
+              </View>
               <Text style={styles.shareCardBrandingSubtext}>
                 {i18n.language === 'es' ? 'Tu asistente de nutrición con IA' : 'Your AI nutrition assistant'}
               </Text>
