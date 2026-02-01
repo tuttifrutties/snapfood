@@ -1241,7 +1241,7 @@ const styles = StyleSheet.create({
     paddingVertical: 30,
     backgroundColor: '#1a1a1a',
     borderBottomWidth: 2,
-    borderBottomColor: 'theme.primary',
+    borderBottomColor: '#FF6B6B',
   },
   recipeIconContainer: {
     width: 100,
@@ -1314,7 +1314,7 @@ const styles = StyleSheet.create({
   macroValue: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'theme.primary',
+    color: '#FF6B6B',
   },
   macroLabel: {
     fontSize: 12,
@@ -1355,7 +1355,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: 'theme.primary',
+    backgroundColor: '#FF6B6B',
     marginTop: 6,
     marginRight: 12,
   },
@@ -1386,7 +1386,7 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: 'theme.primary',
+    backgroundColor: '#FF6B6B',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
@@ -1517,7 +1517,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   portionButtonActive: {
-    backgroundColor: 'theme.primary',
+    backgroundColor: '#FF6B6B',
   },
   portionButtonText: {
     color: '#aaa',
@@ -1654,7 +1654,7 @@ const styles = StyleSheet.create({
   },
   servingsText: {
     fontSize: 13,
-    color: 'theme.primary',
+    color: '#FF6B6B',
     fontWeight: '500',
   },
   portionsSelector: {
@@ -1685,7 +1685,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   portionBtnActive: {
-    backgroundColor: 'theme.primary',
+    backgroundColor: '#FF6B6B',
   },
   portionBtnCustom: {
     paddingHorizontal: 14,
@@ -1759,7 +1759,7 @@ const styles = StyleSheet.create({
   },
   customPortionsConfirmBtn: {
     flex: 1,
-    backgroundColor: 'theme.primary',
+    backgroundColor: '#FF6B6B',
     paddingVertical: 14,
     borderRadius: 10,
     alignItems: 'center',
@@ -1859,7 +1859,7 @@ const styles = StyleSheet.create({
     maxWidth: 350,
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: 'theme.primary',
+    borderColor: '#FF6B6B',
   },
   portionsEatenTitle: {
     fontSize: 20,
@@ -1891,7 +1891,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   portionsEatenBtnActive: {
-    backgroundColor: 'theme.primary',
+    backgroundColor: '#FF6B6B',
   },
   portionsEatenBtnText: {
     color: '#aaa',
@@ -1952,7 +1952,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1a1a2e',
   },
   shareCardGradient: {
-    backgroundColor: 'theme.primary',
+    backgroundColor: '#FF6B6B',
     padding: 24,
     alignItems: 'center',
   },
@@ -2024,7 +2024,7 @@ const styles = StyleSheet.create({
   shareCardSectionTitle: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: 'theme.primary',
+    color: '#FF6B6B',
     marginBottom: 12,
   },
   shareCardIngredient: {
@@ -2033,7 +2033,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   shareCardBullet: {
-    color: 'theme.primary',
+    color: '#FF6B6B',
     fontSize: 14,
     marginRight: 8,
     marginTop: 1,
@@ -2053,7 +2053,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: 'theme.primary',
+    backgroundColor: '#FF6B6B',
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,

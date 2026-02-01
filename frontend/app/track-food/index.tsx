@@ -1017,7 +1017,7 @@ export default function TrackFoodScreen() {
                   <TouchableOpacity onPress={() => {
                     setAddedIngredients(addedIngredients.filter((_, i) => i !== index));
                   }}>
-                    <Ionicons name="close-circle" size={18} color={theme.error || 'theme.primary'} />
+                    <Ionicons name="close-circle" size={18} color={theme.error || '#FF6B6B'} />
                   </TouchableOpacity>
                 </View>
               ))}
@@ -1291,7 +1291,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   portionButtonActive: {
-    backgroundColor: 'theme.primary',
+    backgroundColor: '#FF6B6B',
   },
   portionButtonText: {
     color: '#aaa',
@@ -1328,7 +1328,7 @@ const styles = StyleSheet.create({
   primaryButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'theme.primary',
+    backgroundColor: '#FF6B6B',
     paddingHorizontal: 32,
     paddingVertical: 16,
     borderRadius: 12,
@@ -1345,14 +1345,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'transparent',
     borderWidth: 2,
-    borderColor: 'theme.primary',
+    borderColor: '#FF6B6B',
     paddingHorizontal: 32,
     paddingVertical: 16,
     borderRadius: 12,
     gap: 8,
   },
   secondaryButtonText: {
-    color: 'theme.primary',
+    color: '#FF6B6B',
     fontSize: 18,
     fontWeight: '600',
   },
@@ -1413,7 +1413,7 @@ const styles = StyleSheet.create({
   macroValue: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'theme.primary',
+    color: '#FF6B6B',
   },
   macroLabel: {
     fontSize: 12,
@@ -1546,7 +1546,7 @@ const styles = StyleSheet.create({
   saveButton: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: 'theme.primary',
+    backgroundColor: '#FF6B6B',
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',

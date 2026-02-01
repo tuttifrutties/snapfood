@@ -1522,7 +1522,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   cuisineText: {
-    color: 'theme.primary',
+    color: '#FF6B6B',
     fontSize: 12,
     fontWeight: '500',
   },
@@ -1629,7 +1629,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#333',
   },
   confirmButtonPrimary: {
-    backgroundColor: 'theme.primary',
+    backgroundColor: '#FF6B6B',
   },
   confirmButtonSecondaryText: {
     color: '#fff',
@@ -1680,7 +1680,7 @@ const styles = StyleSheet.create({
   menuDivider: {
     width: 60,
     height: 2,
-    backgroundColor: 'theme.primary',
+    backgroundColor: '#FF6B6B',
     marginTop: 12,
   },
   menuTitle: {
@@ -1711,7 +1711,7 @@ const styles = StyleSheet.create({
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: 'theme.primary',
+    backgroundColor: '#FF6B6B',
     marginRight: 10,
   },
   menuIngredientText: {
@@ -1746,12 +1746,12 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     paddingBottom: 20,
     borderBottomWidth: 2,
-    borderBottomColor: 'theme.primary',
+    borderBottomColor: '#FF6B6B',
   },
   chefTitle: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: 'theme.primary',
+    color: '#FF6B6B',
     textAlign: 'center',
   },
   chefSubtitle: {
@@ -1793,7 +1793,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
   },
   searchButton: {
-    backgroundColor: 'theme.primary',
+    backgroundColor: '#FF6B6B',
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 12,
@@ -1886,7 +1886,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   missingIngredientsLabel: {
-    color: 'theme.primary',
+    color: '#FF6B6B',
     fontSize: 13,
     fontWeight: '600',
   },
@@ -1903,7 +1903,7 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   viewRecipeText: {
-    color: 'theme.primary',
+    color: '#FF6B6B',
     fontSize: 14,
     fontWeight: '500',
   },
@@ -1950,7 +1950,7 @@ const styles = StyleSheet.create({
     padding: 16,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: 'theme.primary',
+    borderColor: '#FF6B6B',
   },
   notificationBannerHeader: {
     flexDirection: 'row',

@@ -237,7 +237,7 @@ const styles = StyleSheet.create({
   emailButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'theme.primary',
+    backgroundColor: '#FF6B6B',
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 8,

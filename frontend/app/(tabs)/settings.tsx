@@ -819,7 +819,7 @@ const styles = StyleSheet.create({
   languageOptionSelected: {
     backgroundColor: 'rgba(255,107,107,0.2)',
     borderWidth: 1,
-    borderColor: 'theme.primary',
+    borderColor: '#FF6B6B',
   },
   languageFlag: {
     fontSize: 24,
@@ -831,7 +831,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   languageTextSelected: {
-    color: 'theme.primary',
+    color: '#FF6B6B',
     fontWeight: '600',
   },
   modalCloseButton: {
@@ -876,7 +876,7 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
   },
   themeModeButtonSelected: {
-    borderColor: 'theme.primary',
+    borderColor: '#FF6B6B',
     backgroundColor: 'theme.primary10',
   },
   themeModeText: {

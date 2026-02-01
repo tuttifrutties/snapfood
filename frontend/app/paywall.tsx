@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
   featureItem: { flexDirection: 'row', marginBottom: 16, gap: 16 },
   checkCircle: {
     width: 40, height: 40, borderRadius: 20,
-    backgroundColor: 'theme.primary', alignItems: 'center', justifyContent: 'center',
+    backgroundColor: '#FF6B6B', alignItems: 'center', justifyContent: 'center',
   },
   featureText: { flex: 1 },
   featureTitle: { fontSize: 16, fontWeight: '600', color: '#fff', marginBottom: 4 },
@@ -383,6 +383,6 @@ const styles = StyleSheet.create({
   alreadyPremium: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
   alreadyPremiumTitle: { fontSize: 24, fontWeight: 'bold', color: '#fff', marginTop: 24, marginBottom: 8 },
   alreadyPremiumSubtitle: { fontSize: 16, color: '#aaa', textAlign: 'center', marginBottom: 32 },
-  goBackButton: { backgroundColor: 'theme.primary', paddingHorizontal: 32, paddingVertical: 14, borderRadius: 12 },
+  goBackButton: { backgroundColor: '#FF6B6B', paddingHorizontal: 32, paddingVertical: 14, borderRadius: 12 },
   goBackButtonText: { color: '#fff', fontSize: 16, fontWeight: '600' },
 });
