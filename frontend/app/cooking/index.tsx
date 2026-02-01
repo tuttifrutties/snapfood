@@ -1018,8 +1018,8 @@ export default function CookingScreen() {
                   ? `para el día de hoy` 
                   : `for today`}
               </Text>
-              <Text style={styles.chefDate}>{formattedDate}</Text>
-              <Text style={styles.chefHint}>
+              <Text style={[styles.chefDate, { color: theme.textMuted }]}>{formattedDate}</Text>
+              <Text style={[styles.chefHint, { color: theme.primary }]}>
                 {i18n.language === 'es' ? 'Elige tu plato' : 'Choose your dish'}
               </Text>
             </View>
@@ -1028,8 +1028,8 @@ export default function CookingScreen() {
             {mainRecipes.length > 0 && (
               <>
                 <View style={styles.sectionHeader}>
-                  <Ionicons name="checkmark-circle" size={20} color="#4CAF50" />
-                  <Text style={styles.sectionTitle}>
+                  <Ionicons name="checkmark-circle" size={20} color={theme.success} />
+                  <Text style={[styles.sectionTitle, { color: theme.success }]}>
                     {i18n.language === 'es' ? 'Con tus ingredientes' : 'With your ingredients'}
                   </Text>
                 </View>
