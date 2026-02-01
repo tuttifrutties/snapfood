@@ -14,7 +14,7 @@ from PIL import Image
 import io
 
 # Configuration
-BACKEND_URL = "https://recipe-ai-39.preview.emergentagent.com/api"
+BACKEND_URL = "https://ui-theming.preview.emergentagent.com/api"
 TEST_USER_ID = None
 
 def create_test_food_image():

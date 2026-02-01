@@ -983,7 +983,7 @@ agent_communication:
       
       🌐 SERVER VERIFICATION:
       ✅ Server responding correctly on port 8001
-      ✅ All endpoints accessible via https://recipe-ai-39.preview.emergentagent.com/api
+      ✅ All endpoints accessible via https://ui-theming.preview.emergentagent.com/api
       ✅ NO 500 errors in main functionality
       ✅ Backend handles all required parameters correctly
       

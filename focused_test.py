@@ -9,7 +9,7 @@ import json
 from datetime import datetime
 
 # Backend URL
-BACKEND_URL = "https://recipe-ai-39.preview.emergentagent.com/api"
+BACKEND_URL = "https://ui-theming.preview.emergentagent.com/api"
 
 # Simple base64 image
 SAMPLE_IMAGE = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="
