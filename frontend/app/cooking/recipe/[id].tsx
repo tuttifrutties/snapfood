@@ -1199,11 +1199,11 @@ export default function RecipeDetailScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0c0c0c',
+    // backgroundColor applied inline with theme.background
   },
   loadingContainer: {
     flex: 1,
-    backgroundColor: '#0c0c0c',
+    // backgroundColor applied inline with theme.background
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -1247,15 +1247,15 @@ const styles = StyleSheet.create({
   recipeHeaderSection: {
     alignItems: 'center',
     paddingVertical: 30,
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
     borderBottomWidth: 2,
-    borderBottomColor: '#FF6B6B',
+    // borderBottomColor applied inline with theme.primary
   },
   recipeIconContainer: {
     width: 100,
     height: 100,
     borderRadius: 50,
-    backgroundColor: 'rgba(255,107,107,0.2)',
+    // backgroundColor applied inline with theme.primary + '30'
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 16,
@@ -1273,7 +1273,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   cuisineNameTop: {
-    color: '#fff',
+    // color applied inline with theme.text
     fontSize: 14,
     fontWeight: '500',
   },
@@ -1285,7 +1285,7 @@ const styles = StyleSheet.create({
   recipeName: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: '#fff',
+    // color applied inline with theme.text
     marginBottom: 16,
   },
   metaRow: {
@@ -1300,7 +1300,7 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   metaText: {
-    color: '#aaa',
+    // color applied inline with theme.textSecondary
     fontSize: 14,
   },
   metaFlag: {
@@ -1310,7 +1310,7 @@ const styles = StyleSheet.create({
   // Macros
   macrosContainer: {
     flexDirection: 'row',
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
     borderRadius: 16,
     padding: 16,
     marginBottom: 24,
@@ -1322,29 +1322,29 @@ const styles = StyleSheet.create({
   macroValue: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#FF6B6B',
+    // color applied inline with theme.primary
   },
   macroLabel: {
     fontSize: 12,
-    color: '#888',
+    // color applied inline with theme.textMuted
     marginTop: 4,
   },
   macroDivider: {
     width: 1,
-    backgroundColor: '#333',
+    // backgroundColor applied inline with theme.border
   },
 
   // Sections
   sectionTitle: {
     fontSize: 20,
     fontWeight: '600',
-    color: '#fff',
+    // color applied inline with theme.text
     marginBottom: 12,
     marginTop: 8,
   },
   description: {
     fontSize: 16,
-    color: '#aaa',
+    // color applied inline with theme.textSecondary
     lineHeight: 24,
     marginBottom: 20,
   },
