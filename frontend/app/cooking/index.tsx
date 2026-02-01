@@ -993,25 +993,25 @@ export default function CookingScreen() {
     );
     
     return (
-      <View style={styles.container}>
-        <View style={styles.header}>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
+        <View style={[styles.header, { backgroundColor: theme.surface }]}>
           <TouchableOpacity onPress={() => setMode('manual')}>
-            <Ionicons name="arrow-back" size={24} color="#fff" />
+            <Ionicons name="arrow-back" size={24} color={theme.text} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>{t('cooking.recipeSuggestions')}</Text>
+          <Text style={[styles.headerTitle, { color: theme.text }]}>{t('cooking.recipeSuggestions')}</Text>
           <View style={{ width: 24 }} />
         </View>
 
         {recipes.length === 0 ? (
           <View style={styles.emptyState}>
-            <Ionicons name="restaurant" size={80} color="#555" />
-            <Text style={styles.emptyText}>{t('cooking.noRecipes')}</Text>
-            <Text style={styles.emptySubtext}>{t('cooking.noRecipesMessage')}</Text>
+            <Ionicons name="restaurant" size={80} color={theme.textMuted} />
+            <Text style={[styles.emptyText, { color: theme.text }]}>{t('cooking.noRecipes')}</Text>
+            <Text style={[styles.emptySubtext, { color: theme.textSecondary }]}>{t('cooking.noRecipesMessage')}</Text>
           </View>
         ) : (
           <ScrollView contentContainerStyle={styles.recipeList}>
             {/* Personalized Title */}
-            <View style={styles.chefTitleContainer}>
+            <View style={[styles.chefTitleContainer, { borderBottomColor: theme.primary }]}>
               <Text style={[styles.chefTitle, { color: theme.text }]}>
                 {i18n.language === 'es' 
                   ? `Menú del Chef ${userName || 'Chef'}` 
@@ -1031,7 +1031,7 @@ export default function CookingScreen() {
             {/* Main recipes - using only user's ingredients */}
             {mainRecipes.length > 0 && (
               <>
-                <View style={styles.sectionHeader}>
+                <View style={[styles.sectionHeader, { borderBottomColor: theme.border }]}>
                   <Ionicons name="checkmark-circle" size={20} color={theme.success} />
                   <Text style={[styles.sectionTitle, { color: theme.success }]}>
                     {i18n.language === 'es' ? 'Con tus ingredientes' : 'With your ingredients'}
@@ -1056,7 +1056,7 @@ export default function CookingScreen() {
                     
                     {/* Country/Cuisine badge */}
                     {(recipe.countryOfOrigin || recipe.cuisine) && (
-                      <View style={styles.cuisineBadge}>
+                      <View style={[styles.cuisineBadge, { backgroundColor: theme.primary + '20' }]}>
                         <Ionicons name="globe-outline" size={14} color={theme.primary} />
                         <Text style={[styles.cuisineText, { color: theme.textSecondary }]}>
                           {recipe.cuisine || recipe.countryOfOrigin}
@@ -1086,14 +1086,14 @@ export default function CookingScreen() {
               <>
                 <View style={styles.bonusSectionHeader}>
                   <View style={styles.bonusSectionTitleRow}>
-                    <Ionicons name="sparkles" size={20} color="#FFD700" />
-                    <Text style={styles.bonusSectionTitle}>
+                    <Ionicons name="sparkles" size={20} color={theme.warning} />
+                    <Text style={[styles.bonusSectionTitle, { color: theme.warning }]}>
                       {i18n.language === 'es' 
                         ? '¿Y si consigues algo más?' 
                         : 'What if you get a bit more?'}
                     </Text>
                   </View>
-                  <Text style={styles.bonusSectionSubtitle}>
+                  <Text style={[styles.bonusSectionSubtitle, { color: theme.textSecondary }]}>
                     {i18n.language === 'es'
                       ? 'Estas recetas necesitan 1-2 ingredientes extra'
                       : 'These recipes need 1-2 extra ingredients'}
@@ -1119,8 +1119,8 @@ export default function CookingScreen() {
                     {/* Extra ingredients needed badge */}
                     {recipe.extraIngredientsNeeded && recipe.extraIngredientsNeeded.length > 0 && (
                       <View style={styles.extraIngredientsBadge}>
-                        <Ionicons name="cart-outline" size={14} color="#FFD700" />
-                        <Text style={[styles.extraIngredientsText, { color: '#FFD700' }]}>
+                        <Ionicons name="cart-outline" size={14} color={theme.warning} />
+                        <Text style={[styles.extraIngredientsText, { color: theme.warning }]}>
                           {i18n.language === 'es' ? 'Necesitas: ' : 'You need: '}
                           {recipe.extraIngredientsNeeded.join(', ')}
                         </Text>
@@ -1129,7 +1129,7 @@ export default function CookingScreen() {
                     
                     {/* Country/Cuisine badge */}
                     {(recipe.countryOfOrigin || recipe.cuisine) && (
-                      <View style={styles.cuisineBadge}>
+                      <View style={[styles.cuisineBadge, { backgroundColor: theme.primary + '20' }]}>
                         <Ionicons name="globe-outline" size={14} color={theme.primary} />
                         <Text style={[styles.cuisineText, { color: theme.textSecondary }]}>
                           {recipe.cuisine || recipe.countryOfOrigin}
