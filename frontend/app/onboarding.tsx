@@ -749,23 +749,23 @@ export default function OnboardingScreen() {
           <Text style={[styles.sectionTitle, { marginTop: 24 }]}>
             {i18n.language === 'es' ? 'Alergias / Intolerancias alimentarias' : 'Food Allergies / Intolerances'}
           </Text>
-          <Text style={styles.sectionSubtitle}>
+          <Text style={[styles.sectionSubtitle, { color: theme.textMuted }]}>
             {i18n.language === 'es' ? '(Opcional) Selecciona los alimentos que debés evitar' : '(Optional) Select foods you need to avoid'}
           </Text>
           
           {/* Search allergies */}
-          <View style={styles.searchContainer}>
-            <Ionicons name="search" size={20} color="#666" />
+          <View style={[styles.searchContainer, { backgroundColor: theme.surface }]}>
+            <Ionicons name="search" size={20} color={theme.textMuted} />
             <TextInput
-              style={styles.allergySearchInput}
+              style={[styles.allergySearchInput, { color: theme.text }]}
               placeholder={i18n.language === 'es' ? 'Buscar alergia...' : 'Search allergy...'}
-              placeholderTextColor="#666"
+              placeholderTextColor={theme.textMuted}
               value={allergySearch}
               onChangeText={setAllergySearch}
             />
             {allergySearch.length > 0 && (
               <TouchableOpacity onPress={() => setAllergySearch('')}>
-                <Ionicons name="close-circle" size={20} color="#666" />
+                <Ionicons name="close-circle" size={20} color={theme.textMuted} />
               </TouchableOpacity>
             )}
           </View>
@@ -779,7 +779,7 @@ export default function OnboardingScreen() {
                 return (
                   <TouchableOpacity
                     key={allergyId}
-                    style={styles.selectedAllergyChip}
+                    style={[styles.selectedAllergyChip, { backgroundColor: theme.primary }]}
                     onPress={() => toggleFoodAllergy(allergyId)}
                   >
                     <Text style={styles.selectedAllergyText}>
@@ -799,14 +799,16 @@ export default function OnboardingScreen() {
                 key={allergy.id}
                 style={[
                   styles.allergyOption,
-                  foodAllergies.includes(allergy.id) && styles.allergyOptionSelected,
+                  { backgroundColor: theme.surface },
+                  foodAllergies.includes(allergy.id) && [styles.allergyOptionSelected, { borderColor: theme.primary, backgroundColor: theme.primary + '15' }],
                 ]}
                 onPress={() => toggleFoodAllergy(allergy.id)}
               >
                 <Text style={styles.allergyOptionIcon}>{allergy.icon}</Text>
                 <Text style={[
                   styles.allergyOptionText,
-                  foodAllergies.includes(allergy.id) && styles.allergyOptionTextSelected,
+                  { color: theme.textMuted },
+                  foodAllergies.includes(allergy.id) && [styles.allergyOptionTextSelected, { color: theme.primary }],
                 ]} numberOfLines={1}>
                   {i18n.language === 'es' ? allergy.es : allergy.en}
                 </Text>
@@ -814,12 +816,12 @@ export default function OnboardingScreen() {
             ))}
           </View>
 
-          <TouchableOpacity style={styles.button} onPress={() => setStep(7)}>
+          <TouchableOpacity style={[styles.button, { backgroundColor: theme.primary }]} onPress={() => setStep(7)}>
             <Text style={styles.buttonText}>{t('common.continue')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.skipButton} onPress={() => setStep(7)}>
-            <Text style={styles.skipButtonText}>
+            <Text style={[styles.skipButtonText, { color: theme.textMuted }]}>
               {i18n.language === 'es' ? 'Sin restricciones, continuar' : 'No restrictions, continue'}
             </Text>
           </TouchableOpacity>
@@ -831,18 +833,18 @@ export default function OnboardingScreen() {
   // Step 7: Personal info (final step)
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={[styles.container, { backgroundColor: theme.background }]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>{t('onboarding.aboutYou')}</Text>
-        <Text style={styles.subtitle}>{t('onboarding.aboutYouSubtitle')}</Text>
+        <Text style={[styles.title, { color: theme.text }]}>{t('onboarding.aboutYou')}</Text>
+        <Text style={[styles.subtitle, { color: theme.textSecondary }]}>{t('onboarding.aboutYouSubtitle')}</Text>
 
         {/* Selected country badge */}
         {selectedCountryData && (
-          <View style={styles.selectedCountryBadge}>
+          <View style={[styles.selectedCountryBadge, { backgroundColor: theme.surface }]}>
             <Text style={styles.selectedCountryFlag}>{selectedCountryData.flag}</Text>
-            <Text style={styles.selectedCountryName}>{selectedCountryData.name}</Text>
+            <Text style={[styles.selectedCountryName, { color: theme.text }]}>{selectedCountryData.name}</Text>
           </View>
         )}
 
@@ -858,13 +860,13 @@ export default function OnboardingScreen() {
 
         {/* Name field with warning */}
         <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>
+          <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>
             {i18n.language === 'es' ? 'Tu nombre' : 'Your name'}
           </Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: theme.surface, color: theme.text }]}
             placeholder={i18n.language === 'es' ? 'Ej: Facundo' : 'E.g: John'}
-            placeholderTextColor="#555"
+            placeholderTextColor={theme.textMuted}
             value={userName}
             onChangeText={setUserName}
             autoCapitalize="words"
@@ -877,11 +879,11 @@ export default function OnboardingScreen() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>{t('onboarding.age')}</Text>
+          <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>{t('onboarding.age')}</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: theme.surface, color: theme.text }]}
             placeholder="25"
-            placeholderTextColor="#555"
+            placeholderTextColor={theme.textMuted}
             keyboardType="number-pad"
             value={age}
             onChangeText={setAge}
@@ -889,11 +891,11 @@ export default function OnboardingScreen() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>{t('onboarding.height')}</Text>
+          <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>{t('onboarding.height')}</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: theme.surface, color: theme.text }]}
             placeholder="170"
-            placeholderTextColor="#555"
+            placeholderTextColor={theme.textMuted}
             keyboardType="decimal-pad"
             value={height}
             onChangeText={setHeight}
