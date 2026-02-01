@@ -1488,12 +1488,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 20,
     paddingTop: 60,
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#fff',
+    // color applied inline with theme.text
   },
   content: {
     padding: 16,
@@ -1514,7 +1514,7 @@ const styles = StyleSheet.create({
   },
   premiumText: {
     fontSize: 16,
-    color: '#aaa',
+    // color applied inline with theme.textMuted
     textAlign: 'center',
     marginTop: 12,
     marginBottom: 30,
@@ -1532,7 +1532,7 @@ const styles = StyleSheet.create({
   },
   // Summary Card
   summaryCard: {
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
     borderRadius: 16,
     padding: 20,
     marginBottom: 16,
@@ -1540,7 +1540,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#fff',
+    // color applied inline with theme.text
     marginBottom: 16,
   },
   statsRow: {
@@ -1554,11 +1554,11 @@ const styles = StyleSheet.create({
   statValue: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#FF6B6B',
+    // color applied inline with theme.primary
   },
   statLabel: {
     fontSize: 12,
-    color: '#aaa',
+    // color applied inline with theme.textMuted
     marginTop: 4,
   },
   // Chart
@@ -1601,7 +1601,7 @@ const styles = StyleSheet.create({
     gap: 8,
     marginTop: 16,
     padding: 12,
-    backgroundColor: '#2a2a2a',
+    // backgroundColor applied inline with theme.surfaceVariant
     borderRadius: 12,
   },
   progressTextGood: {
@@ -1622,17 +1622,17 @@ const styles = StyleSheet.create({
   noDataText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#fff',
+    // color applied inline with theme.text
     marginTop: 12,
   },
   noDataSubtext: {
     fontSize: 14,
-    color: '#aaa',
+    // color applied inline with theme.textMuted
     marginTop: 4,
   },
   // Profile Card
   profileCard: {
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
     borderRadius: 16,
     padding: 20,
     marginBottom: 16,
@@ -1648,20 +1648,20 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#333',
+    // borderBottomColor applied inline with theme.border
   },
   dataLabel: {
     fontSize: 14,
-    color: '#aaa',
+    // color applied inline with theme.textMuted
   },
   dataValue: {
     fontSize: 14,
-    color: '#fff',
+    // color applied inline with theme.text
     fontWeight: '500',
   },
   dataValueHighlight: {
     fontSize: 14,
-    color: '#FF6B6B',
+    // color applied inline with theme.primary
     fontWeight: 'bold',
   },
   // Edit Form
@@ -1670,14 +1670,14 @@ const styles = StyleSheet.create({
   },
   inputLabel: {
     fontSize: 14,
-    color: '#aaa',
+    // color applied inline with theme.textMuted
     marginBottom: 8,
   },
   input: {
-    backgroundColor: '#2a2a2a',
+    // backgroundColor applied inline with theme.surfaceVariant
     borderRadius: 12,
     padding: 14,
-    color: '#fff',
+    // color applied inline with theme.text
     fontSize: 16,
   },
   goalButtons: {
@@ -1691,16 +1691,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
-    backgroundColor: '#2a2a2a',
+    // backgroundColor applied inline with theme.surfaceVariant
     padding: 12,
     borderRadius: 12,
   },
   goalButtonSelected: {
-    backgroundColor: '#FF6B6B',
+    // backgroundColor applied inline with theme.primary
   },
   goalButtonText: {
     fontSize: 12,
-    color: '#aaa',
+    // color applied inline with theme.textMuted
   },
   goalButtonTextSelected: {
     color: '#fff',
@@ -1716,7 +1716,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#33333350',
+    // borderBottomColor applied inline with theme.border
   },
   summaryTabText: {
     fontSize: 14,
