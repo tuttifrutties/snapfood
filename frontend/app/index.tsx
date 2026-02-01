@@ -25,9 +25,9 @@ export default function Index() {
   }, [isLoading, userId, hasCompletedOnboarding]);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <ActivityIndicator size="large" color={theme.primary} />
-      <Text style={styles.text}>Loading...</Text>
+      <Text style={[styles.text, { color: theme.text }]}>Loading...</Text>
     </View>
   );
 }
@@ -35,12 +35,10 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0c0c0c',
     alignItems: 'center',
     justifyContent: 'center',
   },
   text: {
-    color: '#fff',
     marginTop: 16,
     fontSize: 16,
   },
