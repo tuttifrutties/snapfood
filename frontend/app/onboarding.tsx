@@ -1010,29 +1010,29 @@ const styles = StyleSheet.create({
     borderColor: 'transparent',
   },
   goalCardSelected: {
-    borderColor: '#FF6B6B',
-    backgroundColor: 'rgba(255,107,107,0.1)',
+    // borderColor applied inline with theme.primary
+    // backgroundColor applied inline with theme.primary + '15'
   },
   goalTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#aaa',
+    // color applied inline with theme.textMuted
     marginTop: 12,
     marginBottom: 4,
   },
   goalTitleSelected: {
-    color: '#FF6B6B',
+    // color applied inline with theme.primary
   },
   goalDescription: {
     fontSize: 14,
-    color: '#666',
+    // color applied inline with theme.textMuted
   },
   // Personal info
   selectedCountryBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
     padding: 12,
     borderRadius: 20,
     alignSelf: 'center',
@@ -1043,7 +1043,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   selectedCountryName: {
-    color: '#fff',
+    // color applied inline with theme.text
     fontSize: 14,
   },
   activitiesSummary: {
@@ -1067,7 +1067,7 @@ const styles = StyleSheet.create({
   },
   inputLabel: {
     fontSize: 16,
-    color: '#aaa',
+    // color applied inline with theme.textSecondary
     marginBottom: 8,
   },
   nameWarning: {
@@ -1077,8 +1077,8 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
   input: {
-    backgroundColor: '#1a1a1a',
-    color: '#fff',
+    // backgroundColor applied inline with theme.surface
+    // color applied inline with theme.text
     padding: 16,
     borderRadius: 12,
     fontSize: 18,
@@ -1107,7 +1107,7 @@ const styles = StyleSheet.create({
   },
   activityCard: {
     width: '45%',
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
     padding: 16,
     borderRadius: 12,
     alignItems: 'center',
@@ -1116,17 +1116,17 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   activityCardSelected: {
-    borderColor: '#FF6B6B',
-    backgroundColor: 'rgba(255,107,107,0.1)',
+    // borderColor applied inline with theme.primary
+    // backgroundColor applied inline with theme.primary + '15'
   },
   activityName: {
     fontSize: 13,
-    color: '#aaa',
+    // color applied inline with theme.textMuted
     marginTop: 8,
     textAlign: 'center',
   },
   activityNameSelected: {
-    color: '#FF6B6B',
+    // color applied inline with theme.primary
     fontWeight: '600',
   },
   activityDetails: {
