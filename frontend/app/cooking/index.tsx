@@ -1008,12 +1008,12 @@ export default function CookingScreen() {
           <ScrollView contentContainerStyle={styles.recipeList}>
             {/* Personalized Title */}
             <View style={styles.chefTitleContainer}>
-              <Text style={styles.chefTitle}>
+              <Text style={[styles.chefTitle, { color: theme.text }]}>
                 {i18n.language === 'es' 
                   ? `Menú del Chef ${userName || 'Chef'}` 
                   : `Chef ${userName || 'Chef'}'s Menu`}
               </Text>
-              <Text style={styles.chefSubtitle}>
+              <Text style={[styles.chefSubtitle, { color: theme.textSecondary }]}>
                 {i18n.language === 'es' 
                   ? `para el día de hoy` 
                   : `for today`}
