@@ -1381,7 +1381,7 @@ const styles = StyleSheet.create({
   dishName: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#fff',
+    // color applied inline with theme.text
     marginBottom: 12,
   },
   smartPortionBadge: {
@@ -1413,11 +1413,11 @@ const styles = StyleSheet.create({
   macroValue: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#FF6B6B',
+    // color applied inline with theme.primary
   },
   macroLabel: {
     fontSize: 12,
-    color: '#aaa',
+    // color applied inline with theme.textMuted
     marginTop: 4,
   },
   warningsContainer: {
@@ -1442,11 +1442,11 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#fff',
+    // color applied inline with theme.text
     marginBottom: 8,
   },
   ingredientText: {
-    color: '#aaa',
+    // color applied inline with theme.textSecondary
     fontSize: 14,
     marginBottom: 4,
   },
