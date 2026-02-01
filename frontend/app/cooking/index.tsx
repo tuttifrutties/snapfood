@@ -514,28 +514,28 @@ export default function CookingScreen() {
   // Mode: Select method
   if (mode === 'select') {
     return (
-      <View style={styles.container}>
-        <View style={styles.header}>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
+        <View style={[styles.header, { backgroundColor: theme.surface }]}>
           <TouchableOpacity onPress={cancel}>
-            <Ionicons name="arrow-back" size={24} color="#fff" />
+            <Ionicons name="arrow-back" size={24} color={theme.text} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>{t('cooking.title')}</Text>
+          <Text style={[styles.headerTitle, { color: theme.text }]}>{t('cooking.title')}</Text>
           <View style={{ width: 24 }} />
         </View>
 
         <ScrollView contentContainerStyle={styles.content}>
           {/* Notification Suggested Recipes Banner */}
           {notificationRecipes.length > 0 && (
-            <View style={styles.notificationBanner}>
+            <View style={[styles.notificationBanner, { backgroundColor: theme.surface, borderColor: theme.primary }]}>
               <View style={styles.notificationBannerHeader}>
                 <Ionicons name="restaurant" size={20} color={theme.primary} />
-                <Text style={styles.notificationBannerTitle}>
+                <Text style={[styles.notificationBannerTitle, { color: theme.text }]}>
                   {i18n.language === 'es' 
                     ? `🔔 Sugerencias para tu ${notificationMealType === 'lunch' ? 'almuerzo' : 'cena'}`
                     : `🔔 Suggestions for your ${notificationMealType}`}
                 </Text>
               </View>
-              <Text style={styles.notificationBannerSubtitle}>
+              <Text style={[styles.notificationBannerSubtitle, { color: theme.textSecondary }]}>
                 {i18n.language === 'es' 
                   ? 'Basado en tus ingredientes:'
                   : 'Based on your ingredients:'}
@@ -544,13 +544,13 @@ export default function CookingScreen() {
                 {notificationRecipes.map((recipe, index) => (
                   <TouchableOpacity
                     key={index}
-                    style={styles.notificationRecipeItem}
+                    style={[styles.notificationRecipeItem, { backgroundColor: theme.primary + '15' }]}
                     onPress={() => {
                       setRecipeSearchQuery(recipe);
                       setMode('searchRecipe');
                     }}
                   >
-                    <Text style={styles.notificationRecipeText}>
+                    <Text style={[styles.notificationRecipeText, { color: theme.text }]}>
                       👨‍🍳 {recipe}
                     </Text>
                     <Ionicons name="chevron-forward" size={16} color={theme.primary} />
@@ -561,33 +561,33 @@ export default function CookingScreen() {
                 style={styles.notificationDismissBtn}
                 onPress={() => setNotificationRecipes([])}
               >
-                <Text style={styles.notificationDismissText}>
+                <Text style={[styles.notificationDismissText, { color: theme.textMuted }]}>
                   {i18n.language === 'es' ? 'Cerrar' : 'Dismiss'}
                 </Text>
               </TouchableOpacity>
             </View>
           )}
           
-          <Text style={styles.subtitle}>{t('cooking.subtitle')}</Text>
+          <Text style={[styles.subtitle, { color: theme.textSecondary }]}>{t('cooking.subtitle')}</Text>
 
           <TouchableOpacity
-            style={styles.methodCard}
+            style={[styles.methodCard, { backgroundColor: theme.surface, borderColor: theme.border }]}
             onPress={() => setMode('photo')}
           >
             <Ionicons name="camera" size={48} color={theme.primary} />
-            <Text style={styles.methodTitle}>{t('cooking.takePhotoIngredients')}</Text>
-            <Text style={styles.methodDescription}>{t('cooking.takePhotoIngredientsDesc')}</Text>
+            <Text style={[styles.methodTitle, { color: theme.text }]}>{t('cooking.takePhotoIngredients')}</Text>
+            <Text style={[styles.methodDescription, { color: theme.textSecondary }]}>{t('cooking.takePhotoIngredientsDesc')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.methodCard}
+            style={[styles.methodCard, { backgroundColor: theme.surface, borderColor: theme.border }]}
             onPress={() => setMode('manual')}
           >
             <Ionicons name="list" size={48} color={theme.primary} />
-            <Text style={styles.methodTitle}>
+            <Text style={[styles.methodTitle, { color: theme.text }]}>
               {i18n.language === 'es' ? 'Selecciona tus ingredientes' : 'Select your ingredients'}
             </Text>
-            <Text style={styles.methodDescription}>
+            <Text style={[styles.methodDescription, { color: theme.textSecondary }]}>
               {i18n.language === 'es' 
                 ? 'Elige ingredientes de una lista'
                 : 'Choose ingredients from a list'}
@@ -595,14 +595,14 @@ export default function CookingScreen() {
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={styles.methodCard}
+            style={[styles.methodCard, { backgroundColor: theme.surface, borderColor: theme.border }]}
             onPress={() => setMode('searchRecipe')}
           >
             <Ionicons name="search" size={48} color={theme.primary} />
-            <Text style={styles.methodTitle}>
+            <Text style={[styles.methodTitle, { color: theme.text }]}>
               {i18n.language === 'es' ? 'Buscar Receta' : 'Search Recipe'}
             </Text>
-            <Text style={styles.methodDescription}>
+            <Text style={[styles.methodDescription, { color: theme.textSecondary }]}>
               {i18n.language === 'es' 
                 ? 'Busca por nombre de plato y ve qué ingredientes te faltan'
                 : 'Search by dish name and see which ingredients you need'}
@@ -616,19 +616,19 @@ export default function CookingScreen() {
   // Mode: Photo capture
   if (mode === 'photo') {
     return (
-      <View style={styles.container}>
-        <View style={styles.header}>
+      <View style={[styles.container, { backgroundColor: theme.background }]}>
+        <View style={[styles.header, { backgroundColor: theme.surface }]}>
           <TouchableOpacity onPress={() => setMode('select')}>
-            <Ionicons name="arrow-back" size={24} color="#fff" />
+            <Ionicons name="arrow-back" size={24} color={theme.text} />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>{t('cooking.takePhotoIngredients')}</Text>
+          <Text style={[styles.headerTitle, { color: theme.text }]}>{t('cooking.takePhotoIngredients')}</Text>
           <View style={{ width: 24 }} />
         </View>
 
         {isAnalyzing ? (
           <View style={styles.loadingContainer}>
             <ActivityIndicator size="large" color={theme.primary} />
-            <Text style={styles.loadingText}>{t('cooking.analyzingIngredients')}</Text>
+            <Text style={[styles.loadingText, { color: theme.text }]}>{t('cooking.analyzingIngredients')}</Text>
           </View>
         ) : selectedImage ? (
           <View style={styles.imagePreview}>
@@ -637,7 +637,7 @@ export default function CookingScreen() {
         ) : (
           <View style={styles.content}>
             <Ionicons name="camera" size={120} color={theme.primary} />
-            <Text style={styles.instructionText}>
+            <Text style={[styles.instructionText, { color: theme.textSecondary }]}>
               Take a photo of your fridge or pantry ingredients
             </Text>
 
