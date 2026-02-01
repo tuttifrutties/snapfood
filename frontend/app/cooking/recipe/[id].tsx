@@ -744,14 +744,15 @@ export default function RecipeDetailScreen() {
               
               return (
                 <View key={index} style={styles.ingredientItem}>
-                  <View style={styles.ingredientBullet} />
+                  <View style={[styles.ingredientBullet, { backgroundColor: theme.primary }]} />
                   <View style={styles.ingredientTextContainer}>
                     <Text style={[
                       styles.ingredientText,
+                      { color: theme.text },
                       portions !== (recipe.servings || 4) && styles.ingredientTextScaled
                     ]}>{ingredient}</Text>
                     {isCookingFat && (
-                      <Text style={styles.ingredientFatReminder}>
+                      <Text style={[styles.ingredientFatReminder, { color: theme.warning }]}>
                         {i18n.language === 'es' 
                           ? '(recuerda añadirlo en grasas ⬇️)' 
                           : '(remember to add it in fats ⬇️)'}
