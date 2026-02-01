@@ -1147,12 +1147,12 @@ const styles = StyleSheet.create({
   },
   // Activity editor
   activityEditor: {
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
     padding: 20,
     borderRadius: 16,
     marginBottom: 20,
     borderWidth: 2,
-    borderColor: '#FF6B6B',
+    // borderColor applied inline with theme.primary
   },
   activityEditorHeader: {
     flexDirection: 'row',
@@ -1163,11 +1163,11 @@ const styles = StyleSheet.create({
   activityEditorTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#FF6B6B',
+    // color applied inline with theme.primary
   },
   editorLabel: {
     fontSize: 14,
-    color: '#aaa',
+    // color applied inline with theme.textMuted
     marginBottom: 8,
   },
   durationRow: {
@@ -1177,16 +1177,16 @@ const styles = StyleSheet.create({
   },
   durationButton: {
     flex: 1,
-    backgroundColor: '#2a2a2a',
+    // backgroundColor applied inline with theme.surfaceVariant
     padding: 12,
     borderRadius: 8,
     alignItems: 'center',
   },
   durationButtonSelected: {
-    backgroundColor: '#FF6B6B',
+    // backgroundColor applied inline with theme.primary
   },
   durationText: {
-    color: '#aaa',
+    // color applied inline with theme.textMuted
     fontSize: 14,
     fontWeight: '600',
   },
@@ -1200,7 +1200,7 @@ const styles = StyleSheet.create({
   },
   dayButton: {
     flex: 1,
-    backgroundColor: '#2a2a2a',
+    // backgroundColor applied inline with theme.surfaceVariant
     padding: 12,
     borderRadius: 8,
     alignItems: 'center',
@@ -1209,7 +1209,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#4CAF50',
   },
   dayText: {
-    color: '#aaa',
+    // color applied inline with theme.textMuted
     fontSize: 12,
     fontWeight: 'bold',
   },
@@ -1222,13 +1222,13 @@ const styles = StyleSheet.create({
   },
   cancelButton: {
     flex: 1,
-    backgroundColor: '#333',
+    // backgroundColor applied inline with theme.surfaceVariant
     padding: 14,
     borderRadius: 8,
     alignItems: 'center',
   },
   cancelButtonText: {
-    color: '#aaa',
+    // color applied inline with theme.textMuted
     fontSize: 16,
     fontWeight: '600',
   },
