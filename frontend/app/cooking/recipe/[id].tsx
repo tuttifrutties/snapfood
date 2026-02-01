@@ -1591,7 +1591,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   tablespoonButton: {
-    backgroundColor: '#333',
+    // backgroundColor applied inline with theme.surfaceVariant
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 10,
@@ -1602,7 +1602,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFD700',
   },
   tablespoonButtonText: {
-    color: '#aaa',
+    // color applied inline with theme.textMuted
     fontSize: 14,
     fontWeight: '600',
   },
@@ -1610,7 +1610,7 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   caloriesSummary: {
-    backgroundColor: '#252525',
+    // backgroundColor applied inline with theme.surfaceVariant
     borderRadius: 12,
     padding: 16,
     marginTop: 8,
@@ -1622,22 +1622,22 @@ const styles = StyleSheet.create({
   },
   caloriesSummaryLabel: {
     fontSize: 14,
-    color: '#aaa',
+    // color applied inline with theme.textMuted
   },
   caloriesSummaryValue: {
     fontSize: 14,
-    color: '#fff',
+    // color applied inline with theme.text
   },
   caloriesSummaryTotal: {
     borderTopWidth: 1,
-    borderTopColor: '#444',
+    // borderTopColor applied inline with theme.border
     paddingTop: 10,
     marginBottom: 0,
   },
   caloriesSummaryTotalLabel: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#fff',
+    // color applied inline with theme.text
   },
   caloriesSummaryTotalValue: {
     fontSize: 18,
@@ -1654,7 +1654,7 @@ const styles = StyleSheet.create({
   servingsBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 107, 107, 0.15)',
+    // backgroundColor applied inline with theme.primary + '15'
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 12,
@@ -1662,20 +1662,20 @@ const styles = StyleSheet.create({
   },
   servingsText: {
     fontSize: 13,
-    color: '#FF6B6B',
+    // color applied inline with theme.primary
     fontWeight: '500',
   },
   portionsSelector: {
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: '#333',
+    // borderColor applied inline with theme.border
   },
   portionsSelectorLabel: {
     fontSize: 16,
-    color: '#fff',
+    // color applied inline with theme.text
     fontWeight: '600',
     marginBottom: 12,
   },
@@ -1685,7 +1685,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   portionBtn: {
-    backgroundColor: '#333',
+    // backgroundColor applied inline with theme.surfaceVariant
     paddingHorizontal: 18,
     paddingVertical: 12,
     borderRadius: 10,
@@ -1693,13 +1693,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   portionBtnActive: {
-    backgroundColor: '#FF6B6B',
+    // backgroundColor applied inline with theme.primary
   },
   portionBtnCustom: {
     paddingHorizontal: 14,
   },
   portionBtnText: {
-    color: '#aaa',
+    // color applied inline with theme.textMuted
     fontSize: 16,
     fontWeight: '600',
   },
