@@ -1533,6 +1533,72 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 4,
   },
+  ingredientEditRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 4,
+    paddingRight: 4,
+  },
+  editIngredientButton: {
+    padding: 6,
+    marginLeft: 8,
+  },
+  editIngredientModalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  editIngredientModal: {
+    width: '100%',
+    maxWidth: 340,
+    borderRadius: 20,
+    padding: 24,
+  },
+  editIngredientTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 8,
+  },
+  editIngredientHint: {
+    fontSize: 14,
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  editIngredientInput: {
+    borderRadius: 12,
+    padding: 16,
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  editIngredientButtons: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  editIngredientCancelBtn: {
+    flex: 1,
+    padding: 14,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  editIngredientCancelText: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  editIngredientSaveBtn: {
+    flex: 1,
+    padding: 14,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  editIngredientSaveText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
   addIngredientButton: {
     flexDirection: 'row',
     alignItems: 'center',
