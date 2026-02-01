@@ -1363,7 +1363,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#FF6B6B',
+    // backgroundColor applied inline with theme.primary
     marginTop: 6,
     marginRight: 12,
   },
@@ -1372,7 +1372,7 @@ const styles = StyleSheet.create({
   },
   ingredientText: {
     fontSize: 16,
-    color: '#ddd',
+    // color applied inline with theme.textSecondary
     lineHeight: 22,
   },
   ingredientFatReminder: {
@@ -1394,7 +1394,7 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#FF6B6B',
+    // backgroundColor applied inline with theme.primary
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 12,
@@ -1408,14 +1408,14 @@ const styles = StyleSheet.create({
   instructionText: {
     flex: 1,
     fontSize: 16,
-    color: '#ddd',
+    // color applied inline with theme.textSecondary
     lineHeight: 24,
   },
 
   // Tips
   tipsContainer: {
     flexDirection: 'row',
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
     borderRadius: 12,
     padding: 16,
     gap: 12,
@@ -1425,7 +1425,7 @@ const styles = StyleSheet.create({
   },
   tipText: {
     fontSize: 14,
-    color: '#aaa',
+    // color applied inline with theme.textMuted
     lineHeight: 22,
     marginBottom: 4,
   },
@@ -1455,18 +1455,18 @@ const styles = StyleSheet.create({
   
   // Locked instructions
   lockedInstructions: {
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
     borderRadius: 16,
     padding: 32,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 24,
     borderWidth: 1,
-    borderColor: '#333',
+    // borderColor applied inline with theme.border
     borderStyle: 'dashed',
   },
   lockedText: {
-    color: '#888',
+    // color applied inline with theme.textMuted
     fontSize: 16,
     marginTop: 16,
     textAlign: 'center',
