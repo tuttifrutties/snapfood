@@ -1472,14 +1472,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   lockedSubtext: {
-    color: '#555',
+    // color applied inline with theme.textMuted
     fontSize: 14,
     marginTop: 8,
     textAlign: 'center',
   },
   // Fat Selector Styles
   fatSelectorContainer: {
-    backgroundColor: '#1a1a1a',
+    // backgroundColor applied inline with theme.surface
     borderRadius: 16,
     padding: 20,
     marginVertical: 16,
@@ -1500,7 +1500,7 @@ const styles = StyleSheet.create({
   },
   fatSelectorSubtitle: {
     fontSize: 14,
-    color: '#aaa',
+    // color applied inline with theme.textMuted
     marginBottom: 16,
   },
   portionRow: {
@@ -1508,7 +1508,7 @@ const styles = StyleSheet.create({
   },
   portionLabel: {
     fontSize: 14,
-    color: '#fff',
+    // color applied inline with theme.text
     fontWeight: '600',
     marginBottom: 8,
   },
@@ -1517,7 +1517,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   portionButton: {
-    backgroundColor: '#333',
+    // backgroundColor applied inline with theme.surfaceVariant
     paddingHorizontal: 14,
     paddingVertical: 10,
     borderRadius: 10,
@@ -1525,10 +1525,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   portionButtonActive: {
-    backgroundColor: '#FF6B6B',
+    // backgroundColor applied inline with theme.primary
   },
   portionButtonText: {
-    color: '#aaa',
+    // color applied inline with theme.textMuted
     fontSize: 14,
     fontWeight: '600',
   },
@@ -1537,7 +1537,7 @@ const styles = StyleSheet.create({
   },
   fatTypeLabel: {
     fontSize: 14,
-    color: '#fff',
+    // color applied inline with theme.text
     fontWeight: '600',
     marginBottom: 8,
   },
@@ -1545,7 +1545,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   fatTypeButton: {
-    backgroundColor: '#333',
+    // backgroundColor applied inline with theme.surfaceVariant
     padding: 12,
     borderRadius: 12,
     marginRight: 10,
@@ -1564,7 +1564,7 @@ const styles = StyleSheet.create({
   },
   fatTypeName: {
     fontSize: 12,
-    color: '#aaa',
+    // color applied inline with theme.textMuted
     textAlign: 'center',
   },
   fatTypeNameActive: {
@@ -1573,7 +1573,7 @@ const styles = StyleSheet.create({
   },
   fatTypeCalories: {
     fontSize: 10,
-    color: '#666',
+    // color applied inline with theme.textMuted
     marginTop: 2,
   },
   tablespoonRow: {
@@ -1581,7 +1581,7 @@ const styles = StyleSheet.create({
   },
   tablespoonLabel: {
     fontSize: 14,
-    color: '#fff',
+    // color applied inline with theme.text
     fontWeight: '600',
     marginBottom: 8,
   },
