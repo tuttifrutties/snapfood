@@ -2099,6 +2099,11 @@ const styles = StyleSheet.create({
     gap: 10,
     marginBottom: 8,
   },
+  shareCardLogoImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 10,
+  },
   shareCardLogo: {
     width: 36,
     height: 36,
