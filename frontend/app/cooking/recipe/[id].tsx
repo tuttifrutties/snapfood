@@ -826,7 +826,7 @@ export default function RecipeDetailScreen() {
                     <Text style={[styles.tablespoonLabel, { color: theme.text }]}>
                       {i18n.language === 'es' ? 'Cucharadas (cda):' : 'Tablespoons (tbsp):'}
                     </Text>
-                    <Text style={styles.tablespoonHint}>
+                    <Text style={[styles.tablespoonHint, { color: theme.textMuted }]}>
                       {i18n.language === 'es' ? '0.5 = media cda, 1 = una cda' : '0.5 = half tbsp, 1 = one tbsp'}
                     </Text>
                     <View style={styles.tablespoonButtons}>
@@ -835,12 +835,14 @@ export default function RecipeDetailScreen() {
                           key={tbsp}
                           style={[
                             styles.tablespoonButton,
+                            { backgroundColor: theme.surfaceVariant },
                             fatTablespoons === tbsp && styles.tablespoonButtonActive,
                           ]}
                           onPress={() => setFatTablespoons(tbsp)}
                         >
                           <Text style={[
                             styles.tablespoonButtonText,
+                            { color: theme.textMuted },
                             fatTablespoons === tbsp && styles.tablespoonButtonTextActive,
                           ]}>
                             {tbsp}
@@ -852,7 +854,7 @@ export default function RecipeDetailScreen() {
                 )}
 
                 {/* PER PORTION Nutrition Summary */}
-                <View style={styles.caloriesSummary}>
+                <View style={[styles.caloriesSummary, { backgroundColor: theme.surfaceVariant }]}>
                   <Text style={styles.perPortionTitle}>
                     {i18n.language === 'es' 
                       ? `📊 POR CADA PORCIÓN (de ${portions}):` 
@@ -860,28 +862,28 @@ export default function RecipeDetailScreen() {
                   </Text>
                   
                   {/* Base recipe per portion */}
-                  <View style={styles.macrosPerPortion}>
+                  <View style={[styles.macrosPerPortion, { backgroundColor: theme.surface }]}>
                     <View style={styles.macroPerPortionItem}>
-                      <Text style={styles.macroPerPortionValue}>{recipe.calories || 0}</Text>
-                      <Text style={styles.macroPerPortionLabel}>cal</Text>
+                      <Text style={[styles.macroPerPortionValue, { color: theme.text }]}>{recipe.calories || 0}</Text>
+                      <Text style={[styles.macroPerPortionLabel, { color: theme.textMuted }]}>cal</Text>
                     </View>
                     <View style={styles.macroPerPortionItem}>
-                      <Text style={styles.macroPerPortionValue}>{recipe.protein || 0}g</Text>
-                      <Text style={styles.macroPerPortionLabel}>{i18n.language === 'es' ? 'prot' : 'prot'}</Text>
+                      <Text style={[styles.macroPerPortionValue, { color: theme.text }]}>{recipe.protein || 0}g</Text>
+                      <Text style={[styles.macroPerPortionLabel, { color: theme.textMuted }]}>{i18n.language === 'es' ? 'prot' : 'prot'}</Text>
                     </View>
                     <View style={styles.macroPerPortionItem}>
-                      <Text style={styles.macroPerPortionValue}>{recipe.carbs || 0}g</Text>
-                      <Text style={styles.macroPerPortionLabel}>{i18n.language === 'es' ? 'carbs' : 'carbs'}</Text>
+                      <Text style={[styles.macroPerPortionValue, { color: theme.text }]}>{recipe.carbs || 0}g</Text>
+                      <Text style={[styles.macroPerPortionLabel, { color: theme.textMuted }]}>{i18n.language === 'es' ? 'carbs' : 'carbs'}</Text>
                     </View>
                     <View style={styles.macroPerPortionItem}>
-                      <Text style={styles.macroPerPortionValue}>{recipe.fats || 0}g</Text>
-                      <Text style={styles.macroPerPortionLabel}>{i18n.language === 'es' ? 'grasas' : 'fats'}</Text>
+                      <Text style={[styles.macroPerPortionValue, { color: theme.text }]}>{recipe.fats || 0}g</Text>
+                      <Text style={[styles.macroPerPortionLabel, { color: theme.textMuted }]}>{i18n.language === 'es' ? 'grasas' : 'fats'}</Text>
                     </View>
                   </View>
 
                   {/* Fat calories per portion (if added) */}
                   {fatTablespoons > 0 && (
-                    <View style={styles.fatPerPortionRow}>
+                    <View style={[styles.fatPerPortionRow, { borderBottomColor: theme.border }]}>
                       <Text style={styles.fatPerPortionLabel}>
                         + {i18n.language === 'es' ? 'Grasa' : 'Fat'} ({fatTablespoons} {i18n.language === 'es' ? 'cda' : 'tbsp'} ÷ {portions}):
                       </Text>
@@ -893,7 +895,7 @@ export default function RecipeDetailScreen() {
 
                   {/* TOTAL per portion */}
                   <View style={styles.totalPerPortionRow}>
-                    <Text style={styles.totalPerPortionLabel}>
+                    <Text style={[styles.totalPerPortionLabel, { color: theme.text }]}>
                       🍽️ {i18n.language === 'es' ? 'TOTAL POR PORCIÓN:' : 'TOTAL PER SERVING:'}
                     </Text>
                     <Text style={styles.totalPerPortionValue}>
@@ -902,7 +904,7 @@ export default function RecipeDetailScreen() {
                   </View>
 
                   {/* Small note about total cooking */}
-                  <Text style={styles.totalCookingNote}>
+                  <Text style={[styles.totalCookingNote, { color: theme.textMuted }]}>
                     {i18n.language === 'es' 
                       ? `(Total cocinando ${portions} porciones: ${getTotalCalories()} cal)` 
                       : `(Total cooking ${portions} servings: ${getTotalCalories()} cal)`}
@@ -932,17 +934,17 @@ export default function RecipeDetailScreen() {
           )}
 
           {/* Instructions - shown after confirmation */}
-          <Text style={styles.sectionTitle}>{t('recipe.instructions')}</Text>
+          <Text style={[styles.sectionTitle, { color: theme.text }]}>{t('recipe.instructions')}</Text>
           
           {!isConfirmed ? (
-            <View style={styles.lockedInstructions}>
-              <Ionicons name="lock-closed" size={40} color="#555" />
-              <Text style={styles.lockedText}>
+            <View style={[styles.lockedInstructions, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+              <Ionicons name="lock-closed" size={40} color={theme.textMuted} />
+              <Text style={[styles.lockedText, { color: theme.textMuted }]}>
                 {i18n.language === 'es'
                   ? 'Presiona el botón de arriba para ver los pasos'
                   : 'Press the button above to see the steps'}
               </Text>
-              <Text style={styles.lockedSubtext}>
+              <Text style={[styles.lockedSubtext, { color: theme.textMuted }]}>
                 {i18n.language === 'es'
                   ? 'Esto actualizará tu lista de ingredientes guardados'
                   : 'This will update your saved ingredients list'}
@@ -952,10 +954,10 @@ export default function RecipeDetailScreen() {
             <View style={styles.instructionsList}>
               {recipe.instructions?.map((instruction: string, index: number) => (
                 <View key={index} style={styles.instructionItem}>
-                  <View style={styles.stepNumber}>
+                  <View style={[styles.stepNumber, { backgroundColor: theme.primary }]}>
                     <Text style={styles.stepNumberText}>{index + 1}</Text>
                   </View>
-                  <Text style={styles.instructionText}>{instruction}</Text>
+                  <Text style={[styles.instructionText, { color: theme.textSecondary }]}>{instruction}</Text>
                 </View>
               ))}
             </View>
