@@ -197,30 +197,45 @@ export default function TrackFoodScreen() {
 
   // Handle selecting a new ingredient to replace the old one
   const handleSelectNewIngredient = async (newFood: ApiFoodItem) => {
-    if (editingIngredientIndex === null || !analysisResult) return;
+    if (editingIngredientIndex === null || !analysisResult) {
+      console.log('handleSelectNewIngredient: early return - editingIngredientIndex or analysisResult is null');
+      return;
+    }
+    
+    console.log('handleSelectNewIngredient: starting recalculation');
+    console.log('editingIngredientIndex:', editingIngredientIndex);
+    console.log('newFood:', newFood.name);
     
     setIsRecalculatingNutrition(true);
     
     try {
       const oldIngredient = analysisResult.ingredients[editingIngredientIndex];
+      console.log('oldIngredient:', oldIngredient);
+      
+      const requestBody = {
+        originalAnalysis: analysisResult,
+        oldIngredient: oldIngredient,
+        newIngredient: newFood.name,
+        newIngredientCaloriesPer100g: newFood.calories,
+        newIngredientProteinPer100g: newFood.protein,
+        newIngredientCarbsPer100g: newFood.carbs,
+        newIngredientFatsPer100g: newFood.fats,
+        language: i18n.language,
+      };
+      
+      console.log('Sending request to:', `${API_URL}/api/recalculate-nutrition`);
       
       // Call API to recalculate nutrition with the new ingredient
       const response = await fetch(`${API_URL}/api/recalculate-nutrition`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          originalAnalysis: analysisResult,
-          oldIngredient: oldIngredient,
-          newIngredient: newFood.name,
-          newIngredientCaloriesPer100g: newFood.calories,
-          newIngredientProteinPer100g: newFood.protein,
-          newIngredientCarbsPer100g: newFood.carbs,
-          newIngredientFatsPer100g: newFood.fats,
-          language: i18n.language,
-        }),
+        body: JSON.stringify(requestBody),
       });
 
+      console.log('Response status:', response.status);
+
       if (!response.ok) {
+        console.log('Response not ok, falling back to name update only');
         // If API fails, just update the ingredient name
         const newIngredients = [...analysisResult.ingredients];
         newIngredients[editingIngredientIndex] = newFood.name;
@@ -230,6 +245,7 @@ export default function TrackFoodScreen() {
         });
       } else {
         const data = await response.json();
+        console.log('Recalculation response:', data);
         // Update the analysis result with recalculated nutrition
         setAnalysisResult({
           ...analysisResult,
@@ -243,6 +259,7 @@ export default function TrackFoodScreen() {
         });
       }
       
+      console.log('Resetting edit state');
       // Reset edit state
       setEditingIngredientIndex(null);
       setEditIngredientSearch('');
@@ -251,16 +268,19 @@ export default function TrackFoodScreen() {
     } catch (error) {
       console.error('Error recalculating nutrition:', error);
       // Fallback: just update the name
-      const newIngredients = [...analysisResult.ingredients];
-      newIngredients[editingIngredientIndex] = newFood.name;
-      setAnalysisResult({
-        ...analysisResult,
-        ingredients: newIngredients
-      });
+      if (analysisResult && editingIngredientIndex !== null) {
+        const newIngredients = [...analysisResult.ingredients];
+        newIngredients[editingIngredientIndex] = newFood.name;
+        setAnalysisResult({
+          ...analysisResult,
+          ingredients: newIngredients
+        });
+      }
       setEditingIngredientIndex(null);
       setEditIngredientSearch('');
       setEditSearchResults([]);
     } finally {
+      console.log('Finally: setting isRecalculatingNutrition to false');
       setIsRecalculatingNutrition(false);
     }
   };
