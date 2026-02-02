@@ -903,9 +903,9 @@ export default function OnboardingScreen() {
         </View>
 
         <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>{t('onboarding.weight')}</Text>
+          <Text style={[styles.inputLabel, { color: theme.textSecondary }]}>{t('onboarding.weight')}</Text>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: theme.surface, color: theme.text }]}
             placeholder="70"
             placeholderTextColor={theme.textMuted}
             keyboardType="decimal-pad"
