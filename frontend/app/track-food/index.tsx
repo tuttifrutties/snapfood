@@ -1123,7 +1123,8 @@ export default function TrackFoodScreen() {
                   <TouchableOpacity 
                     onPress={() => {
                       setEditingIngredientIndex(index);
-                      setEditIngredientText(ingredient);
+                      setEditIngredientSearch('');
+                      setEditSearchResults([]);
                     }}
                     style={styles.editIngredientButton}
                   >
