@@ -1182,7 +1182,7 @@ export default function TrackFoodScreen() {
                     </TouchableOpacity>
                   </View>
                   
-                  {editingIngredientIndex !== null && analysisResult && (
+                  {editingIngredientIndex !== null && analysisResult && analysisResult.ingredients && analysisResult.ingredients[editingIngredientIndex] && (
                     <View style={[styles.editIngredientCurrentBox, { backgroundColor: theme.surfaceVariant }]}>
                       <Text style={[styles.editIngredientCurrentLabel, { color: theme.textMuted }]}>
                         {i18n.language === 'es' ? 'La IA detectó:' : 'AI detected:'}
