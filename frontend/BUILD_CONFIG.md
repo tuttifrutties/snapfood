@@ -1,115 +1,73 @@
 # 📱 SNAPFOOD - Configuración de Build y Estado Actual
 
 > **IMPORTANTE:** Leer este archivo COMPLETO antes de continuar.
-> **Última actualización:** Enero 2026 - Build v62+
+> **Última actualización:** Febrero 2026 - Build v62
 > **Usuario:** Facu (Argentina) - Responder SIEMPRE en español
 
 ---
 
-## 🚨 ESTADO ACTUAL - TRABAJO EN PROGRESO
+## 🚨 ESTADO ACTUAL - V62 EN PRODUCCIÓN
 
-### ⚠️ TAREAS PENDIENTES (CONTINUAR DESDE AQUÍ)
+### ✅ TRABAJO COMPLETADO EN ESTA SESIÓN
 
-El fork anterior estaba trabajando en estas tareas que quedaron INCOMPLETAS:
+#### 1. COLORES DINÁMICOS - COMPLETADO ✅
+Se refactorizó TODA la app para usar colores dinámicos del ThemeContext.
 
-#### 1. COLORES DINÁMICOS - Tipografías según tema (PARCIALMENTE HECHO)
-**Problema:** En tema oscuro hay textos en negro que no se leen. En tema claro hay textos blancos que no se leen.
+**Archivos actualizados:**
+- ✅ `app/index.tsx` - Colores dinámicos aplicados
+- ✅ `app/onboarding.tsx` - Todos los 7 pasos con colores del tema
+- ✅ `app/cooking/index.tsx` - Completamente refactorizado
+- ✅ `app/cooking/recipe/[id].tsx` - Completamente refactorizado
+- ✅ `app/track-food/index.tsx` - Completamente refactorizado
+- ✅ `app/profile.tsx` - Ya estaba bien, verificado
+- ✅ `app/(tabs)/home.tsx` - Ya estaba bien, verificado
 
-**Regla a implementar:**
-- **Tema OSCURO:** Todas las tipografías deben ser BLANCAS o GRIS CLARO (excepto las que usan el color primario del usuario)
-- **Tema CLARO:** Todas las tipografías deben ser NEGRAS o GRIS OSCURO (excepto las que usan el color primario del usuario)
+**Regla implementada:**
+- **Tema OSCURO:** Tipografías BLANCAS o GRIS CLARO
+- **Tema CLARO:** Tipografías NEGRAS o GRIS OSCURO
+- **Color primario:** Dinámico según elección del usuario (coral, verde, púrpura, naranja)
 
-**Archivos afectados:**
-- `app/cooking/index.tsx` - Parcialmente corregido, revisar
-- `app/cooking/recipe/[id].tsx` - Parcialmente corregido, revisar
-- `app/track-food/index.tsx` - Pendiente
-- `app/profile.tsx` - Pendiente
-- `app/onboarding.tsx` - Pendiente
-
-**Cómo hacerlo:**
-```tsx
-// En JSX, usar colores del theme inline:
-<Text style={[styles.texto, { color: theme.text }]}>Texto normal</Text>
-<Text style={[styles.texto, { color: theme.textSecondary }]}>Texto secundario</Text>
-<Text style={[styles.texto, { color: theme.textMuted }]}>Texto apagado</Text>
-<Text style={[styles.texto, { color: theme.primary }]}>Texto con color del usuario</Text>
-```
-
-**Colores disponibles en theme:**
-- `theme.text` - Blanco en oscuro, negro en claro
-- `theme.textSecondary` - Gris claro en oscuro, gris oscuro en claro
-- `theme.textMuted` - Gris más apagado
-- `theme.primary` - Color elegido por usuario (coral por defecto)
-- `theme.success` - Verde (#4CAF50) para indicadores positivos
-- `theme.warning` - Amarillo (#FFC107) para advertencias
-- `theme.surface` - Fondo de tarjetas
-- `theme.surfaceVariant` - Fondo de secciones
-- `theme.border` - Bordes
-
-#### 2. COLOR PRIMARIO DINÁMICO (PENDIENTE)
-**Problema:** Cuando el usuario elige verde, púrpura o naranja en Settings, hay colores que siguen siendo coral (#FF6B6B) hardcodeados.
-
-**Lo que debe pasar:** TODO lo que sea coral debe cambiar al color que el usuario eligió.
-
-**Archivos con colores hardcodeados (#FF6B6B):**
-```bash
-# Para encontrar todos los lugares:
-grep -rn "#FF6B6B" app/ --include="*.tsx"
-```
-
-**Solución:** Reemplazar `#FF6B6B` por `theme.primary` en los estilos inline.
-
-**NOTA:** Los `StyleSheet.create()` NO pueden usar variables. Los colores deben aplicarse INLINE en el JSX.
-
-#### 3. IMAGEN DE COMPARTIR RECETA (PARCIALMENTE HECHO)
+#### 2. LOGO EN IMAGEN DE COMPARTIR - COMPLETADO ✅
 **Ubicación:** `app/cooking/recipe/[id].tsx`
 
-**Pendiente:**
-- ✅ Títulos "Ingredientes" e "Instrucciones" en blanco (HECHO)
-- ⏳ Agregar estilos para el logo (shareCardLogo, shareCardLogoContainer, shareCardLogoText)
+- Se usa el logo real de la app (`assets/images/icon.png`) en vez de la "S" estilizada
+- Estilos agregados: `shareCardLogoImage`, `shareCardLogoContainer`
 
-**Agregar estos estilos al final de StyleSheet.create():**
-```tsx
-shareCardLogoContainer: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  gap: 8,
-},
-shareCardLogo: {
-  width: 32,
-  height: 32,
-  borderRadius: 8,
-  backgroundColor: '#FF6B6B',
-  alignItems: 'center',
-  justifyContent: 'center',
-},
-shareCardLogoText: {
-  color: '#fff',
-  fontSize: 18,
-  fontWeight: 'bold',
-},
-```
-
-#### 4. EDITAR INGREDIENTES DETECTADOS POR IA (NO IMPLEMENTADO)
+#### 3. EDITAR INGREDIENTES DETECTADOS POR IA - IMPLEMENTADO ✅
 **Ubicación:** `app/track-food/index.tsx`
 
-**Requerimiento:** Cuando la IA detecta ingredientes de una foto, el usuario debe poder:
-1. Ver un ícono de lápiz (✏️) al lado de cada ingrediente
-2. Al tocar el lápiz, mostrar opciones: "Cambiar ingrediente" o "Eliminar"
-3. Si cambia el ingrediente (ej: "chocolate" → "dulce de leche"), la IA debe RECALCULAR las calorías
+**Funcionalidad:**
+- ✏️ Ícono de lápiz al lado de cada ingrediente detectado por IA
+- Modal de búsqueda para encontrar el ingrediente correcto
+- Recálculo automático de calorías al cambiar ingrediente
 
-**Flujo:**
-1. Usuario saca foto de comida
-2. IA detecta: "Flan con chocolate"
-3. Usuario toca lápiz en "chocolate"
-4. Elige "Cambiar ingrediente"
-5. Buscador aparece, escribe "dulce de leche"
-6. Backend recalcula calorías con dulce de leche en vez de chocolate
-7. Se actualiza la vista
+**Backend nuevo:** 
+- Endpoint `POST /api/recalculate-nutrition` en `server.py`
+- Usa GPT-4o para recalcular calorías manteniendo la porción detectada
 
-**Backend necesario:** Endpoint para recalcular nutrición con ingrediente modificado.
+**Estados agregados:**
+```tsx
+const [editingIngredientIndex, setEditingIngredientIndex] = useState<number | null>(null);
+const [editIngredientSearch, setEditIngredientSearch] = useState('');
+const [editSearchResults, setEditSearchResults] = useState<ApiFoodItem[]>([]);
+const [isSearchingEditIngredient, setIsSearchingEditIngredient] = useState(false);
+const [isRecalculatingNutrition, setIsRecalculatingNutrition] = useState(false);
+```
 
-**Cache:** Guardar las correcciones del usuario en AsyncStorage para futuras referencias.
+---
+
+## ⚠️ POSIBLES ISSUES PENDIENTES
+
+### 1. Editar ingrediente - Verificar funcionamiento
+El modal de búsqueda abre correctamente, pero hay que verificar:
+- Que el recálculo de calorías funcione bien en producción
+- Que el modal se cierre después de seleccionar
+- Que las calorías se actualicen en pantalla
+
+**Si hay problemas, revisar:**
+- Función `handleSelectNewIngredient` en `track-food/index.tsx`
+- Endpoint `/api/recalculate-nutrition` en `server.py`
+- Logs del backend para ver errores
 
 ---
 
@@ -126,33 +84,22 @@ shareCardLogoText: {
 
 ```powershell
 cd W:\EMERGENT\APPS\snapfood\snapfood
-
 git fetch origin
-
 git reset --hard origin/main
-
 cd frontend
 ```
 
-**⚠️ EDITAR `frontend/app.json` - cambiar versionCode a 62 (o el siguiente)**
+**⚠️ EDITAR `frontend/app.json` - cambiar versionCode al siguiente número**
 
 ```powershell
 Remove-Item -Recurse -Force android -ErrorAction SilentlyContinue
-
 npm install --legacy-peer-deps
-
 npx expo prebuild --clean --platform android
-
 cd ..
-
 git add .
-
-git commit -m "v62: Descripcion del build"
-
+git commit -m "vXX: Descripcion del build"
 git push origin main
-
 cd frontend
-
 eas build --platform android --profile production
 ```
 
@@ -175,9 +122,9 @@ function MiComponente() {
   const { theme } = useTheme();
   
   return (
-    <View style={{ backgroundColor: theme.background }}>
-      <Text style={{ color: theme.text }}>Texto normal</Text>
-      <Text style={{ color: theme.primary }}>Texto con color del usuario</Text>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
+      <Text style={[styles.texto, { color: theme.text }]}>Texto normal</Text>
+      <Text style={[styles.texto, { color: theme.primary }]}>Texto destacado</Text>
     </View>
   );
 }
@@ -189,13 +136,13 @@ theme.mode          // 'light' | 'dark'
 theme.primary       // Color elegido (#FF6B6B, #4CAF50, etc)
 theme.background    // Fondo principal
 theme.surface       // Fondo de tarjetas
-theme.surfaceVariant // Fondo de secciones
+theme.surfaceVariant // Fondo de secciones/inputs
 theme.text          // Texto principal
 theme.textSecondary // Texto secundario
 theme.textMuted     // Texto apagado
 theme.border        // Bordes
-theme.success       // Verde
-theme.warning       // Amarillo
+theme.success       // Verde (#4CAF50)
+theme.warning       // Amarillo (#FFC107)
 theme.error         // Rojo
 ```
 
@@ -203,50 +150,87 @@ theme.error         // Rojo
 
 ## ✅ FUNCIONALIDADES COMPLETADAS
 
-- Selector de porciones en recetas
-- Popup "¿Cuántas porciones comiste?"
-- Compartir recetas como imagen (parcial - falta logo)
-- Horarios de notificaciones personalizables
-- Salud y restricciones en onboarding y perfil
-- Permisos de galería
-- Notificaciones clickeables → llevan a recetas
-- Calorías SIN grasas de cocción
-- Recordatorio "añadirlo en grasas"
-- Iconos actualizados (coral con fondo transparente)
-- Barra de navegación Android oculta (modo inmersivo)
+### Núcleo
+- Análisis de fotos de comida con IA
+- Seguimiento de calorías diarias
+- Sugerencias de recetas basadas en ingredientes
+- Sistema de ingredientes en memoria
+
+### UI/UX
+- ✅ Colores dinámicos en toda la app (modo claro/oscuro)
+- ✅ Color primario personalizable
+- ✅ Editar ingredientes detectados por IA con recálculo
+- ✅ Selector de porciones en recetas
+- ✅ Popup "¿Cuántas porciones comiste?"
+- ✅ Compartir recetas como imagen con logo
+- ✅ Barra de navegación Android oculta (modo inmersivo)
+
+### Notificaciones
+- ✅ Horarios personalizables
+- ✅ Notificaciones clickeables → llevan a recetas
+- ✅ Re-registro de notificaciones al abrir app
+
+### Onboarding
+- ✅ Selección de país
+- ✅ Actividades físicas con días/duración
+- ✅ Salud y restricciones alimentarias
+- ✅ Buscador de alergias
+
+### Permisos
+- ✅ Cámara
+- ✅ Galería (READ_MEDIA_IMAGES)
+- ✅ Notificaciones
 
 ---
 
 ## 📁 Archivos Clave
 
 ```
+app/index.tsx                 - Pantalla inicial, redirección
+app/onboarding.tsx            - Onboarding completo (7 pasos)
 app/cooking/index.tsx         - Selección ingredientes, sugerencia recetas
 app/cooking/recipe/[id].tsx   - Detalle receta, compartir, porciones
-app/track-food/index.tsx      - Foto comida, galería, buscar
+app/track-food/index.tsx      - Foto comida, galería, editar ingredientes
 app/profile.tsx               - Mi Ficha, editar salud
-app/onboarding.tsx            - Onboarding con paso de salud
+app/(tabs)/home.tsx           - Dashboard principal
 app/(tabs)/settings.tsx       - Ajustes, horarios, tema, color
 src/contexts/ThemeContext.tsx - Sistema de temas y colores
+backend/server.py             - API endpoints incluyendo recalculate-nutrition
 ```
 
 ---
 
 ## 🔑 Integraciones
 
-- **OpenAI GPT-4o:** Via Emergent LLM Key
+- **OpenAI GPT-4o:** Via Emergent LLM Key (análisis fotos, recálculo nutrición)
 - **RevenueCat:** Suscripciones
 - **expo-notifications:** Recordatorios
 - **expo-sharing + react-native-view-shot:** Compartir imágenes
+- **expo-image-picker:** Cámara y galería
 
 ---
 
-## ⚠️ RECORDATORIOS
+## ⚠️ RECORDATORIOS IMPORTANTES
 
-**CAMBIOS EN BACKEND:** → Recordar REDEPLOY en Emergent
-**CAMBIOS EN FRONTEND:** → Save to Git + Build con comandos PowerShell
+| Cambio | Acción requerida |
+|--------|------------------|
+| **Cambios en BACKEND** | Save to Git + **REDEPLOY** en Emergent |
+| **Cambios solo en FRONTEND** | Save to Git (NO necesita redeploy) |
+| **Para buildear** | Comandos PowerShell de arriba |
+
 **PowerShell NO acepta &&** → Usar comandos separados
-**El usuario NO es programador** → Dar instrucciones paso a paso
+**El usuario NO es programador** → Dar instrucciones paso a paso claras
 
 ---
 
-*Última actualización: Enero 2026*
+## 📝 HISTORIAL DE VERSIONES RECIENTES
+
+| Versión | Cambios principales |
+|---------|---------------------|
+| v62 | Colores dinámicos completos, logo compartir, editar ingredientes IA |
+| v61 | Notificaciones clickeables, permisos galería |
+| v60 | Iconos nuevos, modo inmersivo Android |
+
+---
+
+*Última actualización: Febrero 2026*
